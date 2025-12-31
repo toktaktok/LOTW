@@ -8,4 +8,11 @@ namespace Project.Scripts.Data
         public static readonly int AnimHide = Animator.StringToHash("Hide");
         public static readonly int AnimSelect = Animator.StringToHash("Select");
     }
+
+    public readonly struct WorldDefines
+    {
+        public static readonly float InteractionDistance = 30f;
+        public static readonly float DefaultMoveSpeed = 5f;
+        
+    }
 }
