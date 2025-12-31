@@ -1,5 +1,5 @@
 using UnityEngine;
 
-public class GameInstance
+public class GameInstance : Singleton<GameInstance>
 {
 }
