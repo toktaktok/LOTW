@@ -12,7 +12,8 @@ namespace Project.Scripts.Data
     public readonly struct WorldDefines
     {
         public static readonly float InteractionDistance = 30f;
-        public static readonly float DefaultMoveSpeed = 5f;
         
+        public static readonly float DefaultMoveSpeed = 5f;
+        public static readonly float DefaultCorrectionSpeed = 10.0f;
     }
 }
