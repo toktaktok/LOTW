@@ -13,10 +13,15 @@ namespace Project.Scripts.System.World
 
         private NavMeshAgent _navMeshAgent;
         private Animator _animator;
+        
+        //actual visually rendered child's Transform
+        private Transform _visualTransform;
+        private Vector3 _initialScale;
+        
         [SerializeField] protected float moveSpeed = WorldDefines.DefaultMoveSpeed;
 
         private Vector3 _lastPosition;
-        private static readonly int isMoveHash = Animator.StringToHash("isMove");
+        private static readonly int IsMoveHash = Animator.StringToHash("isMove");
         
         #endregion
 
@@ -25,6 +30,7 @@ namespace Project.Scripts.System.World
         public override void Init()
         {
             base.Init();
+            
             _animator = GetComponent<Animator>();
             
             _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -32,6 +38,18 @@ namespace Project.Scripts.System.World
             _navMeshAgent.speed = moveSpeed;
 
             _lastPosition = transform.position;
+            
+            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                _visualTransform = spriteRenderer.transform;
+                _initialScale = _visualTransform.localScale;
+            }
+            else
+            {
+                _visualTransform = transform;
+                _initialScale = transform.localScale;
+            }
         }
 
         public virtual void MoveTo(Vector3 destination)
@@ -51,19 +69,7 @@ namespace Project.Scripts.System.World
                     _navMeshAgent.ResetPath();
 
                 _navMeshAgent.Move(Time.deltaTime * moveSpeed * direction);
-                if(direction != Vector3.zero)
-                {
-                    transform.rotation = Quaternion.LookRotation(direction);
-                }
             }
-        }
-
-        public void LookAt(Vector3 target)
-        {
-            Vector3 direction = (target - transform.position).normalized;
-            direction.y = 0;
-            if(direction != Vector3.zero)
-                transform.rotation = Quaternion.LookRotation(direction);
         }
 
         private void Update()
@@ -77,9 +83,16 @@ namespace Project.Scripts.System.World
                 return;
             
             Vector3 currentPosition = transform.position;
-            bool isMoving = (currentPosition - _lastPosition).sqrMagnitude > Mathf.Epsilon;
+            Vector3 direction = (currentPosition - _lastPosition);
             _lastPosition = currentPosition;
-            _animator.SetBool(isMoveHash, isMoving);
+            _animator.SetBool(IsMoveHash, direction.sqrMagnitude > Mathf.Epsilon);
+
+            if(Mathf.Abs(direction.x) > Mathf.Epsilon)
+            {
+                Vector3 targetScale = _initialScale;
+                targetScale.x = Mathf.Abs(_initialScale.x) * (direction.x > 0 ? 1 : -1);
+                _visualTransform.localScale = targetScale;
+            }
         }
 
         #endregion

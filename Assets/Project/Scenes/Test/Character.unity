@@ -726,8 +726,8 @@ Transform:
   m_GameObject: {fileID: 946372882}
   serializedVersion: 2
   m_LocalRotation: {x: 0.043453418, y: 0.087072924, z: -0.0038016874, w: 0.9952466}
-  m_LocalPosition: {x: 0, y: -1, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1399511079}
@@ -853,9 +853,9 @@ CapsuleCollider:
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
-  m_Height: 2
+  m_Height: 1
   m_Direction: 1
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0.5, z: 0}
 --- !u!33 &1399511078
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -873,9 +873,9 @@ Transform:
   m_GameObject: {fileID: 1399511075}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.34, y: 1, z: -2.03}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_LocalPosition: {x: -7.34, y: 0, z: -2.03}
+  m_LocalScale: {x: 4, y: 4, z: 1}
+  m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 946372883}
   m_Father: {fileID: 0}
@@ -934,8 +934,8 @@ NavMeshAgent:
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
-  m_Height: 2
-  m_BaseOffset: 1
+  m_Height: 1
+  m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!54 &1399511083
