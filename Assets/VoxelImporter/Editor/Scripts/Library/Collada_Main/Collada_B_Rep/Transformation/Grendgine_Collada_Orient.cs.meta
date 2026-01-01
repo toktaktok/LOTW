@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: d2275344273387f4bbc6a3fd3b02a1f5
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_B_Rep/Transformation/Grendgine_Collada_Orient.cs
+  uploadId: 745694

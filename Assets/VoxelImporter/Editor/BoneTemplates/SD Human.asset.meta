@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cc8e758afe9f3da489ce3b7661f73137
+timeCreated: 1487564104
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/BoneTemplates/SD Human.asset
+  uploadId: 745694

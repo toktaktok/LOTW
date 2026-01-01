@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: abc56b5f6acfc0a45afa4fe279af9489
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Kinematics/Joints/Grendgine_Collada_Prismatic.cs
+  uploadId: 745694

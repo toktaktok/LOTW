@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 2a8e99e1b739673419b90995163bf2ba
+timeCreated: 1475652307
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/FrameAnimationObject.prefab
+  uploadId: 745694

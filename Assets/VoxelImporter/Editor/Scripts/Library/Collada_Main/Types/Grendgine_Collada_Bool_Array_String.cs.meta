@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 34bce19ec256aa3449c05a34d19e7a8e
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Types/Grendgine_Collada_Bool_Array_String.cs
+  uploadId: 745694

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 7555e19db697abd43856471ba9d58a34
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Enums/Grendgine_Collada_Shader_Stage.cs
+  uploadId: 745694

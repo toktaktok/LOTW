@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 4939a1b0df58b674e8416ad9ef0c5345
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_B_Rep/Curves/Grendgine_Collada_Circle.cs
+  uploadId: 745694

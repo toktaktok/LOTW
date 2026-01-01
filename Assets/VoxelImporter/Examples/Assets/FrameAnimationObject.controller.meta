@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1af437a991137084f81a4631ddb8ae3b
+timeCreated: 1475652333
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/FrameAnimationObject.controller
+  uploadId: 745694

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 59cf372bffd08754e87782c264ab709f
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Physics/Custom_Types/Grendgine_Collada_Mass_Frame.cs
+  uploadId: 745694

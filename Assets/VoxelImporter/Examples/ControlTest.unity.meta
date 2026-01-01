@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: c376ef5e846322140a9eb23e0d7a7e9a
+timeCreated: 1465632513
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/ControlTest.unity
+  uploadId: 745694

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: c4eac76c8f5c74d42be7e729861df3c6
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Kinematics/Articulated_Systems/Grendgine_Collada_Frame_Tip.cs
+  uploadId: 745694

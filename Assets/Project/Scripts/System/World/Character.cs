@@ -44,12 +44,11 @@ namespace Project.Scripts.System.World
                 if(!_navMeshAgent.isStopped)
                     _navMeshAgent.ResetPath();
 
-                _navMeshAgent.Move(direction * moveSpeed * Time.deltaTime);
+                _navMeshAgent.Move(Time.deltaTime * moveSpeed * direction);
 
                 if(direction != Vector3.zero)
                 {
-                    Quaternion targetRotation = Quaternion.LookRotation(direction);
-                    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, 10f * Time.deltaTime);
+                    transform.rotation = Quaternion.LookRotation(direction);
                 }
             }
         }

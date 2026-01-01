@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 9be91b92a6cb80d4cb68f67f4b768613
+timeCreated: 1475652208
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/FrameAnimation.unity
+  uploadId: 745694

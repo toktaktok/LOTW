@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 22a8f3c352cca6344b91f2cd43113ca4
+timeCreated: 1472105963
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/CreateCubes.cs
+  uploadId: 745694

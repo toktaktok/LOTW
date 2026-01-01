@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fa824784805629c4dbd620220469b90b
+timeCreated: 1468141309
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Chunks.unity
+  uploadId: 745694

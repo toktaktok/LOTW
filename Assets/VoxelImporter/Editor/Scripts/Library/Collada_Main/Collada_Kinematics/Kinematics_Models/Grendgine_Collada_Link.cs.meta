@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ccecd010e9554b2418a0e101d8847e32
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Kinematics/Kinematics_Models/Grendgine_Collada_Link.cs
+  uploadId: 745694

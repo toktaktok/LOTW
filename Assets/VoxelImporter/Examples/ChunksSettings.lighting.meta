@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: f0b9a9fd4c43e16489bd787df2a57bfe
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 4890085278179872738
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/ChunksSettings.lighting
+  uploadId: 745694

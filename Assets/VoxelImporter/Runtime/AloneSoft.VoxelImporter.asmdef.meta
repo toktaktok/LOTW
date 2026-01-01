@@ -1,0 +1,14 @@
+fileFormatVersion: 2
+guid: f5c552c88127f6340abdfe48aa80d7ea
+AssemblyDefinitionImporter:
+  externalObjects: {}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Runtime/AloneSoft.VoxelImporter.asmdef
+  uploadId: 745694

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: dc9fa1a9b5dcaeb4dad0bfd385147beb
+timeCreated: 1516601267
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/RootRotationY.anim
+  uploadId: 745694

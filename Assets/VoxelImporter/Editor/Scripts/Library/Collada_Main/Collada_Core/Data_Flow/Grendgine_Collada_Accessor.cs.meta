@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a59b1c999f187c046a17f59e2e4e9557
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Core/Data_Flow/Grendgine_Collada_Accessor.cs
+  uploadId: 745694

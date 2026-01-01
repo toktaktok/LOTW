@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: b2f65c7aafc225245919404d2e7e99c5
+timeCreated: 1471503804
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Extra/VoxelChunksObjectChunkExplosionCore.cs
+  uploadId: 745694

@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 10fdfccf0d14204449019f591f1f7842
+timeCreated: 1487045326
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Enums/Grendgine_Collada_Format_Hint_Precision.cs
+  uploadId: 745694

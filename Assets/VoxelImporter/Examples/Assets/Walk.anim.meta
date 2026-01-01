@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: da2d91e39d56a1c479dec8ea4b24db38
+timeCreated: 1465614839
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/Walk.anim
+  uploadId: 745694

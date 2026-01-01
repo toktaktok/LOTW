@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 91d8b3509b6800741a61c1daf83a104b
+timeCreated: 1538053175
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 9100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/ShareFacialAnimation.controller
+  uploadId: 745694

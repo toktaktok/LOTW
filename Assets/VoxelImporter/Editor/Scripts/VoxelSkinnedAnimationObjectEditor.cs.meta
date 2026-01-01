@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 25326bf6d7f0ff045b11415a3cd2c5ac
+timeCreated: 1461220885
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/VoxelSkinnedAnimationObjectEditor.cs
+  uploadId: 745694

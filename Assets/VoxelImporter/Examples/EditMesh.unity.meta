@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 1056d2ddadafd954fb859ab396f1f852
+timeCreated: 1516600939
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/EditMesh.unity
+  uploadId: 745694

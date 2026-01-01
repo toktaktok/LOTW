@@ -75,24 +75,18 @@ namespace Project.Scripts.Content.Controller
             camForward.Normalize();
             camRight.Normalize();
 
-            Vector3 inputWorldDir = (camRight * input.x + camForward * input.y).normalized;
+            Vector3 inputWorldDir = (camRight*input.x + camForward*input.y).normalized;
             if(currentBaseNode == currentTargetNode)
             {
                 RailNode next = FindNeighborByDirection(inputWorldDir);
-                if(next != null)
-                {
-                    currentTargetNode = next;
-                }
-                else
-                {
-                    return; 
-                }
+                if(next == null)
+                    return;
+                currentTargetNode = next;
             }
             Vector3 pathVector = currentTargetNode.transform.position - currentBaseNode.transform.position;
             Vector3 pathDir = pathVector.normalized;
         
             float dot = Vector3.Dot(inputWorldDir, pathDir);
-
             if(dot < WorldDefines.DirectionReversalThreshold)
             {
                 (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);
@@ -100,30 +94,25 @@ namespace Project.Scripts.Content.Controller
             }
 
             Vector3 currentPos = currentCharacter.Position;
-            Vector3 a = currentBaseNode.transform.position;
-            Vector3 b = currentTargetNode.transform.position;
+            Vector3 basePos = currentBaseNode.transform.position;
+            Vector3 targetPos = currentTargetNode.transform.position;
 
-            Vector3 projectedPos = GetProjectedPointOnLine(a, b, currentPos);
+            Vector3 projectedPos = GetProjectedPointOnLine(basePos, targetPos, currentPos);
             projectedPos.y = currentPos.y;
 
             Vector3 correction = (projectedPos - currentPos);
         
             if(correction.magnitude > WorldDefines.RailCorrectionDeadzone) 
-            {
                 correction = Time.deltaTime * WorldDefines.DefaultCorrectionSpeed * correction.normalized;
-            }
             else 
-            {
                 correction = Vector3.zero;
-            }
 
             currentCharacter.MoveDirect(pathDir + correction.normalized);
 
-            float dist = Vector3.Distance(currentPos, b);
-            if(dist < WorldDefines.NodeArrivalThreshold)
-            {
+            Vector3 toCharVector = currentCharacter.transform.position - currentBaseNode.transform.position;
+            float t = Vector3.Dot(toCharVector, pathVector) / pathVector.sqrMagnitude;
+            if (t >= 1.0f) 
                 currentBaseNode = currentTargetNode;
-            }
         }
 
         private RailNode FindNeighborByDirection(Vector3 desiredDir)
@@ -145,13 +134,15 @@ namespace Project.Scripts.Content.Controller
             return bestNode;
         }
         
-        private Vector3 GetProjectedPointOnLine(Vector3 a, Vector3 b, Vector3 p)
+        private Vector3 GetProjectedPointOnLine(Vector3 lineStart, Vector3 lineEnd, Vector3 targetPoint)
         {
-            Vector3 ap = p - a;
-            Vector3 ab = b - a;
-            float t = Vector3.Dot(ap, ab) / ab.sqrMagnitude;
-            t = Mathf.Clamp01(t);
-            return a + ab * t;
+            Vector3 toTarget = targetPoint - lineStart;
+            Vector3 lineVector = lineEnd - lineStart;
+
+            float dotProduct = Vector3.Dot(toTarget, lineVector);
+            float projectionRatio = Mathf.Clamp01(dotProduct / lineVector.sqrMagnitude);
+
+            return lineStart + (lineVector * projectionRatio);
         }
     }
 }

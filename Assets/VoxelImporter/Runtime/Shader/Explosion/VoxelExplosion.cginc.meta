@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a75dc7e022c3ba140a31dcc54ad8413a
+timeCreated: 1470804222
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Runtime/Shader/Explosion/VoxelExplosion.cginc
+  uploadId: 745694

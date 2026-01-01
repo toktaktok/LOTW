@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 6aa2109db310ae944a72e882f04d154f
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_B_Rep/Topology/Grendgine_Collada_Faces.cs
+  uploadId: 745694

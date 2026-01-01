@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: e144ab99ec9454b438b285578a33e66e
+timeCreated: 1487045329
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_B_Rep/Curves/Grendgine_Collada_Nurbs.cs
+  uploadId: 745694

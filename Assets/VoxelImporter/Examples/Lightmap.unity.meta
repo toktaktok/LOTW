@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: b46e4798469695d4db259cb1709421cf
+timeCreated: 1465623697
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Lightmap.unity
+  uploadId: 745694

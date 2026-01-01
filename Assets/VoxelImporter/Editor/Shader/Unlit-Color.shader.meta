@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 4a2e981c2f8cfd34b9412c0545b95724
+timeCreated: 1464419037
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Shader/Unlit-Color.shader
+  uploadId: 745694

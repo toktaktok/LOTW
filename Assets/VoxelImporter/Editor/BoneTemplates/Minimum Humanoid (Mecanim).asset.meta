@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 7183d0c5504256343a93dcf87b778388
+timeCreated: 1469254767
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/BoneTemplates/Minimum Humanoid (Mecanim).asset
+  uploadId: 745694

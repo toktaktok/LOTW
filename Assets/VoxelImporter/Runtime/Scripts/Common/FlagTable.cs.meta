@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 960f99bbc0fcdb44c84efea4d5be8231
+timeCreated: 1470044822
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Runtime/Scripts/Common/FlagTable.cs
+  uploadId: 745694

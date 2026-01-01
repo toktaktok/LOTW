@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a9f24bb56e362b446a0343cc7c28d003
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_FX/Texturing/Grendgine_Collada_SamplerDEPTH.cs
+  uploadId: 745694

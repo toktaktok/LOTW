@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: b55daf3fc0e32154b976c1164c506910
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Enums/Grendgine_Collada_FX_Opaque_Channel.cs
+  uploadId: 745694

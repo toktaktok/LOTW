@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: a982f6c09bde6354e8190ed7dbae4352
+timeCreated: 1470985622
+licenseType: Store
+ShaderImporter:
+  defaultTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Runtime/Shader/Explosion/VoxelExplosion-Transparent.shader
+  uploadId: 745694

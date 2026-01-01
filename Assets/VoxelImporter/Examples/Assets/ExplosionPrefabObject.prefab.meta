@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: fdbefd70b358ecd4d9765713c0285894
+timeCreated: 1472102339
+licenseType: Store
+NativeFormatImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/ExplosionPrefabObject.prefab
+  uploadId: 745694

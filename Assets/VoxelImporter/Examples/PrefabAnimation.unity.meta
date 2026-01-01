@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: 66d56767b403dfa4cbb3664b436826e9
+timeCreated: 1465622680
+licenseType: Store
+DefaultImporter:
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/PrefabAnimation.unity
+  uploadId: 745694

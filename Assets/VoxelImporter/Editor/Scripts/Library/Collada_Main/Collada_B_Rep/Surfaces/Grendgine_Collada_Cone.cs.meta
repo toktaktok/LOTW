@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: a63ebc8ff4e2fdf43b8f054f814dd589
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_B_Rep/Surfaces/Grendgine_Collada_Cone.cs
+  uploadId: 745694

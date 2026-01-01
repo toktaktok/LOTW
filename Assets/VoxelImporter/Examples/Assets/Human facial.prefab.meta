@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 83bdee3592e8b2140af6b1fbedb35245
+timeCreated: 1538038255
+licenseType: Store
+NativeFormatImporter:
+  mainObjectFileID: 100100000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Examples/Assets/Human facial.prefab
+  uploadId: 745694

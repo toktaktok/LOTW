@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: aa7a3626406bbc447b0c91d137ccd9ef
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Enums/Grendgine_Collada_FX_Sampler_Common_Wrap_Mode.cs
+  uploadId: 745694

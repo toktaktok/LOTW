@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 461a05dcd7a4c7f4eac53d46e5e19e16
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_Physics/Physics_Model/Grendgine_Collada_Attachment.cs
+  uploadId: 745694

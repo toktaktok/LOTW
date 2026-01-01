@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 26ebd2fadd71a984e9b34d5c9cac84bb
+timeCreated: 1487045327
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Types/Grendgine_Collada_SID_Float.cs
+  uploadId: 745694

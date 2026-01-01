@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: 7da26ed5a896687449055ac4b3c95965
+timeCreated: 1487045328
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_FX/Profiles/GLSL/Grendgine_Collada_Technique_GLSL.cs
+  uploadId: 745694

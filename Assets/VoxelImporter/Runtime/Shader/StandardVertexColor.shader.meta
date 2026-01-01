@@ -1,0 +1,16 @@
+fileFormatVersion: 2
+guid: 8079db16b3057bd408b6b074ed56ab5f
+ShaderImporter:
+  externalObjects: {}
+  defaultTextures: []
+  nonModifiableTextures: []
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Runtime/Shader/StandardVertexColor.shader
+  uploadId: 745694

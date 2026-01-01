@@ -1,0 +1,19 @@
+fileFormatVersion: 2
+guid: ffafe5607b3499145ac1130910a4f600
+timeCreated: 1487045329
+licenseType: Store
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences: []
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 62914
+  packageName: Voxel Importer
+  packageVersion: 1.4.2
+  assetPath: Assets/VoxelImporter/Editor/Scripts/Library/Collada_Main/Collada_FX/Effects/Grendgine_Collada_Effect_Technique.cs
+  uploadId: 745694
