@@ -21,7 +21,9 @@ namespace Project.Scripts.Content.World
             foreach(var neighbor in neighbors)
             {
                 if(neighbor != null)
+                {
                     Gizmos.DrawLine(transform.position, neighbor.transform.position);
+                }
             }
         }
 

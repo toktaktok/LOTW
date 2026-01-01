@@ -1,10 +1,8 @@
-using System;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-using Project.Scripts.System.Trigger;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
+using Project.Scripts.Data;
 
 namespace Project.Scripts.Content.Controller
 {
@@ -12,57 +10,54 @@ namespace Project.Scripts.Content.Controller
     {
         [SerializeField] private Character currentCharacter;
 
-        [Header("Rail System")] [SerializeField]
-        private RailNode currentBaseNode;
-
+        [Header("Rail System")]
+        [SerializeField] private RailNode currentBaseNode;
         [SerializeField] private RailNode currentTargetNode;
 
-        [SerializeField] private float correctionSpeed = 10f;
-        private Camera _mainCam;
-
+        private Camera _mainCamera;
+        
         private InputAction _moveAction;
+        private void OnEnable() => _moveAction.Enable();
+        private void OnDisable() => _moveAction.Disable();
         
         private void Awake()
         {
             _moveAction = new InputAction("Move");
         
-            _moveAction.AddCompositeBinding("1DAxis")
-                .With("Negative", "<Keyboard>/a")
-                .With("Positive", "<Keyboard>/d")
-                .With("Negative", "<Keyboard>/leftArrow")
-                .With("Positive", "<Keyboard>/rightArrow");
+            _moveAction.AddCompositeBinding("2DVector")
+                .With("Up", "<Keyboard>/w")
+                .With("Down", "<Keyboard>/s")
+                .With("Left", "<Keyboard>/a")
+                .With("Right", "<Keyboard>/d")
+                .With("Up", "<Keyboard>/upArrow")
+                .With("Down", "<Keyboard>/downArrow")
+                .With("Left", "<Keyboard>/leftArrow")
+                .With("Right", "<Keyboard>/rightArrow");
         
-            _moveAction.AddBinding("<Gamepad>/leftStick/x");
-            _moveAction.AddBinding("<Gamepad>/dpad/x");
-        }
-        
-        private void OnEnable()
-        {
-            _moveAction.Enable();
-        }
-
-        private void OnDisable()
-        {
-            _moveAction.Disable();
+            _moveAction.AddBinding("<Gamepad>/leftStick");
+            _moveAction.AddBinding("<Gamepad>/dpad");
         }
         
         private void Start()
         {
-            _mainCam = Camera.main;
-            if(currentCharacter != null) currentCharacter.Init();
+            _mainCamera = Camera.main;
+            
+            if(currentCharacter != null)
+                currentCharacter.Init();
 
-            if(currentTargetNode == null) currentTargetNode = currentBaseNode;
+            if(currentTargetNode == null)
+                currentTargetNode = currentBaseNode;
         }
 
         private void Update()
         {
             if(currentCharacter == null || currentBaseNode == null) return;
 
-            float h = _moveAction.ReadValue<float>();
-            
-            if(Mathf.Abs(h) > 0.01f)
+            Vector2 input = _moveAction.ReadValue<Vector2>();
+
+            if(input.sqrMagnitude > WorldDefines.InputThreshold)
             {
-                MoveOnPath(h);
+                MoveOnPath(input);
             }
             else
             {
@@ -70,27 +65,35 @@ namespace Project.Scripts.Content.Controller
             }
         }
 
-        private void MoveOnPath(float input)
+        private void MoveOnPath(Vector2 input)
         {
+            Vector3 camForward = _mainCamera.transform.forward;
+            Vector3 camRight = _mainCamera.transform.right;
+
+            camForward.y = 0;
+            camRight.y = 0;
+            camForward.Normalize();
+            camRight.Normalize();
+
+            Vector3 inputWorldDir = (camRight * input.x + camForward * input.y).normalized;
             if(currentBaseNode == currentTargetNode)
             {
-                RailNode next = FindNeighborByInput(input);
+                RailNode next = FindNeighborByDirection(inputWorldDir);
                 if(next != null)
                 {
                     currentTargetNode = next;
                 }
                 else
                 {
-                    return;
+                    return; 
                 }
             }
-
-            Vector3 pathDir = (currentTargetNode.transform.position - currentBaseNode.transform.position).normalized;
-
-            Vector3 inputWorldDir = _mainCam.transform.right * input;
+            Vector3 pathVector = currentTargetNode.transform.position - currentBaseNode.transform.position;
+            Vector3 pathDir = pathVector.normalized;
+        
             float dot = Vector3.Dot(inputWorldDir, pathDir);
 
-            if(dot < -0.1f)
+            if(dot < WorldDefines.DirectionReversalThreshold)
             {
                 (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);
                 pathDir = (currentTargetNode.transform.position - currentBaseNode.transform.position).normalized;
@@ -104,11 +107,12 @@ namespace Project.Scripts.Content.Controller
             projectedPos.y = currentPos.y;
 
             Vector3 correction = (projectedPos - currentPos);
-            if(correction.magnitude > 0.05f)
+        
+            if(correction.magnitude > WorldDefines.RailCorrectionDeadzone) 
             {
-                correction = correction.normalized * correctionSpeed * Time.deltaTime;
+                correction = Time.deltaTime * WorldDefines.DefaultCorrectionSpeed * correction.normalized;
             }
-            else
+            else 
             {
                 correction = Vector3.zero;
             }
@@ -116,18 +120,16 @@ namespace Project.Scripts.Content.Controller
             currentCharacter.MoveDirect(pathDir + correction.normalized);
 
             float dist = Vector3.Distance(currentPos, b);
-            if(dist < 0.2f)
+            if(dist < WorldDefines.NodeArrivalThreshold)
             {
                 currentBaseNode = currentTargetNode;
             }
         }
 
-        private RailNode FindNeighborByInput(float input)
+        private RailNode FindNeighborByDirection(Vector3 desiredDir)
         {
-            Vector3 desiredDir = _mainCam.transform.right * input;
-
             RailNode bestNode = null;
-            float maxDot = 0f;
+            float maxDot = 0.1f;
 
             foreach(var neighbor in currentBaseNode.neighbors)
             {
@@ -140,10 +142,9 @@ namespace Project.Scripts.Content.Controller
                     bestNode = neighbor;
                 }
             }
-
             return bestNode;
         }
-
+        
         private Vector3 GetProjectedPointOnLine(Vector3 a, Vector3 b, Vector3 p)
         {
             Vector3 ap = p - a;
