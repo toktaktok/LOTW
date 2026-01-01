@@ -64,7 +64,7 @@ namespace Project.Scripts.System.UI
                     await FadeRoutine(0f, 1f);
                     break;
                 case UITransitionMode.Animation:
-                    await PlayAnimationAndWait(UIDefines.AnimShow);
+                    await PlayAnimationAndWait(AnimDefines.ShowID);
                     break;
             }
             SetVisibility(true);
@@ -85,7 +85,7 @@ namespace Project.Scripts.System.UI
                     await FadeRoutine(1f, 0f);
                     break;
                 case UITransitionMode.Animation:
-                    await PlayAnimationAndWait(UIDefines.AnimHide);
+                    await PlayAnimationAndWait(AnimDefines.HideID);
                     break;
             }
             SetVisibility(false);
