@@ -1,3 +1,4 @@
+using System.Linq;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -50,7 +51,10 @@ namespace Project.Scripts.Content.Controller
         private void Start()
         {
             if(currentCharacter != null)
+            {
                 currentCharacter.Init();
+                currentCharacter.Warp(currentBaseNode.transform.position);
+            }
 
             if(currentTargetNode == null)
                 currentTargetNode = currentBaseNode;
@@ -58,10 +62,24 @@ namespace Project.Scripts.Content.Controller
             RecalculatePathData();
             TransitionToIdle();
         }
-
         private void Update()
         {
             _fsm.Update();
+        }
+
+        public void SwitchPath(RailNode targetNode)
+        {
+            if(targetNode == null)
+                return;
+            
+            currentCharacter.Warp(targetNode.transform.position);
+            currentBaseNode = targetNode;
+
+            RailNode foundTargetNode = (targetNode.neighbors.Count > 0)? targetNode.neighbors.First() : targetNode;
+            currentTargetNode = foundTargetNode;
+            
+            RecalculatePathData();
+            TransitionToIdle();
         }
 
         private void OnIdle()
@@ -72,16 +90,14 @@ namespace Project.Scripts.Content.Controller
                 TransitionToMove();
             }
         }
-
-        public void TransitionToIdle()
+        private void TransitionToIdle()
         {
             _fsm.ChangeState("Idle",
-                onEnter: () => { currentCharacter.MoveDirect(Vector3.zero); },
+                onEnter: () => { currentCharacter.MoveDir(Vector3.zero); },
                 onUpdate: OnIdle
             );
         }
-
-        public void TransitionToMove()
+        private void TransitionToMove()
         {
             _fsm.ChangeState("Move",
                 onEnter: null,
@@ -96,7 +112,6 @@ namespace Project.Scripts.Content.Controller
                 }
             );
         }
-
         private void MoveOnPath(float inputX)
         {
             if(currentCharacter==null || currentBaseNode==null)
@@ -106,7 +121,7 @@ namespace Project.Scripts.Content.Controller
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
 
-            if (currentBaseNode == currentTargetNode)
+            if(currentBaseNode == currentTargetNode)
             {
                 RailNode next = FindNeighborByDirection(inputWorldDir);
                 if (next == null)
@@ -142,9 +157,9 @@ namespace Project.Scripts.Content.Controller
             else 
                 correction = Vector3.zero;
 
-            currentCharacter.MoveDirect(_cachedPathDir + correction);
+            currentCharacter.MoveDir(_cachedPathDir + correction);
 
-            if (t >= 1.0f) 
+            if(t >= 1.0f) 
             {
                 currentBaseNode = currentTargetNode;
                 _cachedPathVector = Vector3.zero; 

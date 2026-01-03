@@ -54,8 +54,7 @@ namespace Project.Scripts.System.World
                 _navMeshAgent.SetDestination(destination);
             }
         }
-
-        public virtual void MoveDirect(Vector3 direction)
+        public virtual void MoveDir(Vector3 direction)
         {
             if(_navMeshAgent.enabled)
             {
@@ -65,7 +64,16 @@ namespace Project.Scripts.System.World
                 _navMeshAgent.Move(Time.deltaTime * moveSpeed * direction);
             }
         }
-
+        public void Warp(Vector3 destination)
+        {
+            if(_navMeshAgent != null)
+                _navMeshAgent.Warp(destination);
+            else
+                transform.position = destination;
+            
+            _lastPosition = destination;
+        }
+        
         private void Update()
         {
             UpdateAnimationState();
