@@ -15,7 +15,7 @@ namespace Project.Scripts.Data
     }
     public readonly struct WorldDefines
     {
-        public const float InteractionDistance = 30f;
+        public const float InteractionDistance = 2f;
         
         public const float DefaultMoveSpeed = 5f;
         public const float DefaultCorrectionSpeed = 10.0f;

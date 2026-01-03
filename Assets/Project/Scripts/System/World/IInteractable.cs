@@ -4,6 +4,8 @@ namespace Project.Scripts.System.World
 {
     public interface IInteractable
     {
-        public void Interact(WorldObject interactor);
+        public void Interact(GameObject interactor);
+        
+        string InteractionPrompt { get; }
     }
 }

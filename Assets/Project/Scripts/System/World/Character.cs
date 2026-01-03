@@ -1,4 +1,5 @@
 using System;
+using Project.Scripts.Core.Managers;
 using UnityEngine;
 using UnityEngine.AI;
 using Project.Scripts.Data;
@@ -85,18 +86,16 @@ namespace Project.Scripts.System.World
                 return;
             
             Vector3 currentPosition = transform.position;
-            Vector3 direction = (currentPosition - _lastPosition);
+            Vector3 worldDirection = (currentPosition - _lastPosition);
             _lastPosition = currentPosition;
-            animator.SetBool(IsMoveHash, direction.sqrMagnitude > Mathf.Epsilon);
 
-            // if (Mathf.Abs(direction.x) > 0.0001f && spriteRenderer != null)
-            // {
-            //     spriteRenderer.flipX = direction.x < 0;
-            // }
-            if(Mathf.Abs(direction.x) > Mathf.Epsilon)
+            animator.SetBool(IsMoveHash, worldDirection.sqrMagnitude > Mathf.Epsilon);
+
+            Vector3 localDirection = CameraManager.Instance.GetCurrentCamera().transform.InverseTransformDirection(worldDirection);
+            if(Mathf.Abs(localDirection.x) > Mathf.Epsilon)
             {
                 Vector3 targetScale = _initialScale;
-                targetScale.x = Mathf.Abs(_initialScale.x) * (direction.x > 0 ? 1 : -1);
+                targetScale.x = Mathf.Abs(_initialScale.x) * (localDirection.x > 0 ? 1 : -1);
                 _visualTransform.localScale = targetScale;
             }
         }

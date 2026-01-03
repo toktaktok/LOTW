@@ -1,12 +1,15 @@
 using System.Linq;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Unity.Cinemachine;
 
 using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
 using Project.Scripts.Core.Managers;
+using Unity.Mathematics;
 
 namespace Project.Scripts.Content.Controller
 {
@@ -20,34 +23,22 @@ namespace Project.Scripts.Content.Controller
         [SerializeField] private RailNode currentTargetNode;
 
         private StateMachine<PlayerController> _fsm;
-        private InputAction _moveAction;
-
+        private PlayerControls _controls;
+        
         private Vector3 _cachedPathVector;
         private float _cachedPathSqrLength;
         private Vector3 _cachedPathDir;
 
-        private void OnEnable() => _moveAction.Enable();
-        private void OnDisable() => _moveAction.Disable();
+        private bool _isFreeMoving = false;
+        
+        private void OnEnable() => _controls.Enable();
+        private void OnDisable() => _controls.Disable();
 
         private void Awake()
         {
-            _moveAction = new InputAction("Move");
+            _controls = new PlayerControls();
             _fsm = new StateMachine<PlayerController>(this);
-
-            _moveAction.AddCompositeBinding("2DVector")
-                .With("Up", "<Keyboard>/w")
-                .With("Down", "<Keyboard>/s")
-                .With("Left", "<Keyboard>/a")
-                .With("Right", "<Keyboard>/d")
-                .With("Up", "<Keyboard>/upArrow")
-                .With("Down", "<Keyboard>/downArrow")
-                .With("Left", "<Keyboard>/leftArrow")
-                .With("Right", "<Keyboard>/rightArrow");
-
-            _moveAction.AddBinding("<Gamepad>/leftStick");
-            _moveAction.AddBinding("<Gamepad>/dpad");
         }
-
         private void Start()
         {
             if(currentCharacter != null)
@@ -64,6 +55,9 @@ namespace Project.Scripts.Content.Controller
         }
         private void Update()
         {
+            if(_isFreeMoving)
+                return;
+            
             _fsm.Update();
         }
 
@@ -81,10 +75,48 @@ namespace Project.Scripts.Content.Controller
             RecalculatePathData();
             TransitionToIdle();
         }
+        public void MoveToAndSwitchPath(RailNode targetNode, CinemachineCamera newCam, float camDuration)
+        {
+            StartCoroutine(MoveAndSwitchRoutine(targetNode, newCam, camDuration));
+        }
 
+        private IEnumerator MoveAndSwitchRoutine(RailNode targetNode, CinemachineCamera newCam, float camDuration)
+        {
+            TransitionToIdle();
+            
+            _isFreeMoving = true;
+            currentCharacter.MoveTo(targetNode.transform.position);
+
+            float timeout = 10f;
+            while(Vector3.Distance(currentCharacter.transform.position, targetNode.transform.position) >
+                  WorldDefines.InteractionDistance && timeout>0)
+            {
+                timeout -= Time.deltaTime;
+                yield return null;
+            }
+
+            currentBaseNode = targetNode;
+
+            if(targetNode.neighbors.Count > 0)
+                currentTargetNode = targetNode.neighbors[0];
+            else
+                currentTargetNode = targetNode;
+
+            TransitionToIdle();
+            RecalculatePathData();
+            if(newCam != null)
+                CameraManager.Instance.SwitchCamera(newCam, camDuration);
+            _isFreeMoving = false;
+        }
+
+        private Vector2 GetMoveInput()
+        {
+            return _controls.Player.Move.ReadValue<Vector2>();
+        }
+        
         private void OnIdle()
         {
-            float inputX = _moveAction.ReadValue<Vector2>().x;
+            float inputX = GetMoveInput().x;
             if(Mathf.Abs(inputX) > WorldDefines.InputThreshold)
             {
                 TransitionToMove();
@@ -103,7 +135,7 @@ namespace Project.Scripts.Content.Controller
                 onEnter: null,
                 onUpdate: () =>
                 {
-                    float inputX = _moveAction.ReadValue<Vector2>().x;
+                    float inputX =  GetMoveInput().x;
 
                     if(Mathf.Abs(inputX) > WorldDefines.InputThreshold)
                         MoveOnPath(inputX);
@@ -152,7 +184,7 @@ namespace Project.Scripts.Content.Controller
 
             Vector3 correction = projectedPos - currentPos;
         
-            if(correction.sqrMagnitude > WorldDefines.RailCorrectionDeadzone * WorldDefines.RailCorrectionDeadzone) 
+            if(correction.sqrMagnitude > Mathf.Pow(WorldDefines.RailCorrectionDeadzone, 2))
                 correction = Time.deltaTime * WorldDefines.DefaultCorrectionSpeed * correction.normalized;
             else 
                 correction = Vector3.zero;
