@@ -13,7 +13,7 @@ namespace Project.Scripts.Core.Managers
         public void Add(BaseUI ui) => UIComponents.Add(ui);
     }
 
-    public class UIManager : MonoBehaviour
+    public class UIManager : Singleton<UIManager>
     {
         #region Settings & Cache
 

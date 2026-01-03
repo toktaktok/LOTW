@@ -11,16 +11,16 @@ namespace Project.Scripts.System.World
     {
         #region Properties
 
-        private NavMeshAgent _navMeshAgent;
-        private Animator _animator;
+        [SerializeField] protected float moveSpeed = WorldDefines.DefaultMoveSpeed;
+        private Vector3 _lastPosition;
         
         //actual visually rendered child's Transform
         private Transform _visualTransform;
         private Vector3 _initialScale;
         
-        [SerializeField] protected float moveSpeed = WorldDefines.DefaultMoveSpeed;
+        private NavMeshAgent _navMeshAgent;
+        private Animator _animator;
 
-        private Vector3 _lastPosition;
         private static readonly int IsMoveHash = Animator.StringToHash("isMove");
         
         #endregion

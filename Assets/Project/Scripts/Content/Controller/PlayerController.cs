@@ -120,7 +120,6 @@ namespace Project.Scripts.Content.Controller
             else 
             {
                 float dot = Vector3.Dot(inputWorldDir, _cachedPathDir);
-
                 if(dot < WorldDefines.DirectionReversalThreshold)
                 {
                     (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);

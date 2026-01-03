@@ -25,4 +25,10 @@ namespace Project.Scripts.Data
         public const float DirectionReversalThreshold = -0.1f;
         public const float RailCorrectionDeadzone = 0.05f;
     }
+
+    public readonly struct CameraDefines
+    {
+        public const int DefaultCameraPriority = 10;
+        public const int FirstCameraPriority = 20;
+    }
 }
