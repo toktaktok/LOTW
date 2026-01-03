@@ -1,9 +1,11 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
+using Project.Scripts.Core.Managers;
 
 namespace Project.Scripts.Content.Controller
 {
@@ -17,8 +19,6 @@ namespace Project.Scripts.Content.Controller
         [SerializeField] private RailNode currentTargetNode;
 
         private StateMachine<PlayerController> _fsm;
-        private Camera _mainCamera;
-
         private InputAction _moveAction;
 
         private Vector3 _cachedPathVector;
@@ -49,8 +49,6 @@ namespace Project.Scripts.Content.Controller
 
         private void Start()
         {
-            _mainCamera = Camera.main;
-
             if(currentCharacter != null)
                 currentCharacter.Init();
 
@@ -101,10 +99,10 @@ namespace Project.Scripts.Content.Controller
 
         private void MoveOnPath(float inputX)
         {
-            if(currentCharacter == null || currentBaseNode == null)
+            if(currentCharacter==null || currentBaseNode==null)
                 return;
-
-            Vector3 camRight = _mainCamera.transform.right;
+            
+            Vector3 camRight = CameraManager.Instance.GetCurrentCamera().transform.right;
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
 

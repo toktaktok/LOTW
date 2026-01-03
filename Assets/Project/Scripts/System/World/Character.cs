@@ -6,11 +6,13 @@ using Project.Scripts.Data;
 namespace Project.Scripts.System.World
 {
     [RequireComponent(typeof(NavMeshAgent))]
-    [RequireComponent(typeof(Animator))]
     public class Character : WorldObject
     {
         #region Properties
 
+        [SerializeField] private Animator animator;
+        [SerializeField] private SpriteRenderer spriteRenderer;
+        
         [SerializeField] protected float moveSpeed = WorldDefines.DefaultMoveSpeed;
         private Vector3 _lastPosition;
         
@@ -19,8 +21,6 @@ namespace Project.Scripts.System.World
         private Vector3 _initialScale;
         
         private NavMeshAgent _navMeshAgent;
-        private Animator _animator;
-
         private static readonly int IsMoveHash = Animator.StringToHash("isMove");
         
         #endregion
@@ -30,26 +30,20 @@ namespace Project.Scripts.System.World
         public override void Init()
         {
             base.Init();
-            
-            _animator = GetComponent<Animator>();
-            
+
             _navMeshAgent = GetComponent<NavMeshAgent>();
             _navMeshAgent.updateRotation = false;
             _navMeshAgent.speed = moveSpeed;
 
             _lastPosition = transform.position;
+
+            if(animator == null)
+                animator = GetComponentInChildren<Animator>();
             
-            SpriteRenderer spriteRenderer = GetComponentInChildren<SpriteRenderer>();
-            if (spriteRenderer != null)
-            {
-                _visualTransform = spriteRenderer.transform;
-                _initialScale = _visualTransform.localScale;
-            }
-            else
-            {
-                _visualTransform = transform;
-                _initialScale = transform.localScale;
-            }
+            if(spriteRenderer == null)
+                spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            _visualTransform = spriteRenderer.transform;
+            _initialScale = _visualTransform.localScale;
         }
 
         public virtual void MoveTo(Vector3 destination)
@@ -79,14 +73,18 @@ namespace Project.Scripts.System.World
 
         private void UpdateAnimationState()
         {
-            if(_animator == null)
+            if(animator == null)
                 return;
             
             Vector3 currentPosition = transform.position;
             Vector3 direction = (currentPosition - _lastPosition);
             _lastPosition = currentPosition;
-            _animator.SetBool(IsMoveHash, direction.sqrMagnitude > Mathf.Epsilon);
+            animator.SetBool(IsMoveHash, direction.sqrMagnitude > Mathf.Epsilon);
 
+            // if (Mathf.Abs(direction.x) > 0.0001f && spriteRenderer != null)
+            // {
+            //     spriteRenderer.flipX = direction.x < 0;
+            // }
             if(Mathf.Abs(direction.x) > Mathf.Epsilon)
             {
                 Vector3 targetScale = _initialScale;

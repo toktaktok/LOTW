@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using Project.Scripts.Content.Controller;
 using UnityEngine;
@@ -14,9 +13,9 @@ namespace Project.Scripts.Core.Managers
         
         [Header("Cinemachine")]
         [SerializeField] private CinemachineBrain brain;
-        [SerializeField] private CinemachineCamera defaultCamera;
         
         private CinemachineCamera _currentCamera;
+        private Camera _renderCamera;
         private PlayerController _playerController;
         
         private CinemachineBlendDefinition _initialBlend; 
@@ -25,11 +24,11 @@ namespace Project.Scripts.Core.Managers
         #endregion
 
         #region Methods
-
-        protected override void Awake()
+        
+        private void Start()
         {
-            base.Awake();
-    
+            _playerController = FindFirstObjectByType<PlayerController>();
+            
             if(brain == null && Camera.main != null)
                 brain = Camera.main.GetComponent<CinemachineBrain>();
 
@@ -37,15 +36,13 @@ namespace Project.Scripts.Core.Managers
                 _initialBlend = brain.DefaultBlend;
         }
 
-        private void Start()
+        public Camera GetCurrentCamera()
         {
-            _playerController = FindFirstObjectByType<PlayerController>();
-    
-            if(defaultCamera != null)
-                SetCamera(defaultCamera, 0f);
+            if(_renderCamera == null)
+                _renderCamera = Camera.main;
+            return _renderCamera;
         }
-
-        public void SetCamera(CinemachineCamera targetCamera, float blendDuration = -1f)
+        public void SwitchCamera(CinemachineCamera targetCamera, float blendDuration = -1f)
         {
             if(_currentCamera == targetCamera)
                 return;
