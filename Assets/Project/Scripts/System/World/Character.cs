@@ -55,6 +55,8 @@ namespace Project.Scripts.System.World
                 _navMeshAgent.SetDestination(destination);
             }
         }
+        public float MoveSpeed => moveSpeed;
+
         public virtual void MoveDir(Vector3 direction)
         {
             if(_navMeshAgent.enabled)
@@ -64,6 +66,17 @@ namespace Project.Scripts.System.World
 
                 _navMeshAgent.Move(Time.deltaTime * moveSpeed * direction);
             }
+        }
+
+        public void MoveOnRail(Vector3 railPosition)
+        {
+            if(!_navMeshAgent.enabled)
+                return;
+
+            if(!_navMeshAgent.isStopped)
+                _navMeshAgent.ResetPath();
+
+            _navMeshAgent.Warp(railPosition);
         }
         public void Warp(Vector3 destination)
         {

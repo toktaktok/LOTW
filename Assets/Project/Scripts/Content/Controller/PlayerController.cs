@@ -1,4 +1,3 @@
-using System.Linq;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -9,7 +8,6 @@ using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
 using Project.Scripts.Core.Managers;
-using Unity.Mathematics;
 
 namespace Project.Scripts.Content.Controller
 {
@@ -26,8 +24,8 @@ namespace Project.Scripts.Content.Controller
         private PlayerControls _controls;
         
         private Vector3 _cachedPathVector;
-        private float _cachedPathSqrLength;
         private Vector3 _cachedPathDir;
+        private float _cachedPathSqrLength;
 
         private bool _isFreeMoving = false;
         
@@ -69,7 +67,7 @@ namespace Project.Scripts.Content.Controller
             currentCharacter.Warp(targetNode.transform.position);
             currentBaseNode = targetNode;
 
-            RailNode foundTargetNode = (targetNode.neighbors.Count > 0)? targetNode.neighbors.First() : targetNode;
+            RailNode foundTargetNode = (targetNode.neighbors.Count > 0) ? targetNode.neighbors[0] : targetNode;
             currentTargetNode = foundTargetNode;
             
             RecalculatePathData();
@@ -148,7 +146,7 @@ namespace Project.Scripts.Content.Controller
         {
             if(currentCharacter==null || currentBaseNode==null)
                 return;
-            
+
             Vector3 camRight = CameraManager.Instance.GetCurrentCamera().transform.right;
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
@@ -158,51 +156,52 @@ namespace Project.Scripts.Content.Controller
                 RailNode next = FindNeighborByDirection(inputWorldDir);
                 if (next == null)
                     return;
-             
+
                 currentTargetNode = next;
                 RecalculatePathData();
             }
-            else 
+            else
             {
                 float dot = Vector3.Dot(inputWorldDir, _cachedPathDir);
+
                 if(dot < WorldDefines.DirectionReversalThreshold)
                 {
                     (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);
                     RecalculatePathData();
                 }
             }
-            
-            Vector3 currentPos = currentCharacter.Position;
+
             Vector3 basePos = currentBaseNode.transform.position;
-            
-            Vector3 toCharVector = currentPos - basePos;
+            Vector3 currentPos = currentCharacter.Position;
 
-            float t = Vector3.Dot(toCharVector, _cachedPathVector) / _cachedPathSqrLength;
-            
-            Vector3 projectedPos = basePos + (_cachedPathVector * t);
-            projectedPos.y = currentPos.y; 
+            // Project current position onto the rail and advance by moveSpeed
+            float d = Vector3.Dot(currentPos - basePos, _cachedPathDir);
+            d = Mathf.Max(0f, d);
+            d += Time.deltaTime * currentCharacter.MoveSpeed;
 
-            Vector3 correction = projectedPos - currentPos;
-        
-            if(correction.sqrMagnitude > Mathf.Pow(WorldDefines.RailCorrectionDeadzone, 2))
-                correction = Time.deltaTime * WorldDefines.DefaultCorrectionSpeed * correction.normalized;
-            else 
-                correction = Vector3.zero;
+            float railLength = Mathf.Sqrt(_cachedPathSqrLength);
 
-            currentCharacter.MoveDir(_cachedPathDir + correction);
-
-            if(t >= 1.0f) 
+            if(d >= railLength)
             {
+                Vector3 snapPos = currentTargetNode.transform.position;
+                snapPos.y = currentPos.y;
+                currentCharacter.MoveOnRail(snapPos);
                 currentBaseNode = currentTargetNode;
-                _cachedPathVector = Vector3.zero; 
-                _cachedPathSqrLength = 1f; 
+                _cachedPathVector = Vector3.zero;
+                _cachedPathSqrLength = 1f;
                 _cachedPathDir = Vector3.zero;
+                return;
             }
+
+            Vector3 newRailPos = basePos + _cachedPathDir * d;
+            newRailPos.y = currentPos.y;
+            currentCharacter.MoveOnRail(newRailPos);
         }
 
         private void RecalculatePathData()
         {
             _cachedPathVector = currentTargetNode.transform.position - currentBaseNode.transform.position;
+            _cachedPathVector.y = 0f;
             _cachedPathSqrLength = _cachedPathVector.sqrMagnitude;
 
             if(_cachedPathSqrLength < 0.001f)
