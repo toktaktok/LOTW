@@ -80,6 +80,25 @@ namespace Project.Scripts.Content.Controller
             StartCoroutine(MoveAndSwitchRoutine(targetNode, newCam, camDuration));
         }
 
+        /// <summary>
+        /// 씬 전환 후 SceneTransitionManager가 호출합니다.
+        /// 플레이어를 지정 위치로 즉시 이동하고 Rail 시작 노드를 설정합니다.
+        /// </summary>
+        public void WarpToEntrance(Vector3 position, RailNode startNode)
+        {
+            if (currentCharacter != null)
+                currentCharacter.Warp(position);
+
+            if (startNode != null)
+            {
+                currentBaseNode = startNode;
+                currentTargetNode = startNode.neighbors.Count > 0 ? startNode.neighbors[0] : startNode;
+                RecalculatePathData();
+            }
+
+            TransitionToIdle();
+        }
+
         private IEnumerator MoveAndSwitchRoutine(RailNode targetNode, CinemachineCamera newCam, float camDuration)
         {
             TransitionToIdle();
