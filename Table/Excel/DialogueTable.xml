@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+          xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet">
+  <Worksheet ss:Name="DialogueTable">
+    <Table>
+      <!--
+        컬럼 규칙:
+          DataID    : 고유 ID (필수, 정수)
+          SpeakerId : 화자 내부 ID (캐릭터 식별)
+          SpeakerName : 화면에 표시할 화자 이름
+          Text      : 대화 텍스트
+          NextId    : 다음 대화 DataID (-1 = 종료)
+          ChoiceIds : 선택지 DataID 목록, 콤마 구분 (예: "2,3"). 없으면 비워둠
+      -->
+
+      <!-- ─── 헤더 행 (C# 필드명과 일치시키기, 첫 글자는 대문자) ─── -->
+      <Row>
+        <Cell><Data ss:Type="String">DataId</Data></Cell>
+        <Cell><Data ss:Type="String">SpeakerId</Data></Cell>
+        <Cell><Data ss:Type="String">SpeakerName</Data></Cell>
+        <Cell><Data ss:Type="String">Text</Data></Cell>
+        <Cell><Data ss:Type="String">NextId</Data></Cell>
+        <Cell><Data ss:Type="String">ChoiceIds</Data></Cell>
+      </Row>
+
+      <!-- ─── 데이터 행 ─── -->
+      <!-- 상점 주인 첫 인사 (선택지로 분기) -->
+      <Row>
+        <Cell><Data ss:Type="Number">1</Data></Cell>
+        <Cell><Data ss:Type="String">npc_shopkeeper</Data></Cell>
+        <Cell><Data ss:Type="String">상점 주인</Data></Cell>
+        <Cell><Data ss:Type="String">어서오세요! 무엇을 도와드릴까요?</Data></Cell>
+        <Cell><Data ss:Type="Number">-1</Data></Cell>
+        <Cell><Data ss:Type="String">2,3</Data></Cell>
+      </Row>
+      <!-- 선택지 1: 꽃 구경 -->
+      <Row>
+        <Cell><Data ss:Type="Number">2</Data></Cell>
+        <Cell><Data ss:Type="String">player</Data></Cell>
+        <Cell><Data ss:Type="String">플레이어</Data></Cell>
+        <Cell><Data ss:Type="String">꽃을 좀 구경해도 될까요?</Data></Cell>
+        <Cell><Data ss:Type="Number">4</Data></Cell>
+        <Cell></Cell>
+      </Row>
+      <!-- 선택지 2: 그냥 지나침 -->
+      <Row>
+        <Cell><Data ss:Type="Number">3</Data></Cell>
+        <Cell><Data ss:Type="String">player</Data></Cell>
+        <Cell><Data ss:Type="String">플레이어</Data></Cell>
+        <Cell><Data ss:Type="String">아니요, 그냥 지나가는 길이에요.</Data></Cell>
+        <Cell><Data ss:Type="Number">5</Data></Cell>
+        <Cell></Cell>
+      </Row>
+      <!-- 선택지 1 이후 상점 주인 반응 -->
+      <Row>
+        <Cell><Data ss:Type="Number">4</Data></Cell>
+        <Cell><Data ss:Type="String">npc_shopkeeper</Data></Cell>
+        <Cell><Data ss:Type="String">상점 주인</Data></Cell>
+        <Cell><Data ss:Type="String">물론이죠! 오늘 들어온 장미가 특히 예쁘답니다.</Data></Cell>
+        <Cell><Data ss:Type="Number">-1</Data></Cell>
+        <Cell></Cell>
+      </Row>
+      <!-- 선택지 2 이후 상점 주인 반응 -->
+      <Row>
+        <Cell><Data ss:Type="Number">5</Data></Cell>
+        <Cell><Data ss:Type="String">npc_shopkeeper</Data></Cell>
+        <Cell><Data ss:Type="String">상점 주인</Data></Cell>
+        <Cell><Data ss:Type="String">그렇군요. 또 들러주세요!</Data></Cell>
+        <Cell><Data ss:Type="Number">-1</Data></Cell>
+        <Cell></Cell>
+      </Row>
+    </Table>
+  </Worksheet>
+</Workbook>
