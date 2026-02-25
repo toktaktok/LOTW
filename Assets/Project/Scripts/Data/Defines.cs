@@ -31,4 +31,14 @@ namespace Project.Scripts.Data
         public const int DefaultCameraPriority = 10;
         public const int FirstCameraPriority = 20;
     }
+
+    /// <summary>
+    /// 씬 이름 상수. 씬을 추가할 때마다 여기에 등록합니다.
+    /// 사용 예: SceneTransitionManager.Instance.TransitionTo(SceneDefines.FlowerShop, "FromStreet");
+    /// </summary>
+    public readonly struct SceneDefines
+    {
+        // TODO: 씬을 추가할 때마다 여기에 등록
+        // public const string SceneName = "SceneName";
+    }
 }
