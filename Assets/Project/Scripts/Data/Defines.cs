@@ -21,6 +21,7 @@ namespace Project.Scripts.Data
 
         public const float InputThreshold = 0.01f;
         public const float DirectionReversalThreshold = -0.1f;
+        public const float FacingThreshold = 0.01f;
     }
 
     public readonly struct CameraDefines

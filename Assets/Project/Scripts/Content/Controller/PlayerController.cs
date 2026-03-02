@@ -7,6 +7,7 @@ using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
+using Project.Scripts.Content.UI;
 using Project.Scripts.Core.Managers;
 
 namespace Project.Scripts.Content.Controller
@@ -50,6 +51,8 @@ namespace Project.Scripts.Content.Controller
 
             RecalculatePathData();
             TransitionToIdle();
+
+            UIManager.Instance.PushPage<HudUI>(UILayer.HUD);
         }
         private void Update()
         {
@@ -123,7 +126,7 @@ namespace Project.Scripts.Content.Controller
         private void TransitionToIdle()
         {
             _fsm.ChangeState("Idle",
-                onEnter: () => { currentCharacter.MoveDir(Vector3.zero); },
+                onEnter: () => { currentCharacter.StopNavigation(); },
                 onUpdate: OnIdle
             );
         }

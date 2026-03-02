@@ -16,7 +16,8 @@ namespace Project.Scripts.System.World
         
         [SerializeField] protected float moveSpeed = WorldDefines.DefaultMoveSpeed;
         private Vector3 _lastPosition;
-        
+        private float _lastFacingSign = 1f;
+
         //actual visually rendered child's Transform
         private Transform _visualTransform;
         private Vector3 _initialScale;
@@ -78,6 +79,15 @@ namespace Project.Scripts.System.World
 
             _navMeshAgent.Warp(railPosition);
         }
+
+        public void StopNavigation()
+        {
+            if(!_navMeshAgent.enabled)
+                return;
+
+            if(!_navMeshAgent.isStopped)
+                _navMeshAgent.ResetPath();
+        }
         public void Warp(Vector3 destination)
         {
             if(_navMeshAgent != null)
@@ -97,20 +107,24 @@ namespace Project.Scripts.System.World
         {
             if(animator == null)
                 return;
-            
+
             Vector3 currentPosition = transform.position;
-            Vector3 worldDirection = (currentPosition - _lastPosition);
+            Vector3 worldDirection = currentPosition - _lastPosition;
             _lastPosition = currentPosition;
 
-            animator.SetBool(IsMoveHash, worldDirection.sqrMagnitude > Mathf.Epsilon);
+            bool isMoving = worldDirection.sqrMagnitude > Mathf.Epsilon;
+            animator.SetBool(IsMoveHash, isMoving);
 
-            Vector3 localDirection = CameraManager.Instance.GetCurrentCamera().transform.InverseTransformDirection(worldDirection);
-            if(Mathf.Abs(localDirection.x) > Mathf.Epsilon)
+            if(isMoving)
             {
-                Vector3 targetScale = _initialScale;
-                targetScale.x = Mathf.Abs(_initialScale.x) * (localDirection.x > 0 ? 1 : -1);
-                _visualTransform.localScale = targetScale;
+                Vector3 localDirection = CameraManager.Instance.GetCurrentCamera().transform.InverseTransformDirection(worldDirection);
+                if(Mathf.Abs(localDirection.x) > WorldDefines.FacingThreshold)
+                    _lastFacingSign = localDirection.x > 0 ? 1f : -1f;
             }
+
+            Vector3 targetScale = _initialScale;
+            targetScale.x = Mathf.Abs(_initialScale.x) * _lastFacingSign;
+            _visualTransform.localScale = targetScale;
         }
 
         #endregion
