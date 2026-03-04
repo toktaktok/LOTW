@@ -4,6 +4,7 @@ namespace Project.Scripts.Data
 {
     public readonly struct UIDefines
     {
+        public const float DefaultFadeDuration = 0.3f;
     }
     public readonly struct AnimDefines
     {
