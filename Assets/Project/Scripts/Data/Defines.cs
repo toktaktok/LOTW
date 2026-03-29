@@ -37,7 +37,7 @@ namespace Project.Scripts.Data
     /// </summary>
     public readonly struct SceneDefines
     {
-        // TODO: 씬을 추가할 때마다 여기에 등록
-        // public const string SceneName = "SceneName";
+        public const string Character = "Character";
+        public const string SetUp = "SetUp";
     }
 }
