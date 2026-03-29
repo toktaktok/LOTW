@@ -33,7 +33,12 @@ namespace Project.Scripts.Core.Managers
 
         public void PushPage<T>(UILayer layer = UILayer.Popup) where T : BaseUI
         {
-            EnqueueOperation(async () => { await ProcessPushPage<T>(layer); });
+            EnqueueOperation(async () => { await ProcessPushPage<T>(layer, null); });
+        }
+
+        public void PushPage<T>(UILayer layer, Action<T> setup) where T : BaseUI
+        {
+            EnqueueOperation(async () => { await ProcessPushPage<T>(layer, setup); });
         }
 
         public void PushPageGroup(UILayer layer, params Type[] uiTypes)
@@ -89,13 +94,14 @@ namespace Project.Scripts.Core.Managers
             }
         }
 
-        private async Awaitable ProcessPushPage<T>(UILayer layer) where T : BaseUI
+        private async Awaitable ProcessPushPage<T>(UILayer layer, Action<T> setup) where T : BaseUI
         {
             UIPage newPage = new UIPage();
             T ui = await GetOrCreateUI<T>(layer);
 
             if(ui != null)
             {
+                setup?.Invoke(ui);
                 newPage.Add(ui);
                 ui.transform.SetAsLastSibling();
                 await ui.ShowAsync();

@@ -4,6 +4,7 @@ namespace Project.Scripts.Data
 {
     public readonly struct UIDefines
     {
+        public const float DefaultFadeDuration = 0.3f;
     }
     public readonly struct AnimDefines
     {
@@ -18,12 +19,10 @@ namespace Project.Scripts.Data
         public const float InteractionDistance = 2f;
         
         public const float DefaultMoveSpeed = 5f;
-        public const float DefaultCorrectionSpeed = 10.0f;
-        
-        public const float InputThreshold = 0.01f;
 
+        public const float InputThreshold = 0.01f;
         public const float DirectionReversalThreshold = -0.1f;
-        public const float RailCorrectionDeadzone = 0.05f;
+        public const float FacingThreshold = 0.01f;
     }
 
     public readonly struct CameraDefines

@@ -1,4 +1,5 @@
-using System;
+using Project.Scripts.Content.UI;
+using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using UnityEngine;
@@ -61,7 +62,7 @@ namespace Project.Scripts.Content.Controller
             }
 
             if(closestInteractable != null)
-                closestInteractable.Interact(this.gameObject);
+                UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup, ui => ui.Setup(closestInteractable, this.gameObject));
         }
     }
 }

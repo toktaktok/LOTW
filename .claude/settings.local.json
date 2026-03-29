@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C \"C:/Users/TokTak/Desktop/Local/Unity/LOTW\" status)",
+      "Bash(git -C \"C:/Users/TokTak/Desktop/Local/Unity/LOTW\" log --oneline -5)",
+      "Bash(git -C \"C:/Users/TokTak/Desktop/Local/Unity/LOTW\" add CLAUDE.md .claude/)",
+      "Bash(git -C:*)"
+    ]
+  }
+}

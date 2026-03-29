@@ -2,7 +2,7 @@ using UnityEngine;
 using Unity.Cinemachine;
 using Project.Scripts.Core.Managers;
 
-namespace Project.Scripts.Content.Camera
+namespace Project.Scripts.System.World
 {
     public class SceneCameraStarter : MonoBehaviour
     {
