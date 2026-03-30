@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using Project.Scripts.Core.Managers;
+using Project.Scripts.Data;
 using Project.Scripts.System.UI;
 
 namespace Project.Scripts.Content.UI
@@ -12,12 +13,16 @@ namespace Project.Scripts.Content.UI
     public class InventoryUI : BaseUI
     {
         [Header("Inventory")]
+        [SerializeField] private Transform slotContainer;
         [SerializeField] private Button closeButton;
+
+        private InventorySlotUI[] _slotUIs;
 
         protected override void Awake()
         {
             base.Awake();
             closeButton?.onClick.AddListener(OnClose);
+            CacheSlotUIs();
         }
 
         private void OnEnable()
@@ -31,10 +36,31 @@ namespace Project.Scripts.Content.UI
             InventoryManager.OnInventoryChanged -= Refresh;
         }
 
+        private void CacheSlotUIs()
+        {
+            if (slotContainer != null)
+                _slotUIs = slotContainer.GetComponentsInChildren<InventorySlotUI>(true);
+        }
+
         public void Refresh()
         {
-            // UI 슬롯 갱신은 프리팹 구성에 따라 구현합니다.
-            // InventoryManager.Instance.Slots 를 순회하며 각 슬롯 UI를 업데이트하세요.
+            if (_slotUIs == null || _slotUIs.Length == 0) return;
+
+            var slots = InventoryManager.Instance.Slots;
+
+            for (int i = 0; i < _slotUIs.Length; i++)
+            {
+                if (i < slots.Count)
+                {
+                    var slot = slots[i];
+                    ItemData? data = slot.IsEmpty ? null : InventoryManager.Instance.GetItemData(slot.itemId);
+                    _slotUIs[i].Set(slot, data);
+                }
+                else
+                {
+                    _slotUIs[i].SetEmpty();
+                }
+            }
         }
 
         private void OnClose()
