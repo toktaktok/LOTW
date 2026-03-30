@@ -6,8 +6,40 @@ using Project.Scripts.Data;
 namespace Project.Scripts.Core.Managers
 {
     /// <summary>
+    /// 아이템 ID로부터 아이템 데이터를 조회하는 인터페이스.
+    /// Resources 기반 기본 구현 외에 다른 데이터 소스로 교체 가능합니다.
+    /// </summary>
+    public interface IItemDataProvider
+    {
+        ItemData? GetItemData(string itemId);
+    }
+
+    /// <summary>
+    /// Resources/Items/{itemId}에서 ItemDatabase SO를 로드하는 기본 구현.
+    /// </summary>
+    public class ResourceItemDataProvider : IItemDataProvider
+    {
+        private readonly Dictionary<string, ItemData> _cache = new();
+
+        public ItemData? GetItemData(string itemId)
+        {
+            if (_cache.TryGetValue(itemId, out ItemData data))
+                return data;
+
+            var loaded = Resources.Load<ItemDatabase>($"Items/{itemId}");
+            if (loaded != null)
+            {
+                _cache[itemId] = loaded.Data;
+                return loaded.Data;
+            }
+
+            return null;
+        }
+    }
+
+    /// <summary>
     /// 플레이어 인벤토리를 관리합니다.
-    /// ItemData는 Resources/Items/에서 로드합니다.
+    /// IItemDataProvider를 통해 아이템 데이터를 조회합니다.
     /// </summary>
     public class InventoryManager : Singleton<InventoryManager>
     {
@@ -22,7 +54,7 @@ namespace Project.Scripts.Core.Managers
         [SerializeField] private int maxSlots = 20;
 
         private readonly List<ItemSlot> _slots = new();
-        private readonly Dictionary<string, ItemData> _itemDatabase = new();
+        private IItemDataProvider _itemDataProvider;
 
         #endregion
 
@@ -38,6 +70,7 @@ namespace Project.Scripts.Core.Managers
         protected override void Awake()
         {
             base.Awake();
+            _itemDataProvider = new ResourceItemDataProvider();
             InitializeSlots();
         }
 
@@ -50,21 +83,19 @@ namespace Project.Scripts.Core.Managers
 
         #endregion
 
-        #region Item Database
+        #region Item Data Provider
+
+        /// <summary>
+        /// 아이템 데이터 제공자를 교체합니다. 기본값은 ResourceItemDataProvider입니다.
+        /// </summary>
+        public void SetItemDataProvider(IItemDataProvider provider)
+        {
+            _itemDataProvider = provider;
+        }
 
         public ItemData? GetItemData(string itemId)
         {
-            if (_itemDatabase.TryGetValue(itemId, out ItemData data))
-                return data;
-
-            var loaded = Resources.Load<ItemDatabase>($"Items/{itemId}");
-            if (loaded != null)
-            {
-                _itemDatabase[itemId] = loaded.Data;
-                return loaded.Data;
-            }
-
-            return null;
+            return _itemDataProvider?.GetItemData(itemId);
         }
 
         #endregion
@@ -78,7 +109,6 @@ namespace Project.Scripts.Core.Managers
             ItemData? data = GetItemData(itemId);
             int maxStack = data?.maxStack ?? 99;
 
-            // Try stacking on existing slots first
             for (int i = 0; i < _slots.Count; i++)
             {
                 if (_slots[i].itemId == itemId && _slots[i].count < maxStack)
@@ -90,7 +120,6 @@ namespace Project.Scripts.Core.Managers
                 }
             }
 
-            // Place remainder in empty slots
             while (amount > 0)
             {
                 int emptyIndex = FindEmptySlot();

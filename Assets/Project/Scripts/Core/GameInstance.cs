@@ -1,13 +1,25 @@
 using System;
 using UnityEngine;
+using Project.Scripts.Core.Managers;
 
 namespace Project.Scripts.Core
 {
     /// <summary>
+    /// 게임 설정에 대한 읽기 전용 인터페이스.
+    /// 다른 시스템이 GameInstance에 직접 의존하지 않도록 합니다.
+    /// </summary>
+    public interface ISettingsProvider : IVolumeProvider
+    {
+        string Language { get; }
+        int CurrentSaveSlot { get; }
+    }
+
+    /// <summary>
     /// 게임 전역 상태를 관리합니다.
     /// 게임 설정(볼륨, 언어 등)과 현재 세이브 슬롯 정보를 보관합니다.
+    /// ISettingsProvider를 구현하여 읽기 전용 접근을 제공합니다.
     /// </summary>
-    public class GameInstance : Singleton<GameInstance>
+    public class GameInstance : Singleton<GameInstance>, ISettingsProvider
     {
         #region Events
 

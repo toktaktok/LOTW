@@ -1,13 +1,23 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using Project.Scripts.Core;
 
 namespace Project.Scripts.Core.Managers
 {
     /// <summary>
+    /// 볼륨 정보를 제공하는 인터페이스.
+    /// AudioManager가 이 인터페이스를 통해 볼륨을 읽으므로,
+    /// GameInstance 외 다른 시스템으로도 교체 가능합니다.
+    /// </summary>
+    public interface IVolumeProvider
+    {
+        float MasterVolume { get; }
+        float BgmVolume { get; }
+        float SfxVolume { get; }
+    }
+
+    /// <summary>
     /// BGM과 SFX 재생을 관리하는 싱글턴 매니저.
-    /// GameInstance의 볼륨 설정과 연동됩니다.
+    /// IVolumeProvider를 통해 볼륨을 읽습니다.
     /// </summary>
     public class AudioManager : Singleton<AudioManager>
     {
@@ -21,6 +31,7 @@ namespace Project.Scripts.Core.Managers
         [SerializeField] private float crossfadeDuration = 1f;
 
         private Coroutine _crossfadeRoutine;
+        private IVolumeProvider _volumeProvider;
 
         #endregion
 
@@ -43,14 +54,40 @@ namespace Project.Scripts.Core.Managers
                 sfxSource.loop = false;
                 sfxSource.playOnAwake = false;
             }
+        }
 
-            GameInstance.OnSettingsChanged += ApplyVolume;
+        private void Start()
+        {
+            if (_volumeProvider == null)
+                SetVolumeProvider(GameInstance.Instance);
+
             ApplyVolume();
         }
 
         private void OnDestroy()
         {
             GameInstance.OnSettingsChanged -= ApplyVolume;
+        }
+
+        #endregion
+
+        #region Volume Provider
+
+        /// <summary>
+        /// 볼륨 제공자를 주입합니다. 기본값은 GameInstance입니다.
+        /// </summary>
+        public void SetVolumeProvider(IVolumeProvider provider)
+        {
+            // 기존 이벤트 해제
+            GameInstance.OnSettingsChanged -= ApplyVolume;
+
+            _volumeProvider = provider;
+
+            // GameInstance인 경우 자동으로 이벤트 구독
+            if (provider is GameInstance)
+                GameInstance.OnSettingsChanged += ApplyVolume;
+
+            ApplyVolume();
         }
 
         #endregion
@@ -99,7 +136,6 @@ namespace Project.Scripts.Core.Managers
             float half = crossfadeDuration * 0.5f;
             float startVol = bgmSource.volume;
 
-            // Fade out
             float timer = 0f;
             while (timer < half)
             {
@@ -111,7 +147,6 @@ namespace Project.Scripts.Core.Managers
             bgmSource.clip = newClip;
             bgmSource.Play();
 
-            // Fade in
             float targetVol = GetBgmVolume();
             timer = 0f;
             while (timer < half)
@@ -163,20 +198,23 @@ namespace Project.Scripts.Core.Managers
 
         #region Volume
 
-        private void ApplyVolume()
+        public void ApplyVolume()
         {
+            if (_volumeProvider == null) return;
             bgmSource.volume = GetBgmVolume();
             sfxSource.volume = GetSfxVolume();
         }
 
         private float GetBgmVolume()
         {
-            return GameInstance.Instance.MasterVolume * GameInstance.Instance.BgmVolume;
+            if (_volumeProvider == null) return 1f;
+            return _volumeProvider.MasterVolume * _volumeProvider.BgmVolume;
         }
 
         private float GetSfxVolume()
         {
-            return GameInstance.Instance.MasterVolume * GameInstance.Instance.SfxVolume;
+            if (_volumeProvider == null) return 1f;
+            return _volumeProvider.MasterVolume * _volumeProvider.SfxVolume;
         }
 
         #endregion
