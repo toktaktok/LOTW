@@ -1,7 +1,4 @@
 using UnityEngine;
-using UnityEngine.Events;
-using UnityEngine.UIElements;
-
 using Project.Scripts.Data;
 
 namespace Project.Scripts.System.UI

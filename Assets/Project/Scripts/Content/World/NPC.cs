@@ -16,6 +16,7 @@ namespace Project.Scripts.Content.World
         [SerializeField] private string npcName = "NPC";
 
         [Header("Dialogue")]
+        [SerializeField] private DialogueDatabase dialogueAsset;
         [SerializeField] private DialogueData dialogue;
 
         [Header("Interaction")]
@@ -23,16 +24,20 @@ namespace Project.Scripts.Content.World
 
         public string InteractionPrompt => promptText;
 
+        private DialogueData ResolvedDialogue =>
+            dialogueAsset != null ? dialogueAsset.Data : dialogue;
+
         public void Interact(GameObject interactor)
         {
-            if (dialogue.lines == null || dialogue.lines.Length == 0)
+            var resolved = ResolvedDialogue;
+            if (resolved.lines == null || resolved.lines.Length == 0)
             {
                 Debug.LogWarning($"[NPC] {npcName}: 대화 데이터가 비어 있습니다.");
                 return;
             }
 
             UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup,
-                ui => ui.SetupDialogue(dialogue, this, interactor));
+                ui => ui.SetupDialogue(resolved, this, interactor));
         }
 
 #if UNITY_EDITOR
