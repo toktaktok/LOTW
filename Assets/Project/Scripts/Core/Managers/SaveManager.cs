@@ -67,13 +67,21 @@ namespace Project.Scripts.Core.Managers
                 return null;
             }
 
-            string json = File.ReadAllText(path);
-            SaveData data = JsonUtility.FromJson<SaveData>(json);
+            try
+            {
+                string json = File.ReadAllText(path);
+                SaveData data = JsonUtility.FromJson<SaveData>(json);
 
-            GameInstance.Instance.SelectSaveSlot(slot);
-            OnGameLoaded?.Invoke(slot);
+                GameInstance.Instance.SelectSaveSlot(slot);
+                OnGameLoaded?.Invoke(slot);
 
-            return data;
+                return data;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[SaveManager] Failed to load slot {slot}: {ex.Message}");
+                return null;
+            }
         }
 
         public bool HasSave(int slot)
@@ -93,8 +101,16 @@ namespace Project.Scripts.Core.Managers
             string path = GetSavePath(slot);
             if (!File.Exists(path)) return null;
 
-            string json = File.ReadAllText(path);
-            return JsonUtility.FromJson<SaveData>(json);
+            try
+            {
+                string json = File.ReadAllText(path);
+                return JsonUtility.FromJson<SaveData>(json);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[SaveManager] Failed to peek slot {slot}: {ex.Message}");
+                return null;
+            }
         }
 
         #endregion

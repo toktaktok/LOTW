@@ -115,6 +115,9 @@ namespace Project.Scripts.Content.Controller
                 yield return null;
             }
 
+            if(timeout <= 0)
+                Debug.LogWarning($"[PlayerController] MoveAndSwitchRoutine timed out moving to {targetNode.name}");
+
             currentBaseNode = targetNode;
 
             if(targetNode.neighbors.Count > 0)
@@ -169,7 +172,11 @@ namespace Project.Scripts.Content.Controller
             if(currentCharacter==null || currentBaseNode==null)
                 return;
 
-            Vector3 camRight = CameraManager.Instance.GetCurrentCamera().transform.right;
+            var cam = CameraManager.Instance.GetCurrentCamera();
+            if(cam == null)
+                return;
+
+            Vector3 camRight = cam.transform.right;
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
 
