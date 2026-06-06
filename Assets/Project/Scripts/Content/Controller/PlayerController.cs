@@ -88,7 +88,7 @@ namespace Project.Scripts.Content.Controller
             _isFreeMoving = true;
             currentCharacter.MoveTo(targetNode.transform.position);
 
-            float timeout = 10f;
+            float timeout = WorldDefines.MoveAndSwitchTimeout;
             while(Vector3.Distance(currentCharacter.transform.position, targetNode.transform.position) >
                   WorldDefines.InteractionDistance && timeout>0)
             {
