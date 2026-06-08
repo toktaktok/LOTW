@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
-using Project.Scripts.Core;
 using Project.Scripts.Data;
-using Project.Scripts.Data.Table;
+using DialogueData = Project.Scripts.Data.Table.DialogueData;
 
 namespace Project.Scripts.Core.Managers
 {
