@@ -4,6 +4,7 @@ namespace Project.Scripts.Data
 {
     public readonly struct UIDefines
     {
+        public const float DefaultFadeDuration = 0.3f;
     }
     public readonly struct AnimDefines
     {
@@ -30,5 +31,15 @@ namespace Project.Scripts.Data
     {
         public const int DefaultCameraPriority = 10;
         public const int FirstCameraPriority = 20;
+    }
+
+    /// <summary>
+    /// 씬 이름 상수. 씬을 추가할 때마다 여기에 등록합니다.
+    /// 사용 예: SceneTransitionManager.Instance.TransitionTo(SceneDefines.FlowerShop, "FromStreet");
+    /// </summary>
+    public readonly struct SceneDefines
+    {
+        public const string Character = "Character";
+        public const string SetUp = "SetUp";
     }
 }

@@ -81,6 +81,25 @@ namespace Project.Scripts.Content.Controller
             StartCoroutine(MoveAndSwitchRoutine(targetNode, newCam, camDuration));
         }
 
+        /// <summary>
+        /// 씬 전환 후 SceneTransitionManager가 호출합니다.
+        /// 플레이어를 지정 위치로 즉시 이동하고 Rail 시작 노드를 설정합니다.
+        /// </summary>
+        public void WarpToEntrance(Vector3 position, RailNode startNode)
+        {
+            if (currentCharacter != null)
+                currentCharacter.Warp(position);
+
+            if (startNode != null)
+            {
+                currentBaseNode = startNode;
+                currentTargetNode = startNode.neighbors.Count > 0 ? startNode.neighbors[0] : startNode;
+                RecalculatePathData();
+            }
+
+            TransitionToIdle();
+        }
+
         private IEnumerator MoveAndSwitchRoutine(RailNode targetNode, CinemachineCamera newCam, float camDuration)
         {
             TransitionToIdle();
@@ -95,6 +114,9 @@ namespace Project.Scripts.Content.Controller
                 timeout -= Time.deltaTime;
                 yield return null;
             }
+
+            if(timeout <= 0)
+                Debug.LogWarning($"[PlayerController] MoveAndSwitchRoutine timed out moving to {targetNode.name}");
 
             currentBaseNode = targetNode;
 
@@ -150,7 +172,11 @@ namespace Project.Scripts.Content.Controller
             if(currentCharacter==null || currentBaseNode==null)
                 return;
 
-            Vector3 camRight = CameraManager.Instance.GetCurrentCamera().transform.right;
+            var cam = CameraManager.Instance.GetCurrentCamera();
+            if(cam == null)
+                return;
+
+            Vector3 camRight = cam.transform.right;
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
 

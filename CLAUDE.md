@@ -1,60 +1,45 @@
 # CLAUDE.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+## Behavior
+
+Think before acting. Read files before editing. Be concise in output, thorough in reasoning. Edit over rewrite. No redundant file reads. No sycophantic openers/closers. No question restating. No unsolicited suggestions or scope creep. No over-engineering. ASCII only in output. If unsure, say so. Never guess file paths. User instructions override this file.
 
 ## Project
 
-**LOTW** - A 2.5D side-scrolling game built in Unity 6 (6000.3.2f1) using URP, Cinemachine 3, the New Input System, and NavMesh.
+**LOTW** -- 2.5D side-scrolling game, Unity 6 (6000.3.2f1), URP, Cinemachine 3, New Input System, NavMesh.
 
 ## Commands
 
-This is a Unity project with no build CLI scripts. All building and testing goes through the Unity Editor.
-
-**Run tests (Unity Test Framework):**
-- Unity Editor > Window > General > Test Runner
-- No test files exist yet; `com.unity.test-framework` 1.6.0 is installed
-
-**Open the project:**
-- Open Unity Hub, add the project root, and launch with Unity 6000.3.2f1
-
-**Active development scene:** `Assets/Project/Scenes/Test/Character.unity`
+No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Runner. EditMode tests in `Assets/Tests/EditMode/`. Dev scene: `Assets/Project/Scenes/Test/Character.unity`.
 
 ## Architecture
 
-### Boot Flow
+**Assemblies:** `Project.Scripts` (runtime, `Assets/Project/Scripts/Project.Scripts.asmdef`), `Project.Scripts.Editor` (editor-only), `EditModeTests` (tests, refs `Project.Scripts`).
 
-`Bootstrapper.Execute()` runs via `[RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]` before any scene loads. It checks for `SystemRoot` and, if absent, instantiates `Resources/SubSystemCollection.prefab` as `DontDestroyOnLoad`. This prefab holds all manager singletons (`CameraManager`, `UIManager`, `WorldManager`, `CoreManager`). No scene needs a manual manager setup.
+**Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory.
 
-### Singleton Pattern
+**Singleton:** `Singleton<T>` (Core/Singleton.cs) -- auto-creates, DontDestroyOnLoad, self-destructs duplicates. All managers extend this.
 
-`Singleton<T>` (in `Core/Singleton.cs`) is the base for all managers. It auto-creates if missing, marks itself `DontDestroyOnLoad`, and self-destructs on duplicates. All managers extend this.
+**Rail Movement:** Player moves on `RailNode` graph (max 2 neighbors, linear). `PlayerController` has delegate `StateMachine` with Idle/Move states. `MoveOnPath()` projects camera-relative input onto rail segment. `RailConnector : IInteractable` connects rail sections via warp/walk to `destinationNode`, optional camera switch.
 
-### Rail Movement System
+**Interaction:** `PlayerInteractor` uses `Physics.OverlapSphereNonAlloc` (radius `WorldDefines.InteractionDistance = 2f`) each frame. `HudUI` shows hint. `IInteractable.Interact(gameObject)` is the interface.
 
-The player moves along a graph of `RailNode` waypoints (max 2 neighbors each — strictly linear, no branching). `PlayerController` owns a delegate-based `StateMachine<PlayerController>` with **Idle** and **Move** states. In `MoveOnPath()`, camera-relative input is projected onto the current rail segment to find direction; a correction vector keeps the character on the line. When progress `t >= 1.0`, the base node advances.
+**Camera:** `CameraManager` sets Cinemachine priority (inactive=10, active=20). `CameraTrigger` (BoxCollider) switches on enter/exit. `BillboardHandler` subscribes to `CinemachineCore.CameraUpdatedEvent`.
 
-`RailConnector : IInteractable` is the mechanism for connecting separate rail sections — it either warps or walks the player to a `destinationNode` and optionally triggers a camera switch.
+**UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs from `Resources/UI/{TypeName}.prefab`. Panels: HudUI, DialogueUI, InventoryUI.
 
-### Interaction
+**Dialogue:** `DialogueData` (Data/Structs.cs) has `DialogueLine[]` (speaker+text). `DialogueUI` modes: prompt (confirm/cancel) and dialogue (multi-line via `SetupDialogue()`/`AdvanceLine()`). `NPC : WorldObject, IInteractable` uses dialogue mode.
 
-`PlayerInteractor` polls `InputSystem_Actions.Player.Interact` each frame and calls `Physics.OverlapSphereNonAlloc` (radius: `WorldDefines.InteractionDistance = 2f`) to find the closest `IInteractable`. `IInteractable.Interact(gameObject)` is the only interface method.
+**Audio:** `AudioManager` -- BGM (crossfade), SFX. Volume = MasterVolume * BgmVolume/SfxVolume. Listens to `GameInstance.OnSettingsChanged`.
 
-### Camera System
+**Save:** `SaveManager` serializes `SaveData` (scene, entrance, inventory, flags, timestamp) to JSON in `persistentDataPath/Saves/`. 3 slots. Integrates with `GameInstance.SelectSaveSlot()`.
 
-`CameraManager` controls Cinemachine priority: inactive cameras sit at priority **10**, the active camera is raised to **20**. `CameraTrigger` (BoxCollider) switches cameras on enter/exit. `BillboardHandler` subscribes to `CinemachineCore.CameraUpdatedEvent` to keep sprites camera-facing.
+**Inventory:** `InventoryManager` -- slot-based, stacking. `ItemData` (id, name, desc, icon, maxStack). `ItemDatabase` ScriptableObjects in `Resources/Items/`. `ToSaveData()`/`LoadFromSaveData()` for persistence.
 
-### UI System
+**GameInstance:** Global settings (volumes, language) via PlayerPrefs. Current save slot. Fires `OnSettingsChanged`.
 
-`UIManager` uses Unity 6's `Awaitable` (not coroutines or Tasks) with a `Queue<Func<Awaitable>>` to serialize operations. UI is managed as a push/pop page stack. `BaseUI` is the abstract base for all panels, supporting **Fade** (CanvasGroup alpha) or **Animation** (Animator trigger) transitions. UI prefabs are loaded from `Resources/UI/{TypeName}.prefab`.
+**Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
 
-### Key Defines
+**Data:** `Data/Structs.cs` -- DialogueLine, DialogueData, ItemData, ItemSlot, SaveData. `Data/ItemDatabase.cs` -- ScriptableObject wrapper (CreateAssetMenu: `LOTW/Item Data`).
 
-All magic numbers live in `Data/Defines.cs` as `readonly struct` types: `WorldDefines`, `CameraDefines`, `AnimDefines`, `UIDefines`. Editor gizmo constants are in `Editor/Data/Defines.cs` (`ToolDefines`).
-
-### Namespace Convention
-
-Namespaces mirror folder paths under `Assets/Project/Scripts/`:
-- `Project.Scripts.Core` / `Project.Scripts.Core.Managers`
-- `Project.Scripts.System.World` / `Project.Scripts.System.UI`
-- `Project.Scripts.Content.Controller` / `Project.Scripts.Content.World`
-- `Project.Scripts.Editor`
+**Namespaces:** Mirror folder paths -- `Project.Scripts.Core(.Managers)`, `Project.Scripts.System.World/.UI`, `Project.Scripts.Content.Controller/.World/.UI`, `Project.Scripts.Data`, `Project.Scripts.Editor`.

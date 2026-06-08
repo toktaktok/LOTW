@@ -18,9 +18,9 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
             if(_instance != null)
                 return _instance;
             
-            GameObject obj = new GameObject();
-            obj.name = typeof(T).Name;
+            GameObject obj = new GameObject(typeof(T).Name);
             _instance = obj.AddComponent<T>();
+            DontDestroyOnLoad(obj);
             return _instance;
         }
     }
