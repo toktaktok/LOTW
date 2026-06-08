@@ -1,0 +1,41 @@
+[
+  {
+    "dataId": 1,
+    "speakerId": "npc_shopkeeper",
+    "speakerName": "상점 주인",
+    "text": "어서오세요! 무엇을 도와드릴까요?",
+    "nextId": -1,
+    "choiceIds": [
+      2,
+      3
+    ]
+  },
+  {
+    "dataId": 2,
+    "speakerId": "player",
+    "speakerName": "플레이어",
+    "text": "꽃을 좀 구경해도 될까요?",
+    "nextId": 4
+  },
+  {
+    "dataId": 3,
+    "speakerId": "player",
+    "speakerName": "플레이어",
+    "text": "아니요, 그냥 지나가는 길이에요.",
+    "nextId": 5
+  },
+  {
+    "dataId": 4,
+    "speakerId": "npc_shopkeeper",
+    "speakerName": "상점 주인",
+    "text": "물론이죠! 오늘 들어온 장미가 특히 예쁘답니다.",
+    "nextId": -1
+  },
+  {
+    "dataId": 5,
+    "speakerId": "npc_shopkeeper",
+    "speakerName": "상점 주인",
+    "text": "그렇군요. 또 들러주세요!",
+    "nextId": -1
+  }
+]
