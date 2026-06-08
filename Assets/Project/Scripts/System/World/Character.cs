@@ -44,6 +44,11 @@ namespace Project.Scripts.System.World
             
             if(spriteRenderer == null)
                 spriteRenderer = GetComponentInChildren<SpriteRenderer>();
+            if(spriteRenderer == null)
+            {
+                Debug.LogError($"[Character] No SpriteRenderer found on {name}");
+                return;
+            }
             _visualTransform = spriteRenderer.transform;
             _initialScale = _visualTransform.localScale;
         }
@@ -117,9 +122,13 @@ namespace Project.Scripts.System.World
 
             if(isMoving)
             {
-                Vector3 localDirection = CameraManager.Instance.GetCurrentCamera().transform.InverseTransformDirection(worldDirection);
-                if(Mathf.Abs(localDirection.x) > WorldDefines.FacingThreshold)
-                    _lastFacingSign = localDirection.x > 0 ? 1f : -1f;
+                var cam = CameraManager.Instance.GetCurrentCamera();
+                if(cam != null)
+                {
+                    Vector3 localDirection = cam.transform.InverseTransformDirection(worldDirection);
+                    if(Mathf.Abs(localDirection.x) > WorldDefines.FacingThreshold)
+                        _lastFacingSign = localDirection.x > 0 ? 1f : -1f;
+                }
             }
 
             Vector3 targetScale = _initialScale;
