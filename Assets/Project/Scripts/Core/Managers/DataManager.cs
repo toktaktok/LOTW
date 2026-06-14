@@ -41,7 +41,7 @@ namespace Project.Scripts.Core.Managers
         protected override void Awake()
         {
             base.Awake();
-            LoadAllTables().Cancel();
+            LoadAllTables().Forget();
         }
 
         #endregion
