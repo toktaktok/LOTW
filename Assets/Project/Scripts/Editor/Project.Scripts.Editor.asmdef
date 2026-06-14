@@ -2,7 +2,9 @@
     "name": "Project.Scripts.Editor",
     "rootNamespace": "Project.Scripts.Editor",
     "references": [
-        "Project.Scripts"
+        "Project.Scripts",
+        "AloneSoft.VoxelImporter",
+        "AloneSoft.VoxelImporter.Editor"
     ],
     "includePlatforms": [
         "Editor"
