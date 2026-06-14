@@ -2,7 +2,6 @@
 #define VOXEL_DSS_INPUT_INCLUDED
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/SurfaceInput.hlsl"
 
 // SRP-Batcher: every per-material scalar/vector/color lives in this single named block.
 CBUFFER_START(UnityPerMaterial)
