@@ -25,6 +25,10 @@ namespace Project.Scripts.System.World
         public Vector3 SpawnPosition => spawnPoint != null ? spawnPoint.position : transform.position;
         public RailNode StartNode => startNode;
 
+        /// <summary>맵 빌더가 런타임에 역직렬화된 값을 주입합니다.</summary>
+        public void SetStartNode(RailNode node) => startNode = node;
+        public void SetEntranceId(string id) => entranceId = id;
+
 #if UNITY_EDITOR
         private void OnDrawGizmos()
         {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Project.Scripts.Data;
 using DialogueData = Project.Scripts.Data.Table.DialogueData;
+using MapData = Project.Scripts.Data.Table.MapData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -84,6 +85,7 @@ namespace Project.Scripts.Core.Managers
         private async Awaitable LoadAllTables()
         {
             await LoadTable<DialogueData>("Dialogue");
+            await LoadTable<MapData>("Map");
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
             // await LoadTable<ItemData>("Item");

@@ -12,6 +12,9 @@ namespace Project.Scripts.System.World
         public int ObjectID => objectID;
         public Vector3 Position => transform.position;
 
+        /// <summary>맵 빌더가 할당자(MapModel.nextId)로 발급한 고유 ID를 스폰 시 주입합니다.</summary>
+        public void SetObjectID(int id) => objectID = id;
+
         #endregion
 
         #region Methods

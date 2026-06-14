@@ -1,0 +1,17 @@
+[
+  {
+    "dataId": 1,
+    "mapName": "default",
+    "nextId": 4,
+    "nodes": [
+      { "id": 1, "position": { "x": -2.0, "y": 0.0, "z": 0.0 }, "nodeColor": { "r": 1.0, "g": 0.55, "b": 0.0, "a": 1.0 }, "radius": 0.3 },
+      { "id": 2, "position": { "x": 0.0, "y": 0.0, "z": 0.0 }, "nodeColor": { "r": 1.0, "g": 0.55, "b": 0.0, "a": 1.0 }, "radius": 0.3 },
+      { "id": 3, "position": { "x": 2.0, "y": 0.0, "z": 0.0 }, "nodeColor": { "r": 1.0, "g": 0.55, "b": 0.0, "a": 1.0 }, "radius": 0.3 }
+    ],
+    "edges": [
+      { "a": 1, "b": 2 },
+      { "a": 2, "b": 3 }
+    ],
+    "placeables": []
+  }
+]
