@@ -45,18 +45,22 @@ Shader "LOTW/VoxelDSS"
             #pragma vertex VoxelDSSForwardVertex
             #pragma fragment VoxelDSSForwardFragment
 
-            // URP lighting keywords
+            // URP 17.3 lighting keywords (mirrors stock Lit ForwardLit; APV/decals/debug omitted)
             #pragma multi_compile _ _MAIN_LIGHT_SHADOWS _MAIN_LIGHT_SHADOWS_CASCADE _MAIN_LIGHT_SHADOWS_SCREEN
             #pragma multi_compile _ _ADDITIONAL_LIGHTS_VERTEX _ADDITIONAL_LIGHTS
             #pragma multi_compile_fragment _ _ADDITIONAL_LIGHT_SHADOWS
-            #pragma multi_compile_fragment _ _SHADOWS_SOFT
-            #pragma multi_compile _ _FORWARD_PLUS
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BLENDING
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_BOX_PROJECTION
+            #pragma multi_compile_fragment _ _REFLECTION_PROBE_ATLAS
+            #pragma multi_compile_fragment _ _SHADOWS_SOFT _SHADOWS_SOFT_LOW _SHADOWS_SOFT_MEDIUM _SHADOWS_SOFT_HIGH
             #pragma multi_compile_fragment _ _SCREEN_SPACE_OCCLUSION
+            #pragma multi_compile_fragment _ _LIGHT_COOKIES
+            #pragma multi_compile _ _LIGHT_LAYERS
+            #pragma multi_compile _ _CLUSTER_LIGHT_LOOP
             #pragma multi_compile _ LIGHTMAP_SHADOW_MIXING
             #pragma multi_compile _ SHADOWS_SHADOWMASK
             #pragma multi_compile _ DIRLIGHTMAP_COMBINED
             #pragma multi_compile _ LIGHTMAP_ON
-            #pragma multi_compile_fragment _ _LIGHT_LAYERS
             #pragma multi_compile_fog
 
             // DSS feature keywords
@@ -128,7 +132,11 @@ Shader "LOTW/VoxelDSS"
             #pragma fragment VoxelDSSDepthNormalsFragment
             #pragma shader_feature_local_fragment _DSS_CENTROID
             #pragma shader_feature_local_fragment _DSS_WEIGHTED_LOOP
+
+            // Match stock DepthNormals normals-texture encoding contract for SSAO/decals.
+            #pragma multi_compile_fragment _ _GBUFFER_NORMALS_OCT
             #pragma multi_compile_instancing
+            #include_with_pragmas "Packages/com.unity.render-pipelines.universal/ShaderLibrary/RenderingLayers.hlsl"
 
             #include "VoxelDSSInput.hlsl"
             #include "VoxelDSSDepthNormalsPass.hlsl"

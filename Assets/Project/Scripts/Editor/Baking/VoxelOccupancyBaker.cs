@@ -107,7 +107,7 @@ namespace Project.Scripts.Editor.Baking
             int n = Mathf.Max(8, resolution);
             var grid = new VoxelOccupancyGrid(n, n, n);
             float c = (n - 1) * 0.5f;
-            float radius = c * 0.85f;
+            float radius = c; // inscribed: shell meets the cube face centers so faces show rounding
             float r2 = radius * radius;
             for (int z = 0; z < n; ++z)
             for (int y = 0; y < n; ++y)
@@ -124,11 +124,10 @@ namespace Project.Scripts.Editor.Baking
             {
                 // 데모 큐브: 오브젝트 공간 [-0.5,0.5] 정육면체를 그리드에 매핑.
                 // grid = (objectPos / importScale) - (localOffset + importOffset).
-                // importScale = 1/n (정육면체 한 변이 n복셀에 대응), localOffset = (0,0,0),
-                // importOffset = -(-0.5 / importScale) 로 [-0.5,0.5] -> [0,n] 정렬.
+                // [-0.5,0.5] -> grid[0,n] 정렬: importScale = 1/n, localOffset = 0, importOffset = -0.5n.
                 float s = 1.0f / n;
                 var importScale = new Vector3(s, s, s);
-                var importOffset = new Vector3(0.5f * n, 0.5f * n, 0.5f * n);
+                var importOffset = new Vector3(-0.5f * n, -0.5f * n, -0.5f * n);
                 var localOffset = Vector3.zero;
                 ApplyToMaterial(material, AssetDatabase.LoadAssetAtPath<Texture3D>(assetPath),
                     new Vector3(n, n, n), importScale, importOffset, localOffset);

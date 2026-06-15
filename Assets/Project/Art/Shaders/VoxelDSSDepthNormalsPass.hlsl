@@ -34,16 +34,36 @@ Varyings VoxelDSSDepthNormalsVertex(Attributes IN)
     return OUT;
 }
 
-half4 VoxelDSSDepthNormalsFragment(Varyings IN) : SV_Target
+// Output must match stock URP DepthNormals (LitDepthNormalsPass): WORLD-space normal into
+// SV_Target0, oct-packed under _GBUFFER_NORMALS_OCT, else NormalizeNormalPerPixel(normalWS).
+// SSAO/decals read _CameraNormalsTexture with this exact encoding.
+void VoxelDSSDepthNormalsFragment(
+    Varyings IN
+    , out half4 outNormalWS : SV_Target0
+#ifdef _WRITE_RENDERING_LAYERS
+    , out uint outRenderingLayers : SV_Target1
+#endif
+)
 {
     UNITY_SETUP_INSTANCE_ID(IN);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 
     float3 normalOS = DSS_DeriveNormalOS(IN.positionOS, IN.faceNormalOS);
     float3 normalWS = normalize(TransformObjectToWorldNormal(normalOS));
-    float3 normalVS = normalize(TransformWorldToViewNormal(normalWS, true));
 
-    return half4(normalVS, 0.0);
+#if defined(_GBUFFER_NORMALS_OCT)
+    float2 octNormalWS = PackNormalOctQuadEncode(normalWS);
+    float2 remappedOctNormalWS = saturate(octNormalWS * 0.5 + 0.5);
+    half3 packedNormalWS = PackFloat2To888(remappedOctNormalWS);
+    outNormalWS = half4(packedNormalWS, 0.0);
+#else
+    outNormalWS = half4(NormalizeNormalPerPixel(normalWS), 0.0);
+#endif
+
+#ifdef _WRITE_RENDERING_LAYERS
+    uint renderingLayers = GetMeshRenderingLayer();
+    outRenderingLayers = EncodeMeshRenderingLayer(renderingLayers);
+#endif
 }
 
 #endif // VOXEL_DSS_DEPTHNORMALS_PASS_INCLUDED

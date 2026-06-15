@@ -77,11 +77,8 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(IN.positionCS);
     inputData.shadowMask  = SAMPLE_SHADOWMASK(IN.staticLightmapUV);
 
-#if defined(_SCREEN_SPACE_OCCLUSION)
-    AmbientOcclusionFactor aoFactor = GetScreenSpaceAmbientOcclusion(inputData.normalizedScreenSpaceUV);
-    surfaceData.occlusion = min(surfaceData.occlusion, aoFactor.indirectAmbientOcclusion);
-#endif
-
+    // SSAO is applied once inside UniversalFragmentPBR (via inputData.normalizedScreenSpaceUV);
+    // do not min() it into surfaceData.occlusion here or it darkens twice.
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     return color;

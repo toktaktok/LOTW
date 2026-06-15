@@ -53,3 +53,8 @@ build the mesh, so the volume aligns regardless of non-uniform scale or axis fli
 - Mobile is plain Forward; keep `_KernelRadius` modest or rely on the mip LOD form.
   Escalation path (not built): compute-bake RGB normals into a 2nd Texture3D and sample
   one texel instead of looping - zero shader-interface change.
+- Lighting uses main + Forward+ (cluster) additional lights, reflection probes, soft shadows,
+  and SSAO. Adaptive Probe Volume (APV) GI is NOT sampled by this shader yet - use regular
+  lights/lightmaps for ambient. Validated against URP 17.3 / Unity 6000.3.
+- The test-sphere demo on a primitive Cube is a smoke test (each flat face shows a rounded
+  bump); the convincing demonstration is a real VoxelImporter voxel mesh via Bake From Voxel Object.

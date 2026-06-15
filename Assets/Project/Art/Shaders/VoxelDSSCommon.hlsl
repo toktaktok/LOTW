@@ -8,7 +8,9 @@
 float3 DSS_ObjectToUVW(float3 positionOS)
 {
     float3 grid = (positionOS / _ImportScale.xyz) - (_LocalOffset.xyz + _ImportOffset.xyz);
-    return (grid + 0.5) / max(_VoxelDims.xyz, 1.0);
+    // grid is VoxelImporter's continuous voxel coord (cell center = index + 0.5), so the texel
+    // center (i+0.5)/dims is already hit at grid = i+0.5. uvw = grid/dims (NO extra +0.5).
+    return grid / max(_VoxelDims.xyz, 1.0);
 }
 
 // Single smoothed occupancy sample. Hardware trilinear on the volume already gives a
@@ -58,8 +60,9 @@ float3 DSS_GradientNormalOS(float3 uvw)
     float ny = DSS_SampleRho(uvw - float3(0,du.y,0)) - DSS_SampleRho(uvw + float3(0,du.y,0));
     float nz = DSS_SampleRho(uvw - float3(0,0,du.z)) - DSS_SampleRho(uvw + float3(0,0,du.z));
 #endif
-    // Gradient points toward MORE occupancy; surface normal points OUT, so negate.
-    return -float3(nx, ny, nz);
+    // nx = rho(-du) - rho(+du) already points from filled toward empty (= -grad(rho) = outward),
+    // i.e. it IS the surface-normal direction. Do NOT negate again (agrees with the centroid path).
+    return float3(nx, ny, nz);
 }
 
 // Occupancy centroid (whitepaper A.2): N = normalize(p - C). Empirically Centroid(r) ~= Gradient(r-1).
