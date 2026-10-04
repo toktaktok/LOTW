@@ -22,6 +22,10 @@ CBUFFER_START(UnityPerMaterial)
     half   _DSSStrength;
     half   _AOStrength;
     half   _AORadius;
+
+    half   _ToonSteps;
+    half   _ToonSoftness;
+    half   _ToonSpecular;
 CBUFFER_END
 
 // Textures/samplers stay OUTSIDE the CBUFFER (SRP-Batcher requirement).
