@@ -56,8 +56,8 @@ namespace Project.Scripts.Editor.Baking
             }
         }
 
-        /// <summary>VoxelImporter VoxelObject에서 점유 그리드를 읽어 굽는다.</summary>
-        public static void BakeFromVoxelObject(VoxelObject voxelObject, Material material)
+        /// <summary>VoxelImporter VoxelObject에서 점유 그리드를 읽어 굽고, 지정한 머티리얼들에 매핑을 적용한다.</summary>
+        public static void BakeFromVoxelObject(VoxelObject voxelObject, params Material[] materials)
         {
             if(voxelObject == null)
             {
@@ -91,10 +91,13 @@ namespace Project.Scripts.Editor.Baking
             var tex = CreateVolume(grid, voxelObject.name);
             string assetPath = SaveVolume(tex, voxelObject.name);
 
-            if(material != null)
+            var volume = AssetDatabase.LoadAssetAtPath<Texture3D>(assetPath);
+            foreach(var material in materials)
             {
+                if(material == null)
+                    continue;
                 // 패딩만큼 그리드가 +Padding 이동했으므로 importOffset에서 빼서 셰이더 매핑을 맞춘다.
-                ApplyToMaterial(material, AssetDatabase.LoadAssetAtPath<Texture3D>(assetPath),
+                ApplyToMaterial(material, volume,
                     new Vector3(grid.Width, grid.Height, grid.Depth),
                     voxelObject.importScale, voxelObject.importOffset - Vector3.one * Padding, voxelObject.localOffset);
             }

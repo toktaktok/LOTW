@@ -10,6 +10,13 @@ namespace Project.Scripts.Editor.Data
         // 에디터 자동 생성 시 노드 간격
         public const float NodeEditorSpacing = 2.0f;
 
+        // --- Voxel DSS Applier ---
+        public const string VoxelDssShaderName = "LOTW/VoxelDSS";
+        // 일괄 적용 시 복셀 프리팹을 찾는 폴더
+        public const string VoxelPrefabSearchFolder = "Assets/Project";
+        // 새로 변환한 머티리얼의 toon 명암 단계 수
+        public const float VoxelDssDefaultToonSteps = 3f;
+
         // --- Editor Enhancers ---
         // 로컬 설정 파일 (UserSettings는 gitignore 대상)
         public const string EnhancerSettingsPath = "UserSettings/LOTW/EditorEnhancers.asset";
