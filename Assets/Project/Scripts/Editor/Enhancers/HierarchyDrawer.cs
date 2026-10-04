@@ -94,20 +94,15 @@ namespace Project.Scripts.Editor.Enhancers
             if(_headerStyle == null)
                 _headerStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter };
 
-            // 이름 앞쪽의 아이콘/폴드아웃까지 덮도록 왼쪽으로 확장
-            Rect full = new Rect(rect.x - ToolDefines.HierarchyIndent, rect.y, rect.width + ToolDefines.HierarchyIndent, rect.height);
+            // 왼쪽 폴드아웃 화살표는 가리지 않도록 아이콘 위치부터 덮음
             Color background = EditorGUIUtility.isProSkin ? ToolDefines.HierarchyHeaderColor : ToolDefines.HierarchyHeaderColorLight;
-            EditorGUI.DrawRect(full, background);
+            EditorGUI.DrawRect(rect, background);
 
             if(EnhancerSettings.instance.TryGetHierarchyStyle(GetKey(go), out HierarchyStyle style) && style.color.a > 0f)
-            {
-                Color tint = style.color;
-                tint.a = ToolDefines.HierarchyBackgroundAlpha * 2f;
-                EditorGUI.DrawRect(full, tint);
-            }
+                DrawGradient(rect, style.color, ToolDefines.HierarchyHeaderGradientAlpha);
 
             string title = go.name.Trim('-', ' ').ToUpperInvariant();
-            EditorGUI.LabelField(full, title, _headerStyle);
+            EditorGUI.LabelField(rect, title, _headerStyle);
         }
 
         private static void DrawTreeLines(Transform node, Rect rect)
@@ -149,11 +144,7 @@ namespace Project.Scripts.Editor.Enhancers
         private static void DrawStyle(HierarchyStyle style, Rect rect, Rect iconRect, bool selected)
         {
             if(style.color.a > 0f && !selected)
-            {
-                Color tint = style.color;
-                tint.a = ToolDefines.HierarchyBackgroundAlpha;
-                EditorGUI.DrawRect(new Rect(rect.x, rect.y, rect.width, rect.height), tint);
-            }
+                DrawGradient(rect, style.color, ToolDefines.HierarchyBackgroundAlpha);
 
             Texture2D icon = EnhancerIcons.Get(style.icon);
             if(icon == null)
@@ -162,6 +153,21 @@ namespace Project.Scripts.Editor.Enhancers
             // 기본 아이콘을 행 배경색으로 가린 뒤 커스텀 아이콘을 그림
             EditorGUI.DrawRect(iconRect, GetRowBackground(selected));
             GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+        }
+
+        /// <summary>
+        /// 왼쪽은 startAlpha, 오른쪽 끝으로 갈수록 투명해지는 색 띠.
+        /// </summary>
+        private static void DrawGradient(Rect rect, Color color, float startAlpha)
+        {
+            if(Event.current.type != EventType.Repaint)
+                return;
+
+            Color previous = GUI.color;
+            color.a = startAlpha;
+            GUI.color = color;
+            GUI.DrawTexture(rect, EnhancerIcons.GetGradient(), ScaleMode.StretchToFill);
+            GUI.color = previous;
         }
 
         private static Color GetRowBackground(bool selected)
