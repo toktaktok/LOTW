@@ -28,6 +28,10 @@ namespace Project.Scripts.Core.Managers
         [SerializeField]
         private Transform[] layerParents;
 
+        [Header("UI Prefabs")][Tooltip("PushPage로 여는 UI 프리팹 (타입으로 검색)")]
+        [SerializeField]
+        private BaseUI[] uiPrefabs;
+
         private Dictionary<Type, BaseUI> _uiCache = new Dictionary<Type, BaseUI>();
         private Stack<UIPage> _pageNavigationStack = new Stack<UIPage>();
         private Queue<Func<Awaitable>> _uiWaitingQueue = new Queue<Func<Awaitable>>();
@@ -173,7 +177,7 @@ namespace Project.Scripts.Core.Managers
         private async Awaitable ProcessPushPage<T>(UILayer layer, Action<T> setup) where T : BaseUI
         {
             UIPage newPage = new UIPage(layer);
-            T ui = await GetOrCreateUI<T>(layer);
+            T ui = GetOrCreateUI(typeof(T), layer) as T;
 
             if(ui != null)
             {
@@ -198,7 +202,7 @@ namespace Project.Scripts.Core.Managers
 
             foreach(var type in uiTypes)
             {
-                BaseUI ui = await GetOrCreateUI(type, layer);
+                BaseUI ui = GetOrCreateUI(type, layer);
                 if(ui != null)
                 {
                     newPage.Add(ui);
@@ -237,33 +241,19 @@ namespace Project.Scripts.Core.Managers
             }
         }
 
-        // ... GetOrCreateUI는 이전과 동일 ...
-        private async Awaitable<T> GetOrCreateUI<T>(UILayer layer) where T : BaseUI
-            => await GetOrCreateUI(typeof(T), layer) as T;
-
-        private async Awaitable<BaseUI> GetOrCreateUI(Type type, UILayer layer)
+        private BaseUI GetOrCreateUI(Type type, UILayer layer)
         {
             if(_uiCache.TryGetValue(type, out BaseUI cached))
                 return cached;
 
-            var req = Resources.LoadAsync<GameObject>($"UI/{type.Name}");
-            while(!req.isDone)
-                await Awaitable.NextFrameAsync();
-
-            if(req.asset == null)
+            BaseUI prefab = Array.Find(uiPrefabs, p => p != null && p.GetType() == type);
+            if(prefab == null)
             {
-                Debug.LogError($"[UIManager] UI prefab not found: Resources/UI/{type.Name}");
+                Debug.LogError($"[UIManager] UI prefab not registered: {type.Name}");
                 return null;
             }
 
-            var go = Instantiate(req.asset as GameObject, layerParents[(int)layer]);
-            var ui = go.GetComponent<BaseUI>();
-            if(ui == null)
-            {
-                Debug.LogError($"[UIManager] {type.Name} prefab has no BaseUI component");
-                Destroy(go);
-                return null;
-            }
+            BaseUI ui = Instantiate(prefab, layerParents[(int)layer]);
             _uiCache.Add(type, ui);
             return ui;
         }

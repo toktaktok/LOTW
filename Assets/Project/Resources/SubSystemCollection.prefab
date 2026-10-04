@@ -90,6 +90,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.Core.Managers.UIManager
   layerParents: []
+  uiPrefabs:
+  - {fileID: 1532780703009320440, guid: 1b946854e46d2c34586fda28f89a0837, type: 3}
+  - {fileID: 4173599752920696668, guid: 9eca24e48ffa10b45919819b6d2a84f7, type: 3}
+  - {fileID: 4900000000000000005, guid: a7b8c9d0e1f2034567890123456cdef0, type: 3}
 --- !u!114 &3732351960856632454
 MonoBehaviour:
   m_ObjectHideFlags: 0

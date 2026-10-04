@@ -26,7 +26,7 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Camera:** `CameraManager` sets Cinemachine priority (inactive=10, active=20). `CameraTrigger` (BoxCollider) switches on enter/exit. `BillboardHandler` subscribes to `CinemachineCore.CameraUpdatedEvent`.
 
-**UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs from `Resources/UI/{TypeName}.prefab`. Panels: HudUI, DialogueUI, InventoryUI.
+**UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs in `Prefabs/UI/`, registered in `UIManager.uiPrefabs` on SubSystemCollection (looked up by type). Panels: HudUI, DialogueUI, InventoryUI.
 
 **Dialogue:** `DialogueData` (Data/Structs.cs) has `DialogueLine[]` (speaker+text). `DialogueUI` modes: prompt (confirm/cancel) and dialogue (multi-line via `SetupDialogue()`/`AdvanceLine()`). `NPC : WorldObject, IInteractable` uses dialogue mode.
 
