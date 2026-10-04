@@ -29,6 +29,13 @@ namespace Project.Scripts.System.World
 
         #region Methods
 
+        // 플레이어가 아닌 Character도 Update/MoveTo 전에 초기화되도록 Awake에서 처리
+        protected override void Awake()
+        {
+            base.Awake();
+            Init();
+        }
+
         public override void Init()
         {
             base.Init();
@@ -110,7 +117,7 @@ namespace Project.Scripts.System.World
 
         private void UpdateAnimationState()
         {
-            if(animator == null)
+            if(animator == null || _visualTransform == null)
                 return;
 
             Vector3 currentPosition = transform.position;

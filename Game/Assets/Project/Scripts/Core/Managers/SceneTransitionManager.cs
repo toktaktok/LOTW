@@ -26,6 +26,8 @@ namespace Project.Scripts.Core.Managers
         public void OnBeforeTransition()
         {
             CameraManager.Instance.SetInput(false);
+            // UI는 DontDestroyOnLoad라 이전 씬 대상을 붙든 페이지가 남음. HUD는 새 씬 PlayerController가 다시 연다.
+            UIManager.Instance.ClearAllPages();
         }
 
         public void OnSceneLoaded(string sceneName, string entranceId)
@@ -72,6 +74,9 @@ namespace Project.Scripts.Core.Managers
         public event Action OnTransitionCompleted;
 
         public bool IsTransitioning { get; private set; }
+
+        /// <summary>마지막으로 진입한 SceneEntrance ID. 세이브 데이터의 entranceId로 사용됩니다.</summary>
+        public string CurrentEntranceId { get; private set; } = "";
 
         private Canvas _fadeCanvas;
         private Image _fadeImage;
@@ -134,6 +139,7 @@ namespace Project.Scripts.Core.Managers
 
                 await Awaitable.NextFrameAsync();
 
+                CurrentEntranceId = entranceId;
                 _handler?.OnSceneLoaded(sceneName, entranceId);
 
                 await FadeRoutine(1f, 0f);

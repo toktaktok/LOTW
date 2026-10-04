@@ -25628,9 +25628,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2108976533}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c0c19fe27b82884ab3a1c0239f5ecc8, type: 3}
+  m_Script: {fileID: 11500000, guid: dc34e6cfd08b5666bbeccb1305d02427, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Project.Scripts::Project.Scripts.System.World.SceneBgmStarter
+  m_EditorClassIdentifier: Project.Scripts::Project.Scripts.System.World.SceneBgm
   bgm: {fileID: 8300000, guid: d740f1336fc62425db59a4e06337f940, type: 3}
 --- !u!114 &2108976536
 MonoBehaviour:

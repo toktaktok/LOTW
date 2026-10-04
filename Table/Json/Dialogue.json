@@ -2,7 +2,7 @@
   {
     "dataId": 1,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "상점 주인",
+    "speakerName": "@npc.shopkeeper",
     "text": "어서오세요! 무엇을 도와드릴까요?",
     "nextId": -1,
     "choiceIds": [
@@ -27,16 +27,40 @@
   {
     "dataId": 4,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "상점 주인",
+    "speakerName": "@npc.shopkeeper",
     "text": "물론이죠! 오늘 들어온 장미가 특히 예쁘답니다.",
-    "nextId": -1
+    "nextId": 6
   },
   {
     "dataId": 5,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "상점 주인",
+    "speakerName": "@npc.shopkeeper",
     "text": "그렇군요. 또 들러주세요!",
     "nextId": -1
+  },
+  {
+    "dataId": 6,
+    "speakerId": "npc_shopkeeper",
+    "speakerName": "@npc.shopkeeper",
+    "text": "첫 손님이시니 한 송이 드릴게요.",
+    "nextId": -1,
+    "actions": "giveItem:rose=1;setFlag:got_rose"
+  },
+  {
+    "dataId": 10,
+    "nextId": -1,
+    "choiceIds": [
+      11,
+      1
+    ]
+  },
+  {
+    "dataId": 11,
+    "speakerId": "npc_shopkeeper",
+    "speakerName": "@npc.shopkeeper",
+    "text": "장미는 마음에 드세요? 또 오세요!",
+    "nextId": -1,
+    "conditions": "flag:got_rose"
   },
   {
     "dataId": 1100,

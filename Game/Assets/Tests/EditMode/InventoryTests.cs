@@ -41,21 +41,6 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void DialogueLine_DefaultsAreEmpty()
-        {
-            var line = new DialogueLine();
-            Assert.IsNull(line.speaker);
-            Assert.IsNull(line.text);
-        }
-
-        [Test]
-        public void DialogueData_EmptyLines()
-        {
-            var data = new DialogueData();
-            Assert.IsNull(data.lines);
-        }
-
-        [Test]
         public void SaveData_DefaultValues()
         {
             var save = new SaveData();

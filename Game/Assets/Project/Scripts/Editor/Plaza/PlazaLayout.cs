@@ -23,7 +23,7 @@ namespace Project.Scripts.Editor.Plaza
             public float yaw;
         }
 
-        /// <summary>NPC. dialogueId != 0 이면 PF_NPC_Test 인스턴스(대화 가능), 0 이면 스프라이트만 있는 배경 NPC.</summary>
+        /// <summary>NPC. dialogueId != 0 이면 PF_NPC_Base 인스턴스(대화 가능), 0 이면 스프라이트만 있는 배경 NPC.</summary>
         public struct NpcEntry
         {
             public string name;
@@ -97,7 +97,7 @@ namespace Project.Scripts.Editor.Plaza
         private const string Controllers = "Assets/Project/Art/Animations/Controllers/";
 
         public const string PlayerPrefabPath = "Assets/Project/Prefabs/Characters/PF_SnowMan.prefab";
-        public const string NpcPrefabPath = "Assets/Project/Prefabs/Characters/PF_NPC_Test.prefab";
+        public const string NpcPrefabPath = "Assets/Project/Prefabs/Characters/PF_NPC_Base.prefab";
         public const string SpriteMaterialPath = "Assets/Project/Art/Materials/MAT_SpriteShadow.mat";
         public const string BgmPath = "Assets/Project/Audio/BGM/BGM_Village.wav";
 

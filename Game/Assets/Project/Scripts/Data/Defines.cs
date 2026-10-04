@@ -6,6 +6,11 @@ namespace Project.Scripts.Data
     {
         public const float DefaultFadeDuration = 0.3f;
     }
+    public readonly struct DialogueDefines
+    {
+        /// <summary>분기 행이 연달아 이어질 수 있는 최대 횟수. 분기 행끼리 순환하면 여기서 끊습니다.</summary>
+        public const int MaxRouteDepth = 16;
+    }
     public readonly struct AnimDefines
     {
         public static readonly int ShowID = Animator.StringToHash("Show");
@@ -25,6 +30,8 @@ namespace Project.Scripts.Data
         public const float FacingThreshold = 0.01f;
 
         public const float MoveAndSwitchTimeout = 10f;
+        /// <summary>걷기 이동(RailConnector)에서 목적 노드 도착으로 보는 수평 거리.</summary>
+        public const float RailArrivalDistance = 0.1f;
     }
 
     public readonly struct CameraDefines

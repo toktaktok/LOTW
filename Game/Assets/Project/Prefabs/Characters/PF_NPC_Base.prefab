@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1000000000000000003}
   - component: {fileID: 1000000000000000004}
   m_Layer: 6
-  m_Name: PF_NPC_Test
+  m_Name: PF_NPC_Base
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -68,17 +68,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectID: 0
-  npcName: Gumman
-  dialogueAsset: {fileID: 0}
-  dialogue:
-    lines:
-    - speaker: Gumman
-      text: "\uC548\uB155! \uB098\uB294 \uD14C\uC2A4\uD2B8\uC6A9 NPC\uC57C."
-    - speaker: Gumman
-      text: "\uB300\uD654\uAC00 \uC798 \uB118\uC5B4\uAC00\uB098?"
-    - speaker: 
-      text: "\uAC80\uB9E8\uC740 \uC190\uC744 \uD754\uB4E4\uC5C8\uB2E4."
-  promptText: "\uB300\uD654\uD558\uAE30"
+  profile: {fileID: 11400000, guid: 1c4b37a302c3f9cca53e62d57d54e92a, type: 2}
+  spriteRenderer: {fileID: 1000000000000000013}
+  dialogueId: 10
+  promptText: '@ui.talk'
 --- !u!1 &1000000000000000011
 GameObject:
   m_ObjectHideFlags: 0

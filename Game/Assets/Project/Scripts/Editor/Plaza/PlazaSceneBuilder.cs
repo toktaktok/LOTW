@@ -465,8 +465,8 @@ namespace Project.Scripts.Editor.Plaza
                 SetProperties(cameraStarter, ("sceneDefaultCamera", defaultCamera));
             }
 
-            if(go.GetComponent<SceneBgmStarter>() == null)
-                SetProperties(go.AddComponent<SceneBgmStarter>(), ("bgm", AssetDatabase.LoadAssetAtPath<AudioClip>(PlazaLayout.BgmPath)));
+            if(go.GetComponent<SceneBgm>() == null)
+                SetProperties(go.AddComponent<SceneBgm>(), ("bgm", AssetDatabase.LoadAssetAtPath<AudioClip>(PlazaLayout.BgmPath)));
         }
 
         private static Light GetOrCreateLighting(Transform lighting)
@@ -697,7 +697,6 @@ namespace Project.Scripts.Editor.Plaza
                 go.transform.position = entry.position;
 
                 SetProperties(go.GetComponent<NPC>(),
-                    ("npcName", entry.name),
                     ("objectID", entry.objectId),
                     ("dialogueId", entry.dialogueId),
                     ("dialogueCamera", dialogueCamera));

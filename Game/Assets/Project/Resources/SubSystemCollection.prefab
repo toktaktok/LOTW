@@ -122,6 +122,7 @@ MonoBehaviour:
   bgmSource: {fileID: 0}
   sfxSource: {fileID: 0}
   crossfadeDuration: 1
+  library: {fileID: 11400000, guid: 7f21575e63529cd06430bc03d4c14b0d, type: 2}
 --- !u!114 &2233445566778899012
 MonoBehaviour:
   m_ObjectHideFlags: 0

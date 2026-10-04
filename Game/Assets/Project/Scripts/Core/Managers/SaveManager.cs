@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Project.Scripts.Data;
 
 namespace Project.Scripts.Core.Managers
@@ -142,6 +143,40 @@ namespace Project.Scripts.Core.Managers
                 OnGameLoaded?.Invoke(slot);
             }
             return data;
+        }
+
+        /// <summary>
+        /// 현재 게임 상태(씬, 입구, 인벤토리, 플래그)를 모아 슬롯에 저장합니다.
+        /// </summary>
+        public void SaveCurrent(int slot)
+        {
+            var data = new SaveData
+            {
+                currentScene = SceneManager.GetActiveScene().name,
+                entranceId = SceneTransitionManager.HasInstance ? SceneTransitionManager.Instance.CurrentEntranceId : "",
+                inventory = InventoryManager.Instance.ToSaveData(),
+                flags = FlagManager.Instance.ToSaveData()
+            };
+            Save(slot, data);
+        }
+
+        /// <summary>
+        /// 슬롯을 로드해 인벤토리와 플래그를 복원하고 저장된 씬/입구로 전환합니다.
+        /// 세이브가 없으면 false.
+        /// </summary>
+        public bool LoadAndApply(int slot)
+        {
+            SaveData? loaded = Load(slot);
+            if(!loaded.HasValue)
+                return false;
+
+            SaveData data = loaded.Value;
+            InventoryManager.Instance.LoadFromSaveData(data.inventory);
+            FlagManager.Instance.LoadFromSaveData(data.flags);
+
+            if(!string.IsNullOrEmpty(data.currentScene))
+                SceneTransitionManager.Instance.TransitionTo(data.currentScene, data.entranceId);
+            return true;
         }
 
         public bool HasSave(int slot) => _saveSystem.HasSave(slot);
