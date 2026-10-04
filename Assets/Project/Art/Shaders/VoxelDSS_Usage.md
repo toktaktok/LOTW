@@ -80,9 +80,10 @@ mesh (importOffset minus the padding), so the volume aligns regardless of non-un
   - Ignores `_Metallic`, reflection probes and SSAO (screen-space, so noisy and view-dependent
     at low resolution; use `_AOStrength` for stable voxel-space AO). Ambient GI, Forward+
     lights and light layers still apply.
-- `_DSS_VOXEL_LIGHTING` toggle (`Per-Voxel Lighting`) - evaluates normal, shadow, light
+- `_DSS_VOXEL_LIGHTING` toggle (`Per-Voxel Lighting`) - evaluates normal, light
   attenuation and AO at the center of each voxel face instead of per pixel, so every voxel
-  face gets one flat value. Pairs with toon for clean, camera-stable pixel-art shading.
+  face gets one flat value. Shadows stay per pixel (voxels are a non-integer number of
+  pixels wide, so voxel-snapped shadow edges would stair-step unevenly). Pairs with toon.
 
 ## Notes
 

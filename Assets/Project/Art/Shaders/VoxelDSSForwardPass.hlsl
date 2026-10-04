@@ -54,7 +54,7 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 
     // Lighting position: the pixel itself, or the center of its voxel face so each voxel face
-    // gets one flat normal/shadow/attenuation value (stable under camera motion, no pixel noise).
+    // gets one flat normal/attenuation/AO value (stable under camera motion, no pixel noise).
     float3 lightPosOS = IN.positionOS;
 #if defined(_DSS_VOXEL_LIGHTING)
     lightPosOS = DSS_SnapToVoxelFaceOS(IN.positionOS, IN.faceNormalOS);
@@ -86,7 +86,9 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
 #if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
     inputData.shadowCoord = IN.shadowCoord;
 #elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
-    inputData.shadowCoord = TransformWorldToShadowCoord(lightPosWS);
+    // Shadows use the real pixel position even with per-voxel lighting: voxels are a
+    // non-integer number of pixels wide, so voxel-snapped shadow edges stair-step unevenly.
+    inputData.shadowCoord = TransformWorldToShadowCoord(IN.positionWS);
 #else
     inputData.shadowCoord = float4(0, 0, 0, 0);
 #endif
