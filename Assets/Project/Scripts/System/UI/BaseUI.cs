@@ -55,7 +55,7 @@ namespace Project.Scripts.System.UI
             currentUIState = UIState.Opening;
             gameObject.SetActive(true);
 
-            switch (transitionMode)
+            switch(transitionMode)
             {
                 case UITransitionMode.Fade:
                     await FadeRoutine(0f, 1f);
@@ -70,13 +70,14 @@ namespace Project.Scripts.System.UI
         // --- Hide ---
         public virtual async Awaitable HideAsync()
         {
-            if(currentUIState == UIState.Closing || currentUIState == UIState.Closed) return;
+            if(currentUIState == UIState.Closing || currentUIState == UIState.Closed)
+                return;
 
             currentUIState = UIState.Closing;
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = false;
 
-            switch (transitionMode)
+            switch(transitionMode)
             {
                 case UITransitionMode.Fade:
                     await FadeRoutine(1f, 0f);
@@ -106,7 +107,8 @@ namespace Project.Scripts.System.UI
         }
         protected async Awaitable PlayAnimationAndWait(int triggerID)
         {
-            if (uiAnimator == null) return;
+            if(uiAnimator == null)
+                return;
 
             uiAnimator.SetTrigger(triggerID);
             await Awaitable.NextFrameAsync();

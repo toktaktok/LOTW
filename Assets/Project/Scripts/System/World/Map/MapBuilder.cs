@@ -24,15 +24,15 @@ namespace Project.Scripts.System.World.Map
         public void Build(MapData data)
         {
             ClearBuilt();
-            if (data == null)
+            if(data == null)
                 return;
 
             _root = new GameObject("[MapRoot]");
 
             // Pass 1: nodes
-            if (data.nodes != null)
+            if(data.nodes != null)
             {
-                foreach (NodeEntry n in data.nodes)
+                foreach(NodeEntry n in data.nodes)
                 {
                     GameObject go = new GameObject($"RailNode_{n.id}");
                     go.transform.SetParent(_root.transform);
@@ -46,30 +46,30 @@ namespace Project.Scripts.System.World.Map
             }
 
             // Pass 2: edges (RailNode.ConnectTo enforces max-2 + bidirectional)
-            if (data.edges != null)
+            if(data.edges != null)
             {
-                foreach (EdgeEntry e in data.edges)
+                foreach(EdgeEntry e in data.edges)
                 {
-                    if (_nodeMap.TryGetValue(e.a, out RailNode a) && _nodeMap.TryGetValue(e.b, out RailNode b))
+                    if(_nodeMap.TryGetValue(e.a, out RailNode a) && _nodeMap.TryGetValue(e.b, out RailNode b))
                         a.ConnectTo(b);
                 }
             }
 
             // Pass 3: placeables (resolve linkedNodeId after all nodes exist)
-            if (data.placeables != null)
+            if(data.placeables != null)
             {
-                foreach (PlaceableEntry p in data.placeables)
+                foreach(PlaceableEntry p in data.placeables)
                     SpawnPlaceable(p);
             }
         }
 
         private void SpawnPlaceable(PlaceableEntry p)
         {
-            if (string.IsNullOrEmpty(p.prefabId))
+            if(string.IsNullOrEmpty(p.prefabId))
                 return;
 
             GameObject prefab = Resources.Load<GameObject>($"MapPrefabs/{p.prefabId}");
-            if (prefab == null)
+            if(prefab == null)
             {
                 Debug.LogWarning($"[MapBuilder] Missing prefab Resources/MapPrefabs/{p.prefabId}; skipping placeable {p.objectID}.");
                 return;
@@ -78,32 +78,32 @@ namespace Project.Scripts.System.World.Map
             GameObject go = Object.Instantiate(prefab, p.position, Quaternion.Euler(p.eulerAngles), _root.transform);
 
             WorldObject wo = go.GetComponent<WorldObject>();
-            if (wo != null && p.objectID != 0)
+            if(wo != null && p.objectID != 0)
                 wo.SetObjectID(p.objectID);
 
             RailNode linked = null;
-            if (p.linkedNodeId != -1)
+            if(p.linkedNodeId != -1)
                 _nodeMap.TryGetValue(p.linkedNodeId, out linked);
 
             RailConnector connector = go.GetComponent<RailConnector>();
-            if (connector != null && linked != null)
+            if(connector != null && linked != null)
                 connector.SetDestinationNode(linked);
 
             SceneEntrance entrance = go.GetComponent<SceneEntrance>();
-            if (entrance != null)
+            if(entrance != null)
             {
-                if (linked != null)
+                if(linked != null)
                     entrance.SetStartNode(linked);
-                if (!string.IsNullOrEmpty(p.entranceId))
+                if(!string.IsNullOrEmpty(p.entranceId))
                     entrance.SetEntranceId(p.entranceId);
             }
         }
 
         public void ClearBuilt()
         {
-            if (_root != null)
+            if(_root != null)
             {
-                if (Application.isPlaying)
+                if(Application.isPlaying)
                     Object.Destroy(_root);
                 else
                     Object.DestroyImmediate(_root);
@@ -114,7 +114,7 @@ namespace Project.Scripts.System.World.Map
 
         public RailNode FirstNode()
         {
-            foreach (KeyValuePair<int, RailNode> kv in _nodeMap)
+            foreach(KeyValuePair<int, RailNode> kv in _nodeMap)
                 return kv.Value;
             return null;
         }

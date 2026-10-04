@@ -21,9 +21,10 @@ namespace Project.Scripts.Core.Managers
         /// </summary>
         public void Set(string key, int value = 1)
         {
-            if (string.IsNullOrEmpty(key)) return;
+            if(string.IsNullOrEmpty(key))
+                return;
 
-            if (value == 0)
+            if(value == 0)
                 _flags.Remove(key);
             else
                 _flags[key] = value;
@@ -32,21 +33,24 @@ namespace Project.Scripts.Core.Managers
         /// <summary>플래그가 0이 아닌 값으로 설정되어 있는지 여부.</summary>
         public bool Has(string key)
         {
-            if (string.IsNullOrEmpty(key)) return false;
+            if(string.IsNullOrEmpty(key))
+                return false;
             return _flags.TryGetValue(key, out int value) && value != 0;
         }
 
         /// <summary>플래그 값을 반환합니다. 미설정이면 0.</summary>
         public int Get(string key)
         {
-            if (string.IsNullOrEmpty(key)) return 0;
+            if(string.IsNullOrEmpty(key))
+                return 0;
             return _flags.TryGetValue(key, out int value) ? value : 0;
         }
 
         /// <summary>플래그 값에 amount를 더한 뒤 결과 값을 반환합니다. 진행 카운터용.</summary>
         public int Add(string key, int amount = 1)
         {
-            if (string.IsNullOrEmpty(key)) return 0;
+            if(string.IsNullOrEmpty(key))
+                return 0;
 
             int next = Get(key) + amount;
             Set(key, next);
@@ -56,7 +60,8 @@ namespace Project.Scripts.Core.Managers
         /// <summary>특정 플래그를 제거합니다.</summary>
         public void Clear(string key)
         {
-            if (string.IsNullOrEmpty(key)) return;
+            if(string.IsNullOrEmpty(key))
+                return;
             _flags.Remove(key);
         }
 
@@ -75,7 +80,7 @@ namespace Project.Scripts.Core.Managers
         {
             var result = new string[_flags.Count];
             int i = 0;
-            foreach (var pair in _flags)
+            foreach(var pair in _flags)
             {
                 result[i] = $"{pair.Key}={pair.Value}";
                 i++;
@@ -91,17 +96,19 @@ namespace Project.Scripts.Core.Managers
         public void LoadFromSaveData(string[] data)
         {
             _flags.Clear();
-            if (data == null) return;
+            if(data == null)
+                return;
 
-            foreach (var entry in data)
+            foreach(var entry in data)
             {
-                if (string.IsNullOrEmpty(entry)) continue;
+                if(string.IsNullOrEmpty(entry))
+                    continue;
 
                 int sep = entry.IndexOf('=');
                 string key;
                 int value;
 
-                if (sep < 0)
+                if(sep < 0)
                 {
                     key = entry;
                     value = 1;
@@ -109,11 +116,12 @@ namespace Project.Scripts.Core.Managers
                 else
                 {
                     key = entry.Substring(0, sep);
-                    if (!int.TryParse(entry.Substring(sep + 1), out value))
+                    if(!int.TryParse(entry.Substring(sep + 1), out value))
                         continue;
                 }
 
-                if (string.IsNullOrEmpty(key) || value == 0) continue;
+                if(string.IsNullOrEmpty(key) || value == 0)
+                    continue;
                 _flags[key] = value;
             }
         }

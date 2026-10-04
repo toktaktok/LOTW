@@ -13,10 +13,10 @@ public static class AwaitableExtensions
         {
             await awaitable;
         }
-        catch (OperationCanceledException)
+        catch(OperationCanceledException)
         {
         }
-        catch (Exception ex)
+        catch(Exception ex)
         {
             Debug.LogException(ex);
         }

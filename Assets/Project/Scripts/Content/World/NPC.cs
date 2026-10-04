@@ -30,7 +30,7 @@ namespace Project.Scripts.Content.World
         public void Interact(GameObject interactor)
         {
             var resolved = ResolvedDialogue;
-            if (resolved.lines == null || resolved.lines.Length == 0)
+            if(resolved.lines == null || resolved.lines.Length == 0)
             {
                 Debug.LogWarning($"[NPC] {npcName}: 대화 데이터가 비어 있습니다.");
                 return;

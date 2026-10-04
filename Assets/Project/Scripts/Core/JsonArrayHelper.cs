@@ -24,7 +24,7 @@ namespace Project.Scripts.Core
         /// <summary>JSON 배열 문자열 → List&lt;T&gt; 로 역직렬화합니다.</summary>
         public static List<T> FromJson<T>(string json)
         {
-            if (string.IsNullOrEmpty(json))
+            if(string.IsNullOrEmpty(json))
                 return new List<T>();
 
             string wrapped = $"{{\"items\":{json}}}";

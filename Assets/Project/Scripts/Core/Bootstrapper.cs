@@ -15,13 +15,13 @@ namespace Project.Scripts.Core
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         public static void Execute()
         {
-            if (Object.FindFirstObjectByType<SystemRoot>() != null)
+            if(Object.FindFirstObjectByType<SystemRoot>() != null)
                 return;
 
             string prefabPath = LoadPrefabPath();
             Object resource = Resources.Load(prefabPath);
 
-            if (resource == null)
+            if(resource == null)
             {
                 Debug.LogError($"[Bootstrapper] Couldn't find 'Resources/{prefabPath}'.");
                 return;
@@ -29,7 +29,7 @@ namespace Project.Scripts.Core
 
             GameObject managers = Object.Instantiate(resource) as GameObject;
 
-            if (managers != null)
+            if(managers != null)
             {
                 managers.name = "[SubSystemCollection]";
                 Object.DontDestroyOnLoad(managers);
@@ -39,7 +39,7 @@ namespace Project.Scripts.Core
         private static string LoadPrefabPath()
         {
             var config = Resources.Load<BootstrapConfig>(ConfigPath);
-            if (config != null && !string.IsNullOrEmpty(config.PrefabPath))
+            if(config != null && !string.IsNullOrEmpty(config.PrefabPath))
                 return config.PrefabPath;
 
             return DefaultPrefabPath;

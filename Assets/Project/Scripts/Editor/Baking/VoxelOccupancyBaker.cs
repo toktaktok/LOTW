@@ -39,9 +39,9 @@ namespace Project.Scripts.Editor.Baking
                 "Target Material", _targetMaterial, typeof(Material), false);
             _generateMips = EditorGUILayout.Toggle("Generate Mips (large-r form)", _generateMips);
 
-            using (new EditorGUI.DisabledScope(_voxelObject == null))
+            using(new EditorGUI.DisabledScope(_voxelObject == null))
             {
-                if (GUILayout.Button("Bake From Voxel Object"))
+                if(GUILayout.Button("Bake From Voxel Object"))
                 {
                     BakeFromVoxelObject(_voxelObject, _targetMaterial, _generateMips);
                 }
@@ -50,7 +50,7 @@ namespace Project.Scripts.Editor.Baking
             EditorGUILayout.Space();
             EditorGUILayout.LabelField("Procedural Test Sphere", EditorStyles.boldLabel);
             _sphereResolution = EditorGUILayout.IntSlider("Resolution", _sphereResolution, 8, 128);
-            if (GUILayout.Button("Bake Test Sphere"))
+            if(GUILayout.Button("Bake Test Sphere"))
             {
                 BakeTestSphere(_sphereResolution, _targetMaterial, _generateMips);
             }
@@ -59,7 +59,7 @@ namespace Project.Scripts.Editor.Baking
         /// <summary>VoxelImporter VoxelObject에서 점유 그리드를 읽어 굽는다.</summary>
         public static void BakeFromVoxelObject(VoxelObject voxelObject, Material material, bool mips)
         {
-            if (voxelObject == null)
+            if(voxelObject == null)
             {
                 Debug.LogError("[VoxelDSS] VoxelObject가 지정되지 않았습니다.");
                 return;
@@ -67,14 +67,14 @@ namespace Project.Scripts.Editor.Baking
 
             // 에디트 타임 코어 구성 후 voxelData 로드.
             var core = new VoxelObjectCore(voxelObject);
-            if (!core.ReadyVoxelData())
+            if(!core.ReadyVoxelData())
             {
                 Debug.LogError("[VoxelDSS] ReadyVoxelData 실패. 소스 .vox/.qb/.png 파일이 존재하는지 확인하세요.");
                 return;
             }
 
             var data = core.voxelData;
-            if (data == null || data.voxels == null)
+            if(data == null || data.voxels == null)
             {
                 Debug.LogError("[VoxelDSS] voxelData가 비어 있습니다.");
                 return;
@@ -82,7 +82,7 @@ namespace Project.Scripts.Editor.Baking
 
             IntVector3 dims = data.voxelSize;
             var grid = new VoxelOccupancyGrid(dims.x, dims.y, dims.z);
-            for (int i = 0; i < data.voxels.Length; ++i)
+            for(int i = 0; i < data.voxels.Length; ++i)
             {
                 var v = data.voxels[i];
                 grid.SetFilled(v.x, v.y, v.z); // 점유 판정 = 존재 여부 (visible 플래그 아님)
@@ -91,7 +91,7 @@ namespace Project.Scripts.Editor.Baking
             var tex = CreateVolume(grid, mips, voxelObject.name);
             string assetPath = SaveVolume(tex, voxelObject.name);
 
-            if (material != null)
+            if(material != null)
             {
                 ApplyToMaterial(material, AssetDatabase.LoadAssetAtPath<Texture3D>(assetPath),
                     new Vector3(dims.x, dims.y, dims.z),
@@ -109,18 +109,19 @@ namespace Project.Scripts.Editor.Baking
             float c = (n - 1) * 0.5f;
             float radius = c; // inscribed: shell meets the cube face centers so faces show rounding
             float r2 = radius * radius;
-            for (int z = 0; z < n; ++z)
-            for (int y = 0; y < n; ++y)
-            for (int x = 0; x < n; ++x)
+            for(int z = 0; z < n; ++z)
+            for(int y = 0; y < n; ++y)
+            for(int x = 0; x < n; ++x)
             {
                 float dx = x - c, dy = y - c, dz = z - c;
-                if (dx * dx + dy * dy + dz * dz <= r2) grid.SetFilled(x, y, z);
+                if(dx * dx + dy * dy + dz * dz <= r2)
+                    grid.SetFilled(x, y, z);
             }
 
             var tex = CreateVolume(grid, mips, "Sphere");
             string assetPath = SaveVolume(tex, "Sphere");
 
-            if (material != null)
+            if(material != null)
             {
                 // 데모 큐브: 오브젝트 공간 [-0.5,0.5] 정육면체를 그리드에 매핑.
                 // grid = (objectPos / importScale) - (localOffset + importOffset).
@@ -153,14 +154,15 @@ namespace Project.Scripts.Editor.Baking
 
         private static string SaveVolume(Texture3D tex, string label)
         {
-            if (!AssetDatabase.IsValidFolder(OutputFolder))
+            if(!AssetDatabase.IsValidFolder(OutputFolder))
             {
                 Directory.CreateDirectory(OutputFolder);
                 AssetDatabase.Refresh();
             }
             string path = $"{OutputFolder}/TEX3D_{label}_Occupancy.asset";
             var existing = AssetDatabase.LoadAssetAtPath<Texture3D>(path);
-            if (existing != null) AssetDatabase.DeleteAsset(path);
+            if(existing != null)
+                AssetDatabase.DeleteAsset(path);
             AssetDatabase.CreateAsset(tex, path);
             AssetDatabase.SaveAssets();
             AssetDatabase.Refresh();

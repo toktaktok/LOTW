@@ -91,10 +91,10 @@ namespace Project.Scripts.Content.Controller
         /// </summary>
         public void WarpToEntrance(Vector3 position, RailNode startNode)
         {
-            if (currentCharacter != null)
+            if(currentCharacter != null)
                 currentCharacter.Warp(position);
 
-            if (startNode != null)
+            if(startNode != null)
             {
                 currentBaseNode = startNode;
                 currentTargetNode = startNode.neighbors.Count > 0 ? startNode.neighbors[0] : startNode;
@@ -187,7 +187,7 @@ namespace Project.Scripts.Content.Controller
             if(currentBaseNode == currentTargetNode)
             {
                 RailNode next = FindNeighborByDirection(inputWorldDir);
-                if (next == null)
+                if(next == null)
                     return;
 
                 currentTargetNode = next;

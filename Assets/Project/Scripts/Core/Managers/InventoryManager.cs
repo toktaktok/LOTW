@@ -23,11 +23,11 @@ namespace Project.Scripts.Core.Managers
 
         public ItemData? GetItemData(string itemId)
         {
-            if (_cache.TryGetValue(itemId, out ItemData data))
+            if(_cache.TryGetValue(itemId, out ItemData data))
                 return data;
 
             var loaded = Resources.Load<ItemDatabase>($"Items/{itemId}");
-            if (loaded != null)
+            if(loaded != null)
             {
                 _cache[itemId] = loaded.Data;
                 return loaded.Data;
@@ -77,7 +77,7 @@ namespace Project.Scripts.Core.Managers
         private void InitializeSlots()
         {
             _slots.Clear();
-            for (int i = 0; i < maxSlots; i++)
+            for(int i = 0; i < maxSlots; i++)
                 _slots.Add(new ItemSlot());
         }
 
@@ -104,26 +104,28 @@ namespace Project.Scripts.Core.Managers
 
         public bool AddItem(string itemId, int amount = 1)
         {
-            if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
+            if(string.IsNullOrEmpty(itemId) || amount <= 0)
+                return false;
 
             ItemData? data = GetItemData(itemId);
             int maxStack = data?.maxStack ?? 99;
 
-            for (int i = 0; i < _slots.Count; i++)
+            for(int i = 0; i < _slots.Count; i++)
             {
-                if (_slots[i].itemId == itemId && _slots[i].count < maxStack)
+                if(_slots[i].itemId == itemId && _slots[i].count < maxStack)
                 {
                     int canAdd = Mathf.Min(amount, maxStack - _slots[i].count);
                     _slots[i] = new ItemSlot { itemId = itemId, count = _slots[i].count + canAdd };
                     amount -= canAdd;
-                    if (amount <= 0) break;
+                    if(amount <= 0)
+                        break;
                 }
             }
 
-            while (amount > 0)
+            while(amount > 0)
             {
                 int emptyIndex = FindEmptySlot();
-                if (emptyIndex < 0)
+                if(emptyIndex < 0)
                 {
                     Debug.LogWarning("[InventoryManager] Inventory full.");
                     OnInventoryChanged?.Invoke();
@@ -141,14 +143,17 @@ namespace Project.Scripts.Core.Managers
 
         public bool RemoveItem(string itemId, int amount = 1)
         {
-            if (string.IsNullOrEmpty(itemId) || amount <= 0) return false;
+            if(string.IsNullOrEmpty(itemId) || amount <= 0)
+                return false;
 
             int totalOwned = GetItemCount(itemId);
-            if (totalOwned < amount) return false;
+            if(totalOwned < amount)
+                return false;
 
-            for (int i = _slots.Count - 1; i >= 0 && amount > 0; i--)
+            for(int i = _slots.Count - 1; i >= 0 && amount > 0; i--)
             {
-                if (_slots[i].itemId != itemId) continue;
+                if(_slots[i].itemId != itemId)
+                    continue;
 
                 int toRemove = Mathf.Min(amount, _slots[i].count);
                 int remaining = _slots[i].count - toRemove;
@@ -172,9 +177,9 @@ namespace Project.Scripts.Core.Managers
         public int GetItemCount(string itemId)
         {
             int total = 0;
-            foreach (var slot in _slots)
+            foreach(var slot in _slots)
             {
-                if (slot.itemId == itemId)
+                if(slot.itemId == itemId)
                     total += slot.count;
             }
             return total;
@@ -192,13 +197,13 @@ namespace Project.Scripts.Core.Managers
         public void LoadFromSaveData(ItemSlot[] data)
         {
             _slots.Clear();
-            if (data != null)
+            if(data != null)
             {
-                foreach (var slot in data)
+                foreach(var slot in data)
                     _slots.Add(slot);
             }
 
-            while (_slots.Count < maxSlots)
+            while(_slots.Count < maxSlots)
                 _slots.Add(new ItemSlot());
 
             OnInventoryChanged?.Invoke();
@@ -210,9 +215,10 @@ namespace Project.Scripts.Core.Managers
 
         private int FindEmptySlot()
         {
-            for (int i = 0; i < _slots.Count; i++)
+            for(int i = 0; i < _slots.Count; i++)
             {
-                if (_slots[i].IsEmpty) return i;
+                if(_slots[i].IsEmpty)
+                    return i;
             }
             return -1;
         }

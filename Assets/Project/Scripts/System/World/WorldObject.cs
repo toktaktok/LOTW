@@ -26,7 +26,7 @@ namespace Project.Scripts.System.World
 
         protected virtual void OnDestroy()
         {
-            if (WorldManager.Instance != null)
+            if(WorldManager.Instance != null)
                 WorldManager.Instance.Unregister(this);
         }
 

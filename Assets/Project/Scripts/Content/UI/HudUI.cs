@@ -18,11 +18,12 @@ namespace Project.Scripts.Content.UI
 
         public void ShowInteractionHint(string prompt)
         {
-            if (interactionHintRoot == null) return;
+            if(interactionHintRoot == null)
+                return;
 
             interactionHintText.text = prompt;
 
-            if (!_hintVisible)
+            if(!_hintVisible)
             {
                 interactionHintRoot.SetActive(true);
                 _hintVisible = true;
@@ -31,7 +32,8 @@ namespace Project.Scripts.Content.UI
 
         public void HideInteractionHint()
         {
-            if (!_hintVisible || interactionHintRoot == null) return;
+            if(!_hintVisible || interactionHintRoot == null)
+                return;
 
             interactionHintRoot.SetActive(false);
             _hintVisible = false;

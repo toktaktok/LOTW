@@ -27,7 +27,7 @@ namespace Project.Scripts.System.World.Map
         public static string Save(MapData data, string mapName)
         {
             string dir = Path.Combine(Application.persistentDataPath, MapFolder);
-            if (!Directory.Exists(dir))
+            if(!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
             string path = Path.Combine(dir, $"map_{mapName}.json");
@@ -40,13 +40,13 @@ namespace Project.Scripts.System.World.Map
 
         public static MapData Load(string path)
         {
-            if (string.IsNullOrEmpty(path) || !File.Exists(path))
+            if(string.IsNullOrEmpty(path) || !File.Exists(path))
                 return null;
             try
             {
                 return JsonUtility.FromJson<MapData>(File.ReadAllText(path));
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Debug.LogError($"[MapSerializer] Failed to load map at {path}: {ex.Message}");
                 return null;
@@ -64,7 +64,7 @@ namespace Project.Scripts.System.World.Map
 
         public static void RequestPromote()
         {
-            if (!DirtySaved || string.IsNullOrEmpty(LastSavedPath))
+            if(!DirtySaved || string.IsNullOrEmpty(LastSavedPath))
             {
                 Debug.LogWarning("[MapSerializer] Promote ignored: no map saved this session.");
                 return;

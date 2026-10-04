@@ -16,43 +16,43 @@ namespace Project.Scripts.Content.UI
 
         public void Set(ItemSlot slot, ItemData? data)
         {
-            if (slot.IsEmpty)
+            if(slot.IsEmpty)
             {
                 SetEmpty();
                 return;
             }
 
-            if (iconImage != null)
+            if(iconImage != null)
             {
                 iconImage.sprite = data?.icon;
                 iconImage.enabled = data?.icon != null;
             }
 
-            if (countText != null)
+            if(countText != null)
             {
                 countText.text = slot.count > 1 ? slot.count.ToString() : string.Empty;
                 countText.enabled = true;
             }
 
-            if (emptyOverlay != null)
+            if(emptyOverlay != null)
                 emptyOverlay.SetActive(false);
         }
 
         public void SetEmpty()
         {
-            if (iconImage != null)
+            if(iconImage != null)
             {
                 iconImage.sprite = null;
                 iconImage.enabled = false;
             }
 
-            if (countText != null)
+            if(countText != null)
             {
                 countText.text = string.Empty;
                 countText.enabled = false;
             }
 
-            if (emptyOverlay != null)
+            if(emptyOverlay != null)
                 emptyOverlay.SetActive(true);
         }
     }

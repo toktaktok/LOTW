@@ -29,7 +29,7 @@ namespace Project.Scripts.System.Trigger
 
         public void Interact(GameObject interactor)
         {
-            if (string.IsNullOrEmpty(targetScene))
+            if(string.IsNullOrEmpty(targetScene))
             {
                 Debug.LogWarning($"[SceneExitZone] {name}: targetScene이 비어 있습니다.");
                 return;

@@ -30,10 +30,11 @@ namespace Project.Scripts.Core
         /// </summary>
         public void Subscribe<TSignal>(Action<TSignal> handler)
         {
-            if (handler == null) return;
+            if(handler == null)
+                return;
 
             Type key = typeof(TSignal);
-            if (!_handlers.TryGetValue(key, out var list))
+            if(!_handlers.TryGetValue(key, out var list))
             {
                 list = new List<Delegate>();
                 _handlers[key] = list;
@@ -48,13 +49,15 @@ namespace Project.Scripts.Core
         /// </summary>
         public void Unsubscribe<TSignal>(Action<TSignal> handler)
         {
-            if (handler == null) return;
+            if(handler == null)
+                return;
 
             Type key = typeof(TSignal);
-            if (!_handlers.TryGetValue(key, out var list)) return;
+            if(!_handlers.TryGetValue(key, out var list))
+                return;
 
             list.Remove(handler);
-            if (list.Count == 0)
+            if(list.Count == 0)
                 _handlers.Remove(key);
         }
 
@@ -65,20 +68,21 @@ namespace Project.Scripts.Core
         public void Publish<TSignal>(TSignal signal)
         {
             Type key = typeof(TSignal);
-            if (!_handlers.TryGetValue(key, out var list) || list.Count == 0)
+            if(!_handlers.TryGetValue(key, out var list) || list.Count == 0)
                 return;
 
             // 게시 도중 구독/해제가 일어나도 안전하도록 스냅샷을 순회합니다.
             var snapshot = list.ToArray();
-            foreach (var entry in snapshot)
+            foreach(var entry in snapshot)
             {
-                if (entry is not Action<TSignal> handler) continue;
+                if(entry is not Action<TSignal> handler)
+                    continue;
 
                 try
                 {
                     handler(signal);
                 }
-                catch (Exception ex)
+                catch(Exception ex)
                 {
                     OnHandlerException?.Invoke(ex);
                 }

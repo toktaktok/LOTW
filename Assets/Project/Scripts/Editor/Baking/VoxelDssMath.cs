@@ -31,7 +31,8 @@ namespace Project.Scripts.Editor.Baking
         /// <summary>좌표를 채움 상태로 표시. 범위를 벗어나면 무시(경계 안전).</summary>
         public void SetFilled(int x, int y, int z)
         {
-            if (!InRange(x, y, z)) return;
+            if(!InRange(x, y, z))
+                return;
             _cells[Index(x, y, z)] = 255;
         }
 

@@ -12,34 +12,34 @@ namespace Project.Scripts.System.World.Map
         public static List<string> Validate(MapData data)
         {
             List<string> warnings = new List<string>();
-            if (data == null)
+            if(data == null)
             {
                 warnings.Add("MapData is null.");
                 return warnings;
             }
 
             HashSet<int> nodeIds = new HashSet<int>();
-            if (data.nodes != null)
+            if(data.nodes != null)
             {
-                foreach (NodeEntry n in data.nodes)
-                    if (!nodeIds.Add(n.id))
+                foreach(NodeEntry n in data.nodes)
+                    if(!nodeIds.Add(n.id))
                         warnings.Add($"Duplicate node id {n.id}.");
             }
-            if (nodeIds.Count == 0)
+            if(nodeIds.Count == 0)
                 warnings.Add("Map has no nodes.");
 
             Dictionary<int, int> degree = new Dictionary<int, int>();
-            if (data.edges != null)
+            if(data.edges != null)
             {
                 HashSet<long> seen = new HashSet<long>();
-                foreach (EdgeEntry e in data.edges)
+                foreach(EdgeEntry e in data.edges)
                 {
-                    if (e.a == e.b)
+                    if(e.a == e.b)
                     {
                         warnings.Add($"Self edge on node {e.a}.");
                         continue;
                     }
-                    if (!nodeIds.Contains(e.a) || !nodeIds.Contains(e.b))
+                    if(!nodeIds.Contains(e.a) || !nodeIds.Contains(e.b))
                     {
                         warnings.Add($"Edge {e.a}-{e.b} references a missing node.");
                         continue;
@@ -47,7 +47,7 @@ namespace Project.Scripts.System.World.Map
                     int lo = e.a < e.b ? e.a : e.b;
                     int hi = e.a < e.b ? e.b : e.a;
                     long key = ((long)lo << 32) | (uint)hi;
-                    if (!seen.Add(key))
+                    if(!seen.Add(key))
                     {
                         warnings.Add($"Duplicate edge {e.a}-{e.b}.");
                         continue;
@@ -56,20 +56,20 @@ namespace Project.Scripts.System.World.Map
                     degree.TryGetValue(e.b, out int db); degree[e.b] = db + 1;
                 }
             }
-            foreach (KeyValuePair<int, int> kv in degree)
-                if (kv.Value > 2)
+            foreach(KeyValuePair<int, int> kv in degree)
+                if(kv.Value > 2)
                     warnings.Add($"Node {kv.Key} has {kv.Value} neighbors (max 2).");
 
             HashSet<int> objIds = new HashSet<int>();
-            if (data.placeables != null)
+            if(data.placeables != null)
             {
-                foreach (PlaceableEntry p in data.placeables)
+                foreach(PlaceableEntry p in data.placeables)
                 {
-                    if (p.objectID != 0 && !objIds.Add(p.objectID))
+                    if(p.objectID != 0 && !objIds.Add(p.objectID))
                         warnings.Add($"Duplicate placeable objectID {p.objectID}.");
-                    if (string.IsNullOrEmpty(p.prefabId))
+                    if(string.IsNullOrEmpty(p.prefabId))
                         warnings.Add($"Placeable objectID {p.objectID} has empty prefabId.");
-                    if (p.linkedNodeId != -1 && !nodeIds.Contains(p.linkedNodeId))
+                    if(p.linkedNodeId != -1 && !nodeIds.Contains(p.linkedNodeId))
                         warnings.Add($"Placeable objectID {p.objectID} links to missing node {p.linkedNodeId}.");
                 }
             }

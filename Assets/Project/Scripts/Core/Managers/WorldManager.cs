@@ -17,7 +17,8 @@ namespace Project.Scripts.Core.Managers
 
         public void Register(int id, T obj)
         {
-            if (obj == null) return;
+            if(obj == null)
+                return;
             _objects[id] = obj;
         }
 
@@ -64,13 +65,15 @@ namespace Project.Scripts.Core.Managers
 
         public void Register(WorldObject obj)
         {
-            if (obj == null) return;
+            if(obj == null)
+                return;
             _registry.Register(obj.ObjectID, obj);
         }
 
         public void Unregister(WorldObject obj)
         {
-            if (obj == null) return;
+            if(obj == null)
+                return;
             _registry.Unregister(obj.ObjectID);
         }
 

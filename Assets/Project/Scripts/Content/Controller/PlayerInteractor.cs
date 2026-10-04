@@ -34,7 +34,7 @@ namespace Project.Scripts.Content.Controller
         {
             DetectNearbyInteractable();
 
-            if (_controls.Player.Interact.WasPressedThisFrame())
+            if(_controls.Player.Interact.WasPressedThisFrame())
                 TryInteract();
         }
 
@@ -50,12 +50,12 @@ namespace Project.Scripts.Content.Controller
             IInteractable closest = null;
             float closestSqrDist = float.MaxValue;
 
-            for (int i = 0; i < hitCount; i++)
+            for(int i = 0; i < hitCount; i++)
             {
-                if (_hitResults[i].TryGetComponent(out IInteractable interactable))
+                if(_hitResults[i].TryGetComponent(out IInteractable interactable))
                 {
                     float sqrDist = (_hitResults[i].transform.position - currentCharacter.Position).sqrMagnitude;
-                    if (sqrDist < closestSqrDist)
+                    if(sqrDist < closestSqrDist)
                     {
                         closestSqrDist = sqrDist;
                         closest = interactable;
@@ -63,7 +63,7 @@ namespace Project.Scripts.Content.Controller
                 }
             }
 
-            if (closest != _currentNearby)
+            if(closest != _currentNearby)
             {
                 _currentNearby = closest;
                 UpdateHint();
@@ -72,12 +72,13 @@ namespace Project.Scripts.Content.Controller
 
         private void UpdateHint()
         {
-            if (_hud == null)
+            if(_hud == null)
                 _hud = FindFirstObjectByType<HudUI>();
 
-            if (_hud == null) return;
+            if(_hud == null)
+                return;
 
-            if (_currentNearby != null)
+            if(_currentNearby != null)
                 _hud.ShowInteractionHint(_currentNearby.InteractionPrompt);
             else
                 _hud.HideInteractionHint();
@@ -85,7 +86,7 @@ namespace Project.Scripts.Content.Controller
 
         private void TryInteract()
         {
-            if (_currentNearby != null)
+            if(_currentNearby != null)
             {
                 UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup,
                     ui => ui.Setup(_currentNearby, gameObject));

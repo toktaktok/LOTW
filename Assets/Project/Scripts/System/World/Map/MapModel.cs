@@ -32,9 +32,10 @@ namespace Project.Scripts.System.World.Map
 
         public bool MoveNode(int id, Vector3 position)
         {
-            for (int i = 0; i < nodes.Count; i++)
+            for(int i = 0; i < nodes.Count; i++)
             {
-                if (nodes[i].id != id) continue;
+                if(nodes[i].id != id)
+                    continue;
                 NodeEntry n = nodes[i];
                 n.position = position;
                 nodes[i] = n;
@@ -52,8 +53,9 @@ namespace Project.Scripts.System.World.Map
         public int NeighborCount(int id)
         {
             int c = 0;
-            foreach (EdgeEntry e in edges)
-                if (e.a == id || e.b == id) c++;
+            foreach(EdgeEntry e in edges)
+                if(e.a == id || e.b == id)
+                    c++;
             return c;
         }
 
@@ -63,16 +65,18 @@ namespace Project.Scripts.System.World.Map
 
         public bool HasEdge(int a, int b)
         {
-            foreach (EdgeEntry e in edges)
-                if ((e.a == a && e.b == b) || (e.a == b && e.b == a)) return true;
+            foreach(EdgeEntry e in edges)
+                if((e.a == a && e.b == b) || (e.a == b && e.b == a))
+                    return true;
             return false;
         }
 
         /// <summary>RailNode와 동일하게 노드당 최대 2개 이웃 제한을 사전 검사합니다.</summary>
         public bool AddEdge(int a, int b)
         {
-            if (a == b || HasEdge(a, b)) return false;
-            if (NeighborCount(a) >= 2 || NeighborCount(b) >= 2)
+            if(a == b || HasEdge(a, b))
+                return false;
+            if(NeighborCount(a) >= 2 || NeighborCount(b) >= 2)
             {
                 Debug.LogWarning($"[MapModel] Cannot connect {a}-{b}: a node is full (max 2).");
                 return false;
@@ -92,16 +96,18 @@ namespace Project.Scripts.System.World.Map
 
         public int AddPlaceable(PlaceableEntry entry)
         {
-            if (entry.objectID == 0) entry.objectID = AllocId();
+            if(entry.objectID == 0)
+                entry.objectID = AllocId();
             placeables.Add(entry);
             return entry.objectID;
         }
 
         public bool MovePlaceable(int objectID, Vector3 position)
         {
-            for (int i = 0; i < placeables.Count; i++)
+            for(int i = 0; i < placeables.Count; i++)
             {
-                if (placeables[i].objectID != objectID) continue;
+                if(placeables[i].objectID != objectID)
+                    continue;
                 PlaceableEntry p = placeables[i];
                 p.position = position;
                 placeables[i] = p;
@@ -135,7 +141,8 @@ namespace Project.Scripts.System.World.Map
         /// <summary>다른 모델의 내용으로 이 인스턴스를 덮어씁니다 (readonly 참조 유지용).</summary>
         public void CopyFrom(MapModel other)
         {
-            if (other == null) return;
+            if(other == null)
+                return;
             mapName = other.mapName;
             _nextId = other._nextId;
             nodes.Clear(); nodes.AddRange(other.nodes);
@@ -146,13 +153,17 @@ namespace Project.Scripts.System.World.Map
         public static MapModel FromData(MapData data)
         {
             MapModel m = new MapModel();
-            if (data == null) return m;
+            if(data == null)
+                return m;
 
             m.mapName = string.IsNullOrEmpty(data.mapName) ? "untitled" : data.mapName;
             m._nextId = Mathf.Max(1, data.nextId);
-            if (data.nodes != null) m.nodes.AddRange(data.nodes);
-            if (data.edges != null) m.edges.AddRange(data.edges);
-            if (data.placeables != null) m.placeables.AddRange(data.placeables);
+            if(data.nodes != null)
+                m.nodes.AddRange(data.nodes);
+            if(data.edges != null)
+                m.edges.AddRange(data.edges);
+            if(data.placeables != null)
+                m.placeables.AddRange(data.placeables);
             return m;
         }
 

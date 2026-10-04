@@ -24,14 +24,14 @@ namespace Tests.EditMode
         [Test]
         public void Evaluate_AtZero_IsZero_ForAllTypes()
         {
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
                 Assert.AreEqual(0f, Easing.Evaluate(0f, type), Tol, type.ToString());
         }
 
         [Test]
         public void Evaluate_AtOne_IsOne_ForAllTypes()
         {
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
                 Assert.AreEqual(1f, Easing.Evaluate(1f, type), Tol, type.ToString());
         }
 
@@ -41,10 +41,10 @@ namespace Tests.EditMode
         public void Evaluate_IsMonotonicNonDecreasing_ForAllTypes()
         {
             const int steps = 100;
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
             {
                 float prev = Easing.Evaluate(0f, type);
-                for (int i = 1; i <= steps; i++)
+                for(int i = 1; i <= steps; i++)
                 {
                     float t = i / (float)steps;
                     float cur = Easing.Evaluate(t, type);
@@ -60,9 +60,9 @@ namespace Tests.EditMode
         public void Evaluate_StaysWithinUnitRange_ForAllTypes()
         {
             const int steps = 50;
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
             {
-                for (int i = 0; i <= steps; i++)
+                for(int i = 0; i <= steps; i++)
                 {
                     float t = i / (float)steps;
                     float v = Easing.Evaluate(t, type);
@@ -77,14 +77,14 @@ namespace Tests.EditMode
         [Test]
         public void Evaluate_ClampsBelowZero_ForAllTypes()
         {
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
                 Assert.AreEqual(0f, Easing.Evaluate(-0.5f, type), Tol, type.ToString());
         }
 
         [Test]
         public void Evaluate_ClampsAboveOne_ForAllTypes()
         {
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
                 Assert.AreEqual(1f, Easing.Evaluate(1.5f, type), Tol, type.ToString());
         }
 
@@ -107,7 +107,7 @@ namespace Tests.EditMode
         public void SmoothStep_IsSymmetricAboutMidpoint()
         {
             // f(t) + f(1-t) == 1 for this curve
-            for (int i = 0; i <= 10; i++)
+            for(int i = 0; i <= 10; i++)
             {
                 float t = i / 10f;
                 Assert.AreEqual(1f, Easing.SmoothStep(t) + Easing.SmoothStep(1f - t), Tol, $"t={t}");
@@ -183,7 +183,7 @@ namespace Tests.EditMode
         [Test]
         public void Lerp_WithEaseType_PreservesEndpoints()
         {
-            foreach (var type in AllTypes)
+            foreach(var type in AllTypes)
             {
                 Assert.AreEqual(5f, Easing.Lerp(5f, 9f, 0f, type), Tol, type.ToString());
                 Assert.AreEqual(9f, Easing.Lerp(5f, 9f, 1f, type), Tol, type.ToString());

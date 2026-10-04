@@ -26,13 +26,14 @@ namespace Project.Scripts.Core.Managers
 
         public bool Save(int slot, T data)
         {
-            if (!ValidateSlot(slot)) return false;
+            if(!ValidateSlot(slot))
+                return false;
 
             string json = JsonUtility.ToJson(data, true);
             string path = GetSavePath(slot);
 
             string dir = Path.GetDirectoryName(path);
-            if (!Directory.Exists(dir))
+            if(!Directory.Exists(dir))
                 Directory.CreateDirectory(dir);
 
             File.WriteAllText(path, json);
@@ -41,17 +42,19 @@ namespace Project.Scripts.Core.Managers
 
         public T? Load(int slot)
         {
-            if (!ValidateSlot(slot)) return null;
+            if(!ValidateSlot(slot))
+                return null;
 
             string path = GetSavePath(slot);
-            if (!File.Exists(path)) return null;
+            if(!File.Exists(path))
+                return null;
 
             try
             {
                 string json = File.ReadAllText(path);
                 return JsonUtility.FromJson<T>(json);
             }
-            catch (Exception ex)
+            catch(Exception ex)
             {
                 Debug.LogError($"[SaveSystem] Failed to load slot {slot}: {ex.Message}");
                 return null;
@@ -65,9 +68,10 @@ namespace Project.Scripts.Core.Managers
 
         public void DeleteSave(int slot)
         {
-            if (!ValidateSlot(slot)) return;
+            if(!ValidateSlot(slot))
+                return;
             string path = GetSavePath(slot);
-            if (File.Exists(path))
+            if(File.Exists(path))
                 File.Delete(path);
         }
 
@@ -121,7 +125,7 @@ namespace Project.Scripts.Core.Managers
         {
             data.timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            if (_saveSystem.Save(slot, data))
+            if(_saveSystem.Save(slot, data))
             {
                 Debug.Log($"[SaveManager] Saved to slot {slot}");
                 GameInstance.Instance.SelectSaveSlot(slot);
@@ -132,7 +136,7 @@ namespace Project.Scripts.Core.Managers
         public SaveData? Load(int slot)
         {
             SaveData? data = _saveSystem.Load(slot);
-            if (data.HasValue)
+            if(data.HasValue)
             {
                 GameInstance.Instance.SelectSaveSlot(slot);
                 OnGameLoaded?.Invoke(slot);

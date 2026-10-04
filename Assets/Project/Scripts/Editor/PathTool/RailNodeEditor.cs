@@ -63,7 +63,7 @@ namespace Project.Scripts.Editor
                 EditorGUILayout.EndHorizontal();
             }
             
-            if (nodeCount < 2)
+            if(nodeCount < 2)
             {
                 GUI.backgroundColor = Color.cyan;
                 //빈 슬롯 추가
@@ -89,10 +89,10 @@ namespace Project.Scripts.Editor
             string newName = "RailNode_Next";
 
             int underscoreIndex = currentName.LastIndexOf('_');
-            if (underscoreIndex>=0 && underscoreIndex < currentName.Length-1)
+            if(underscoreIndex>=0 && underscoreIndex < currentName.Length-1)
             {
                 string suffix = currentName.Substring(underscoreIndex + 1);
-                if (int.TryParse(suffix, out int number))
+                if(int.TryParse(suffix, out int number))
                     newName = $"RailNode_{number+1}"; // 5 -> 6
             }
             else

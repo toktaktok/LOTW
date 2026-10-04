@@ -43,7 +43,7 @@ namespace Project.Scripts.Content.World
             string labelText = name;
             int underscoreIndex = name.LastIndexOf('_');
 
-            if (underscoreIndex >= 0 && underscoreIndex < name.Length - 1)
+            if(underscoreIndex >= 0 && underscoreIndex < name.Length - 1)
             {
                 labelText = name.Substring(underscoreIndex + 1);
             }

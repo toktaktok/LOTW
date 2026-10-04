@@ -40,7 +40,7 @@ namespace Project.Scripts.System.World
 
             Handles.Label(pos + Vector3.up * 1.8f, $"[Entrance]\n{entranceId}");
 
-            if (startNode != null)
+            if(startNode != null)
             {
                 Gizmos.color = new Color(1f, 1f, 0f, 0.4f);
                 Gizmos.DrawLine(pos, startNode.transform.position);

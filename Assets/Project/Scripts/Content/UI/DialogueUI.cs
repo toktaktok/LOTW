@@ -47,7 +47,7 @@ namespace Project.Scripts.Content.UI
 
             SetSpeaker(null);
 
-            if (promptText != null)
+            if(promptText != null)
                 promptText.text = interactable.InteractionPrompt;
 
             SetButtonVisibility(true);
@@ -70,7 +70,7 @@ namespace Project.Scripts.Content.UI
 
         private void ShowCurrentLine()
         {
-            if (_lines == null || _lineIndex >= _lines.Length)
+            if(_lines == null || _lineIndex >= _lines.Length)
             {
                 FinishDialogue();
                 return;
@@ -79,15 +79,16 @@ namespace Project.Scripts.Content.UI
             DialogueLine line = _lines[_lineIndex];
             SetSpeaker(line.speaker);
 
-            if (promptText != null)
+            if(promptText != null)
                 promptText.text = line.text;
         }
 
         private void SetSpeaker(string speaker)
         {
-            if (speakerText == null) return;
+            if(speakerText == null)
+                return;
 
-            if (string.IsNullOrEmpty(speaker))
+            if(string.IsNullOrEmpty(speaker))
             {
                 speakerText.gameObject.SetActive(false);
             }
@@ -100,13 +101,16 @@ namespace Project.Scripts.Content.UI
 
         private void SetButtonVisibility(bool visible)
         {
-            if (confirmButton != null) confirmButton.gameObject.SetActive(visible);
-            if (cancelButton != null) cancelButton.gameObject.SetActive(visible);
+            if(confirmButton != null)
+                confirmButton.gameObject.SetActive(visible);
+            if(cancelButton != null)
+                cancelButton.gameObject.SetActive(visible);
         }
 
         private void OnConfirm()
         {
-            if (_isDialogueMode) return;
+            if(_isDialogueMode)
+                return;
 
             _pending?.Interact(_interactor);
             _pending = null;
@@ -115,7 +119,7 @@ namespace Project.Scripts.Content.UI
 
         private void OnCancel()
         {
-            if (_isDialogueMode)
+            if(_isDialogueMode)
             {
                 FinishDialogue();
                 return;
@@ -130,7 +134,8 @@ namespace Project.Scripts.Content.UI
         /// </summary>
         public void AdvanceLine()
         {
-            if (!_isDialogueMode) return;
+            if(!_isDialogueMode)
+                return;
 
             _lineIndex++;
             ShowCurrentLine();

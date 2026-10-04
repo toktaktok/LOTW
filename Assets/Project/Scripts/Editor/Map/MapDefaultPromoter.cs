@@ -34,16 +34,16 @@ namespace Project.Scripts.Editor.Map
 
         private static void OnPlayModeChanged(PlayModeStateChange state)
         {
-            if (state != PlayModeStateChange.ExitingPlayMode)
+            if(state != PlayModeStateChange.ExitingPlayMode)
                 return;
-            if (!SessionState.GetBool(KeyRequested, false))
+            if(!SessionState.GetBool(KeyRequested, false))
                 return;
 
             string savedPath = SessionState.GetString(KeyPath, "");
             SessionState.EraseBool(KeyRequested);
             SessionState.EraseString(KeyPath);
 
-            if (string.IsNullOrEmpty(savedPath) || !File.Exists(savedPath))
+            if(string.IsNullOrEmpty(savedPath) || !File.Exists(savedPath))
             {
                 Debug.LogWarning("[MapDefaultPromoter] No saved map file to promote.");
                 return;

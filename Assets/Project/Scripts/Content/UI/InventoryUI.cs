@@ -38,19 +38,20 @@ namespace Project.Scripts.Content.UI
 
         private void CacheSlotUIs()
         {
-            if (slotContainer != null)
+            if(slotContainer != null)
                 _slotUIs = slotContainer.GetComponentsInChildren<InventorySlotUI>(true);
         }
 
         public void Refresh()
         {
-            if (_slotUIs == null || _slotUIs.Length == 0) return;
+            if(_slotUIs == null || _slotUIs.Length == 0)
+                return;
 
             var slots = InventoryManager.Instance.Slots;
 
-            for (int i = 0; i < _slotUIs.Length; i++)
+            for(int i = 0; i < _slotUIs.Length; i++)
             {
-                if (i < slots.Count)
+                if(i < slots.Count)
                 {
                     var slot = slots[i];
                     ItemData? data = slot.IsEmpty ? null : InventoryManager.Instance.GetItemData(slot.itemId);

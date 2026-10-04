@@ -41,14 +41,14 @@ namespace Project.Scripts.Core.Managers
         {
             base.Awake();
 
-            if (bgmSource == null)
+            if(bgmSource == null)
             {
                 bgmSource = gameObject.AddComponent<AudioSource>();
                 bgmSource.loop = true;
                 bgmSource.playOnAwake = false;
             }
 
-            if (sfxSource == null)
+            if(sfxSource == null)
             {
                 sfxSource = gameObject.AddComponent<AudioSource>();
                 sfxSource.loop = false;
@@ -58,7 +58,7 @@ namespace Project.Scripts.Core.Managers
 
         private void Start()
         {
-            if (_volumeProvider == null)
+            if(_volumeProvider == null)
                 SetVolumeProvider(GameInstance.Instance);
 
             ApplyVolume();
@@ -85,7 +85,7 @@ namespace Project.Scripts.Core.Managers
             _volumeProvider = provider;
 
             // GameInstance인 경우 자동으로 이벤트 구독
-            if (provider is GameInstance)
+            if(provider is GameInstance)
                 GameInstance.OnSettingsChanged += ApplyVolume;
 
             ApplyVolume();
@@ -97,14 +97,15 @@ namespace Project.Scripts.Core.Managers
 
         public void PlayBGM(AudioClip clip, bool crossfade = true)
         {
-            if (clip == null) return;
-
-            if (bgmSource.clip == clip && bgmSource.isPlaying)
+            if(clip == null)
                 return;
 
-            if (crossfade && bgmSource.isPlaying)
+            if(bgmSource.clip == clip && bgmSource.isPlaying)
+                return;
+
+            if(crossfade && bgmSource.isPlaying)
             {
-                if (_crossfadeRoutine != null)
+                if(_crossfadeRoutine != null)
                     StopCoroutine(_crossfadeRoutine);
                 _crossfadeRoutine = StartCoroutine(CrossfadeRoutine(clip));
             }
@@ -118,11 +119,12 @@ namespace Project.Scripts.Core.Managers
 
         public void StopBGM(bool fadeOut = true)
         {
-            if (!bgmSource.isPlaying) return;
+            if(!bgmSource.isPlaying)
+                return;
 
-            if (fadeOut)
+            if(fadeOut)
             {
-                if (_crossfadeRoutine != null)
+                if(_crossfadeRoutine != null)
                     StopCoroutine(_crossfadeRoutine);
                 _crossfadeRoutine = StartCoroutine(FadeOutRoutine());
             }
@@ -138,7 +140,7 @@ namespace Project.Scripts.Core.Managers
             float startVol = bgmSource.volume;
 
             float timer = 0f;
-            while (timer < half)
+            while(timer < half)
             {
                 timer += Time.unscaledDeltaTime;
                 bgmSource.volume = Mathf.Lerp(startVol, 0f, timer / half);
@@ -150,7 +152,7 @@ namespace Project.Scripts.Core.Managers
 
             float targetVol = GetBgmVolume();
             timer = 0f;
-            while (timer < half)
+            while(timer < half)
             {
                 timer += Time.unscaledDeltaTime;
                 bgmSource.volume = Mathf.Lerp(0f, targetVol, timer / half);
@@ -167,7 +169,7 @@ namespace Project.Scripts.Core.Managers
             float timer = 0f;
             float duration = crossfadeDuration * 0.5f;
 
-            while (timer < duration)
+            while(timer < duration)
             {
                 timer += Time.unscaledDeltaTime;
                 bgmSource.volume = Mathf.Lerp(startVol, 0f, timer / duration);
@@ -185,13 +187,15 @@ namespace Project.Scripts.Core.Managers
 
         public void PlaySFX(AudioClip clip)
         {
-            if (clip == null) return;
+            if(clip == null)
+                return;
             sfxSource.PlayOneShot(clip, GetSfxVolume());
         }
 
         public void PlaySFXAtPoint(AudioClip clip, Vector3 position)
         {
-            if (clip == null) return;
+            if(clip == null)
+                return;
             AudioSource.PlayClipAtPoint(clip, position, GetSfxVolume());
         }
 
@@ -201,20 +205,23 @@ namespace Project.Scripts.Core.Managers
 
         public void ApplyVolume()
         {
-            if (_volumeProvider == null) return;
+            if(_volumeProvider == null)
+                return;
             bgmSource.volume = GetBgmVolume();
             sfxSource.volume = GetSfxVolume();
         }
 
         private float GetBgmVolume()
         {
-            if (_volumeProvider == null) return 1f;
+            if(_volumeProvider == null)
+                return 1f;
             return _volumeProvider.MasterVolume * _volumeProvider.BgmVolume;
         }
 
         private float GetSfxVolume()
         {
-            if (_volumeProvider == null) return 1f;
+            if(_volumeProvider == null)
+                return 1f;
             return _volumeProvider.MasterVolume * _volumeProvider.SfxVolume;
         }
 

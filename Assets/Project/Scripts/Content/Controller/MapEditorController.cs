@@ -44,25 +44,31 @@ namespace Project.Scripts.Content.Controller
         private void Update()
         {
             Keyboard kb = Keyboard.current;
-            if (kb == null)
+            if(kb == null)
                 return;
 
-            if (kb.f2Key.wasPressedThisFrame)
+            if(kb.f2Key.wasPressedThisFrame)
             {
                 SetEditing(!_editing);
                 return;
             }
-            if (!_editing)
+            if(!_editing)
                 return;
 
-            if (kb.digit1Key.wasPressedThisFrame) _mode = Mode.Place;
-            else if (kb.digit2Key.wasPressedThisFrame) _mode = Mode.SelectMove;
-            else if (kb.digit3Key.wasPressedThisFrame) { _mode = Mode.Connect; _connectFirst = -1; }
-            else if (kb.digit4Key.wasPressedThisFrame) _mode = Mode.Delete;
+            if(kb.digit1Key.wasPressedThisFrame)
+                _mode = Mode.Place;
+            else if(kb.digit2Key.wasPressedThisFrame)
+                _mode = Mode.SelectMove;
+            else if(kb.digit3Key.wasPressedThisFrame) { _mode = Mode.Connect; _connectFirst = -1; }
+            else if(kb.digit4Key.wasPressedThisFrame)
+                _mode = Mode.Delete;
 
-            if (kb.f5Key.wasPressedThisFrame) Save();
-            if (kb.f6Key.wasPressedThisFrame) Reload();
-            if (kb.pKey.wasPressedThisFrame) MapSerializer.RequestPromote();
+            if(kb.f5Key.wasPressedThisFrame)
+                Save();
+            if(kb.f6Key.wasPressedThisFrame)
+                Reload();
+            if(kb.pKey.wasPressedThisFrame)
+                MapSerializer.RequestPromote();
 
             HandleMouse();
         }
@@ -71,13 +77,16 @@ namespace Project.Scripts.Content.Controller
         {
             _editing = on;
 
-            if (_player == null) _player = FindFirstObjectByType<PlayerController>();
-            if (_interactor == null) _interactor = FindFirstObjectByType<PlayerInteractor>();
+            if(_player == null)
+                _player = FindFirstObjectByType<PlayerController>();
+            if(_interactor == null)
+                _interactor = FindFirstObjectByType<PlayerInteractor>();
 
             // 상호작용 팝업만 끄고, 플레이어 이동은 유지해 새로 만든 레일을 걸어볼 수 있게 한다.
-            if (_interactor != null) _interactor.enabled = !on;
+            if(_interactor != null)
+                _interactor.enabled = !on;
 
-            if (on)
+            if(on)
             {
                 _builder.Build(_model);
                 RepointPlayer();
@@ -92,38 +101,38 @@ namespace Project.Scripts.Content.Controller
         private void HandleMouse()
         {
             Mouse mouse = Mouse.current;
-            if (mouse == null)
+            if(mouse == null)
                 return;
 
-            if (!TryGroundPoint(mouse.position.ReadValue(), out Vector3 point))
+            if(!TryGroundPoint(mouse.position.ReadValue(), out Vector3 point))
                 return;
 
-            switch (_mode)
+            switch(_mode)
             {
                 case Mode.Place:
-                    if (mouse.leftButton.wasPressedThisFrame)
+                    if(mouse.leftButton.wasPressedThisFrame)
                         PlaceNode(point);
                     break;
 
                 case Mode.SelectMove:
-                    if (mouse.leftButton.wasPressedThisFrame)
+                    if(mouse.leftButton.wasPressedThisFrame)
                     {
                         _selectedNodeId = PickNode(point);
                         _dragging = _selectedNodeId >= 0;
                     }
-                    if (_dragging && mouse.leftButton.isPressed && _selectedNodeId >= 0)
+                    if(_dragging && mouse.leftButton.isPressed && _selectedNodeId >= 0)
                         MoveNode(_selectedNodeId, point);
-                    if (!mouse.leftButton.isPressed)
+                    if(!mouse.leftButton.isPressed)
                         _dragging = false;
                     break;
 
                 case Mode.Connect:
-                    if (mouse.leftButton.wasPressedThisFrame)
+                    if(mouse.leftButton.wasPressedThisFrame)
                         ConnectPick(point);
                     break;
 
                 case Mode.Delete:
-                    if (mouse.leftButton.wasPressedThisFrame)
+                    if(mouse.leftButton.wasPressedThisFrame)
                         DeletePick(point);
                     break;
             }
@@ -136,7 +145,7 @@ namespace Project.Scripts.Content.Controller
             int id = _model.AddNode(point, Color.cyan, MapDefines.DefaultNodeRadius);
 
             // 선택된 노드가 있고 여유가 있으면 새 노드를 자동 연결한다.
-            if (_selectedNodeId >= 0 && _model.NeighborCount(_selectedNodeId) < 2)
+            if(_selectedNodeId >= 0 && _model.NeighborCount(_selectedNodeId) < 2)
                 _model.AddEdge(_selectedNodeId, id);
 
             _selectedNodeId = id;
@@ -146,26 +155,26 @@ namespace Project.Scripts.Content.Controller
 
         private void MoveNode(int id, Vector3 point)
         {
-            if (!_model.MoveNode(id, point))
+            if(!_model.MoveNode(id, point))
                 return;
-            if (_builder.NodeMap.TryGetValue(id, out RailNode rn) && rn != null)
+            if(_builder.NodeMap.TryGetValue(id, out RailNode rn) && rn != null)
                 rn.transform.position = point;
         }
 
         private void ConnectPick(Vector3 point)
         {
             int id = PickNode(point);
-            if (id < 0)
+            if(id < 0)
                 return;
 
-            if (_connectFirst < 0)
+            if(_connectFirst < 0)
             {
                 _connectFirst = id;
                 _message = $"Connect from {id}";
                 return;
             }
 
-            if (_model.AddEdge(_connectFirst, id))
+            if(_model.AddEdge(_connectFirst, id))
             {
                 Rebuild();
                 _message = $"Connected {_connectFirst}-{id}";
@@ -180,11 +189,12 @@ namespace Project.Scripts.Content.Controller
         private void DeletePick(Vector3 point)
         {
             int id = PickNode(point);
-            if (id < 0)
+            if(id < 0)
                 return;
 
             _model.DeleteNode(id);
-            if (_selectedNodeId == id) _selectedNodeId = -1;
+            if(_selectedNodeId == id)
+                _selectedNodeId = -1;
             Rebuild();
             _message = $"Deleted node {id}";
         }
@@ -199,7 +209,7 @@ namespace Project.Scripts.Content.Controller
         {
             string path = MapSerializer.ResolveMapPath(_model.mapName);
             var data = MapSerializer.Load(path);
-            if (data == null)
+            if(data == null)
             {
                 _message = "Reload: no saved map";
                 return;
@@ -223,7 +233,7 @@ namespace Project.Scripts.Content.Controller
         private void RepointPlayer()
         {
             RailNode first = _builder.FirstNode();
-            if (first != null && _player != null)
+            if(first != null && _player != null)
                 _player.WarpToEntrance(first.transform.position, first);
         }
 
@@ -231,11 +241,12 @@ namespace Project.Scripts.Content.Controller
         {
             int best = -1;
             float bestDist = MapDefines.NodePickRadius;
-            foreach (var kv in _builder.NodeMap)
+            foreach(var kv in _builder.NodeMap)
             {
-                if (kv.Value == null) continue;
+                if(kv.Value == null)
+                    continue;
                 float d = Vector3.Distance(point, kv.Value.transform.position);
-                if (d < bestDist)
+                if(d < bestDist)
                 {
                     bestDist = d;
                     best = kv.Key;
@@ -248,12 +259,12 @@ namespace Project.Scripts.Content.Controller
         {
             point = Vector3.zero;
             Camera cam = Camera.main;
-            if (cam == null)
+            if(cam == null)
                 return false;
 
             Ray ray = cam.ScreenPointToRay(screenPos);
             Plane ground = new Plane(Vector3.up, new Vector3(0f, MapDefines.GroundPlaneY, 0f));
-            if (ground.Raycast(ray, out float enter) && enter <= MapDefines.PlacementRayMaxDistance)
+            if(ground.Raycast(ray, out float enter) && enter <= MapDefines.PlacementRayMaxDistance)
             {
                 point = ray.GetPoint(enter);
                 return true;
@@ -263,7 +274,7 @@ namespace Project.Scripts.Content.Controller
 
         private void OnGUI()
         {
-            if (!_editing)
+            if(!_editing)
                 return;
 
             GUILayout.BeginArea(new Rect(10, 10, 340, 200), GUI.skin.box);
@@ -275,7 +286,7 @@ namespace Project.Scripts.Content.Controller
                 : "none";
             GUILayout.Label($"Selected: {sel}");
             GUILayout.Label("[F5]Save  [F6]Reload  [P]Promote default");
-            if (!string.IsNullOrEmpty(_message))
+            if(!string.IsNullOrEmpty(_message))
                 GUILayout.Label(_message);
             GUILayout.EndArea();
         }

@@ -55,7 +55,7 @@ namespace Project.Scripts.Core.Managers
         /// </summary>
         public T GetRow<T>(int dataId) where T : TableRowData
         {
-            if (_cache.TryGetValue(typeof(T), out object tableObj))
+            if(_cache.TryGetValue(typeof(T), out object tableObj))
             {
                 var dict = (Dictionary<int, T>)tableObj;
                 return dict.TryGetValue(dataId, out T row) ? row : null;
@@ -69,7 +69,7 @@ namespace Project.Scripts.Core.Managers
         /// </summary>
         public IReadOnlyCollection<T> GetRows<T>() where T : TableRowData
         {
-            if (_cache.TryGetValue(typeof(T), out object tableObj))
+            if(_cache.TryGetValue(typeof(T), out object tableObj))
                 return ((Dictionary<int, T>)tableObj).Values;
             return Array.Empty<T>();
         }
@@ -103,10 +103,10 @@ namespace Project.Scripts.Core.Managers
         private async Awaitable LoadTable<T>(string tableName) where T : TableRowData
         {
             ResourceRequest req = Resources.LoadAsync<TextAsset>($"Table/{tableName}");
-            while (!req.isDone)
+            while(!req.isDone)
                 await Awaitable.NextFrameAsync();
 
-            if (req.asset is not TextAsset textAsset)
+            if(req.asset is not TextAsset textAsset)
             {
                 Debug.LogError(
                     $"[DataManager] 파일 없음: Resources/Table/{tableName}.json\n" +
@@ -115,16 +115,16 @@ namespace Project.Scripts.Core.Managers
             }
 
             List<T> rows = JsonArrayHelper.FromJson<T>(textAsset.text);
-            if (rows == null || rows.Count == 0)
+            if(rows == null || rows.Count == 0)
             {
                 Debug.LogWarning($"[DataManager] {tableName}: 파싱 결과가 비어 있습니다.");
                 return;
             }
 
             var dict = new Dictionary<int, T>(rows.Count);
-            foreach (T row in rows)
+            foreach(T row in rows)
             {
-                if (dict.ContainsKey(row.dataId))
+                if(dict.ContainsKey(row.dataId))
                     Debug.LogWarning($"[DataManager] {tableName}: 중복 dataId = {row.dataId} (나중 값 사용)");
                 dict[row.dataId] = row;
             }

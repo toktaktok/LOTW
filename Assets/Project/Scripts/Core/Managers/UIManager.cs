@@ -126,7 +126,8 @@ namespace Project.Scripts.Core.Managers
                 }
             }
 
-            foreach(var task in tasks) await task;
+            foreach(var task in tasks)
+                await task;
             _pageNavigationStack.Push(newPage);
         }
 
@@ -143,7 +144,8 @@ namespace Project.Scripts.Core.Managers
                 tasks.Add(ui.HideAsync());
             }
 
-            foreach(var task in tasks) await task;
+            foreach(var task in tasks)
+                await task;
         }
 
         private async Awaitable ProcessClearAll()
@@ -160,10 +162,12 @@ namespace Project.Scripts.Core.Managers
 
         private async Awaitable<BaseUI> GetOrCreateUI(Type type, UILayer layer)
         {
-            if(_uiCache.TryGetValue(type, out BaseUI cached)) return cached;
+            if(_uiCache.TryGetValue(type, out BaseUI cached))
+                return cached;
 
             var req = Resources.LoadAsync<GameObject>($"UI/{type.Name}");
-            while(!req.isDone) await Awaitable.NextFrameAsync();
+            while(!req.isDone)
+                await Awaitable.NextFrameAsync();
 
             if(req.asset == null)
             {

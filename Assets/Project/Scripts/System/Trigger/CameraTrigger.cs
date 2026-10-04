@@ -28,12 +28,12 @@ namespace Project.Scripts.System.Trigger
         
         private void OnTriggerEnter(Collider other)
         {
-            if (other.CompareTag("Player") && targetCamera != null)
+            if(other.CompareTag("Player") && targetCamera != null)
                 CameraManager.Instance.SwitchCamera(targetCamera, blendDuration);
         }
         private void OnTriggerExit(Collider other)
         {
-            if (other.CompareTag("Player") && exitCamera != null)
+            if(other.CompareTag("Player") && exitCamera != null)
                 CameraManager.Instance.SwitchCamera(exitCamera, exitBlendDuration);
         }
         

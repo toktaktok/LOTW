@@ -30,15 +30,17 @@ namespace Project.Scripts.Core.Managers
 
         public void OnSceneLoaded(string sceneName, string entranceId)
         {
-            if (string.IsNullOrEmpty(entranceId)) return;
+            if(string.IsNullOrEmpty(entranceId))
+                return;
 
             SceneEntrance[] entrances = UnityEngine.Object.FindObjectsByType<SceneEntrance>(FindObjectsSortMode.None);
-            foreach (SceneEntrance entrance in entrances)
+            foreach(SceneEntrance entrance in entrances)
             {
-                if (entrance.EntranceId != entranceId) continue;
+                if(entrance.EntranceId != entranceId)
+                    continue;
 
                 PlayerController player = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
-                if (player != null)
+                if(player != null)
                     player.WarpToEntrance(entrance.SpawnPosition, entrance.StartNode);
                 break;
             }
@@ -104,7 +106,8 @@ namespace Project.Scripts.Core.Managers
 
         public void TransitionTo(string sceneName, string entranceId = "")
         {
-            if (IsTransitioning) return;
+            if(IsTransitioning)
+                return;
             ExecuteTransition(sceneName, entranceId).Forget();
         }
 
@@ -122,7 +125,7 @@ namespace Project.Scripts.Core.Managers
             await FadeRoutine(0f, 1f);
 
             AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
-            while (!op.isDone)
+            while(!op.isDone)
                 await Awaitable.NextFrameAsync();
 
             await Awaitable.NextFrameAsync();
@@ -146,7 +149,7 @@ namespace Project.Scripts.Core.Managers
             _fadeCanvas.gameObject.SetActive(true);
             SetFadeAlpha(from);
 
-            while (timer < fadeDuration)
+            while(timer < fadeDuration)
             {
                 timer += Time.deltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
@@ -156,13 +159,14 @@ namespace Project.Scripts.Core.Managers
 
             SetFadeAlpha(to);
 
-            if (to <= 0f)
+            if(to <= 0f)
                 _fadeCanvas.gameObject.SetActive(false);
         }
 
         private void SetFadeAlpha(float alpha)
         {
-            if (_fadeImage == null) return;
+            if(_fadeImage == null)
+                return;
             Color c = _fadeImage.color;
             c.a = alpha;
             _fadeImage.color = c;

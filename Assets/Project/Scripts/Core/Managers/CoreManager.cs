@@ -22,7 +22,8 @@ namespace Project.Scripts.Core.Managers
 
         public void PauseGame()
         {
-            if (IsPaused) return;
+            if(IsPaused)
+                return;
 
             IsPaused = true;
             Time.timeScale = 0f;
@@ -31,7 +32,8 @@ namespace Project.Scripts.Core.Managers
 
         public void ResumeGame()
         {
-            if (!IsPaused) return;
+            if(!IsPaused)
+                return;
 
             IsPaused = false;
             Time.timeScale = 1f;
@@ -40,7 +42,7 @@ namespace Project.Scripts.Core.Managers
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            if (pauseStatus)
+            if(pauseStatus)
                 PauseGame();
             else
                 ResumeGame();

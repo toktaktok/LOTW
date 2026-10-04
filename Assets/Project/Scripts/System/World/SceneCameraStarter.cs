@@ -11,9 +11,9 @@ namespace Project.Scripts.System.World
 
         private void Start()
         {
-            if (sceneDefaultCamera != null)
+            if(sceneDefaultCamera != null)
             {
-                if (CameraManager.Instance != null)
+                if(CameraManager.Instance != null)
                     CameraManager.Instance.SwitchCamera(sceneDefaultCamera, 0f);
             }
             else

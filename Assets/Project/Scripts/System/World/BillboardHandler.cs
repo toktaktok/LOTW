@@ -20,7 +20,7 @@ namespace Project.Scripts.System.World
         
         private void Start()
         {
-            if (followTarget == null)
+            if(followTarget == null)
                 followTarget = transform.parent;
 
             if(followTarget != null)
@@ -29,7 +29,7 @@ namespace Project.Scripts.System.World
                 _autoOffset = transform.position - followTarget.position;
             }
 
-            if (detachFromParent && transform.parent != null)
+            if(detachFromParent && transform.parent != null)
             {
                 transform.SetParent(null);
             }
@@ -44,15 +44,15 @@ namespace Project.Scripts.System.World
 
         private void OnCameraUpdated(CinemachineBrain brain)
         {
-            if (followTarget == null)
+            if(followTarget == null)
                 return;
             
             Camera targetCamera = CameraManager.Instance.GetCurrentCamera();
-            if (targetCamera == null)
+            if(targetCamera == null)
                 return;
 
             transform.position = followTarget.position + _autoOffset + additionalOffset;
-            if (lockYAxis)
+            if(lockYAxis)
             {
                 float cameraY = targetCamera.transform.rotation.eulerAngles.y;
                 transform.rotation = Quaternion.Euler(0f, cameraY, 0f);
@@ -65,16 +65,16 @@ namespace Project.Scripts.System.World
 
         private void Update()
         {
-            if (followTarget == null)
+            if(followTarget == null)
             {
                 Destroy(gameObject);
                 return;
             }
 
-            if (_targetGameObject != null)
+            if(_targetGameObject != null)
             {
                 bool isParentActive = _targetGameObject.activeInHierarchy;
-                if (gameObject.activeSelf != isParentActive)
+                if(gameObject.activeSelf != isParentActive)
                     gameObject.SetActive(isParentActive);
             }
         }
