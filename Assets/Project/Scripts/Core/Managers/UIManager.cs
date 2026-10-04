@@ -42,12 +42,16 @@ namespace Project.Scripts.Core.Managers
         #endregion
 
         /// <summary>
-        /// HUD 레이어를 제외한 페이지가 열려 있는지 여부. 플레이어 입력 차단에 사용.
+        /// HUD 레이어를 제외한 페이지가 열려 있거나 UI 작업이 처리 중인지 여부. 플레이어 입력 차단에 사용.
+        /// 처리 중도 포함해야 Pop 직후 같은 프레임의 입력이 프롬프트를 다시 열지 않음.
         /// </summary>
         public bool HasBlockingPage
         {
             get
             {
+                if(_isProcessing)
+                    return true;
+
                 foreach(var page in _pageNavigationStack)
                 {
                     if(page.Layer != UILayer.HUD)
