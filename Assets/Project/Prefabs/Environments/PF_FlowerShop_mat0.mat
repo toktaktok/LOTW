@@ -26,6 +26,7 @@ Material:
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords:
   - _DSS_TOON
+  - _DSS_VOXEL_LIGHTING
   m_InvalidKeywords: []
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
@@ -141,6 +142,7 @@ Material:
     - _ToonSteps: 3
     - _UseCentroid: 0
     - _UseToon: 1
+    - _UseVoxelLighting: 1
     - _UseWeightedLoop: 0
     - _WorkflowMode: 1
     - _XRMotionVectorsPass: 1
