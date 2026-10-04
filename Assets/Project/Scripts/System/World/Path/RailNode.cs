@@ -15,6 +15,7 @@ namespace Project.Scripts.Content.World
 
         private void OnValidate()
         {
+            neighbors.RemoveAll(n => n == null);
             if(neighbors.Count > 2)
                 neighbors.RemoveRange(2, neighbors.Count-2); 
         }
@@ -83,6 +84,34 @@ namespace Project.Scripts.Content.World
 
             neighbors.Remove(other);
             other.neighbors.Remove(this);
+        }
+
+        /// <summary>exclude가 아닌 이웃을 반환합니다. 레일이 한 줄(이웃 최대 2)이라 "계속 진행" 방향이 됩니다.</summary>
+        public RailNode GetOtherNeighbor(RailNode exclude)
+        {
+            foreach(RailNode neighbor in neighbors)
+            {
+                if(neighbor != null && neighbor != exclude)
+                    return neighbor;
+            }
+            return null;
+        }
+
+        /// <summary>씬에서 position에 가장 가까운 RailNode. 없으면 null.</summary>
+        public static RailNode FindNearest(Vector3 position)
+        {
+            RailNode best = null;
+            float bestSqr = float.MaxValue;
+            foreach(RailNode node in FindObjectsByType<RailNode>(FindObjectsSortMode.None))
+            {
+                float sqr = (node.transform.position - position).sqrMagnitude;
+                if(sqr < bestSqr)
+                {
+                    bestSqr = sqr;
+                    best = node;
+                }
+            }
+            return best;
         }
     }
 }
