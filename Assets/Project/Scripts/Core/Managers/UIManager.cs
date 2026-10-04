@@ -62,7 +62,7 @@ namespace Project.Scripts.Core.Managers
 
             if(!_isProcessing)
             {
-                ProcessQueue().Cancel();
+                ProcessQueue().Forget();
             }
         }
 
@@ -165,10 +165,20 @@ namespace Project.Scripts.Core.Managers
             var req = Resources.LoadAsync<GameObject>($"UI/{type.Name}");
             while(!req.isDone) await Awaitable.NextFrameAsync();
 
-            if(req.asset == null) return null;
+            if(req.asset == null)
+            {
+                Debug.LogError($"[UIManager] UI prefab not found: Resources/UI/{type.Name}");
+                return null;
+            }
 
             var go = Instantiate(req.asset as GameObject, layerParents[(int)layer]);
             var ui = go.GetComponent<BaseUI>();
+            if(ui == null)
+            {
+                Debug.LogError($"[UIManager] {type.Name} prefab has no BaseUI component");
+                Destroy(go);
+                return null;
+            }
             _uiCache.Add(type, ui);
             return ui;
         }

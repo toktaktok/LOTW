@@ -48,9 +48,10 @@ namespace Project.Scripts.Core.Managers
             ApplyVolume();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
             GameInstance.OnSettingsChanged -= ApplyVolume;
+            base.OnDestroy();
         }
 
         #endregion

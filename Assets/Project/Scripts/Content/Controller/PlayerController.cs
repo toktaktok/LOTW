@@ -41,15 +41,19 @@ namespace Project.Scripts.Content.Controller
         private void Start()
         {
             if(currentCharacter != null)
-            {
                 currentCharacter.Init();
-                currentCharacter.Warp(currentBaseNode.transform.position);
+
+            if(currentBaseNode != null)
+            {
+                if(currentCharacter != null)
+                    currentCharacter.Warp(currentBaseNode.transform.position);
+
+                if(currentTargetNode == null)
+                    currentTargetNode = currentBaseNode;
+
+                RecalculatePathData();
             }
 
-            if(currentTargetNode == null)
-                currentTargetNode = currentBaseNode;
-
-            RecalculatePathData();
             TransitionToIdle();
 
             UIManager.Instance.PushPage<HudUI>(UILayer.HUD);

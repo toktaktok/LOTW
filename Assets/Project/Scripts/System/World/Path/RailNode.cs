@@ -75,5 +75,14 @@ namespace Project.Scripts.Content.World
             if(!other.neighbors.Contains(this))
                 other.neighbors.Add(this);
         }
+
+        public void Disconnect(RailNode other)
+        {
+            if(other == null)
+                return;
+
+            neighbors.Remove(other);
+            other.neighbors.Remove(this);
+        }
     }
 }

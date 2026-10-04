@@ -33,6 +33,15 @@ namespace Project.Scripts.Data
         public const int FirstCameraPriority = 20;
     }
 
+    /// <summary>플레이 모드 맵 에디터 상수.</summary>
+    public readonly struct MapDefines
+    {
+        public const float GroundPlaneY = 0f;
+        public const float PlacementRayMaxDistance = 100f;
+        public const float NodePickRadius = 0.5f;
+        public const float DefaultNodeRadius = 0.3f;
+    }
+
     /// <summary>
     /// 씬 이름 상수. 씬을 추가할 때마다 여기에 등록합니다.
     /// 사용 예: SceneTransitionManager.Instance.TransitionTo(SceneDefines.FlowerShop, "FromStreet");

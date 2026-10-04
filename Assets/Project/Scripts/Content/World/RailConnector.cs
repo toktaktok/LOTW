@@ -26,6 +26,9 @@ namespace Project.Scripts.Content.World
         public Vector3 InteractionPosition => transform.position;
         public string InteractionPrompt => promptText;
 
+        /// <summary>맵 빌더가 모든 노드 생성 후 linkedNodeId를 해소해 주입합니다.</summary>
+        public void SetDestinationNode(RailNode node) => destinationNode = node;
+
         public void Interact(GameObject interactor)
         {
             PlayerController pc = interactor.GetComponent<PlayerController>();

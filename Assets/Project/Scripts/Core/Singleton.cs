@@ -39,5 +39,11 @@ public abstract class Singleton<T> : MonoBehaviour where T : Component
             Destroy(gameObject);
         }
     }
+
+    protected virtual void OnDestroy()
+    {
+        if(_instance == this)
+            _instance = null;
+    }
     #endregion
 }

@@ -47,7 +47,7 @@ namespace Project.Scripts.Core.Managers
         public void TransitionTo(string sceneName, string entranceId = "")
         {
             if (IsTransitioning) return;
-            ExecuteTransition(sceneName, entranceId).Cancel();
+            ExecuteTransition(sceneName, entranceId).Forget();
         }
 
         #endregion
