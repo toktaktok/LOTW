@@ -73,6 +73,9 @@ namespace Project.Scripts.Core.Managers
 
         public bool IsTransitioning { get; private set; }
 
+        /// <summary>마지막으로 진입한 SceneEntrance ID. 세이브 데이터의 entranceId로 사용됩니다.</summary>
+        public string CurrentEntranceId { get; private set; } = "";
+
         private Canvas _fadeCanvas;
         private Image _fadeImage;
         private ISceneTransitionHandler _handler;
@@ -134,6 +137,7 @@ namespace Project.Scripts.Core.Managers
 
                 await Awaitable.NextFrameAsync();
 
+                CurrentEntranceId = entranceId;
                 _handler?.OnSceneLoaded(sceneName, entranceId);
 
                 await FadeRoutine(1f, 0f);

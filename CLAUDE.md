@@ -16,7 +16,7 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Assemblies:** `Project.Scripts` (runtime, `Assets/Project/Scripts/Project.Scripts.asmdef`), `Project.Scripts.Editor` (editor-only), `EditModeTests` (tests, refs `Project.Scripts`).
 
-**Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory.
+**Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory, Data.
 
 **Singleton:** `Singleton<T>` (Core/Singleton.cs) -- auto-creates, DontDestroyOnLoad, self-destructs duplicates. All managers extend this.
 
@@ -28,11 +28,11 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs in `Prefabs/UI/`, registered in `UIManager.uiPrefabs` on SubSystemCollection (looked up by type). Panels: HudUI, DialogueUI, InventoryUI.
 
-**Dialogue:** `DialogueData` (Data/Structs.cs) has `DialogueLine[]` (speaker+text). `DialogueUI` modes: prompt (confirm/cancel) and dialogue (multi-line via `SetupDialogue()`/`AdvanceLine()`). `NPC : WorldObject, IInteractable` uses dialogue mode.
+**Dialogue:** Table-driven. `DataManager` loads `Resources/Table/*.json` (generated from `Table/Excel/*.xlsx` by `Table/ConvertTable.bat`) once at boot and caches rows by `dataId` until quit. `Data.Table.DialogueData` row: speakerName, text, `nextId` (-1 ends), `choiceIds`. `NPC` holds a start `dialogueId`; `DialogueUI.SetupDialogue(row)` follows `nextId` and clones ConfirmButton per choice.
 
 **Audio:** `AudioManager` -- BGM (crossfade), SFX. Volume = MasterVolume * BgmVolume/SfxVolume. Listens to `GameInstance.OnSettingsChanged`.
 
-**Save:** `SaveManager` serializes `SaveData` (scene, entrance, inventory, flags, timestamp) to JSON in `persistentDataPath/Saves/`. 3 slots. Integrates with `GameInstance.SelectSaveSlot()`.
+**Save:** `SaveManager` serializes `SaveData` (scene, entrance, inventory, flags, timestamp) to JSON in `persistentDataPath/Saves/`. 3 slots. Integrates with `GameInstance.SelectSaveSlot()`. `SaveCurrent(slot)` collects scene, `SceneTransitionManager.CurrentEntranceId`, inventory, flags; `LoadAndApply(slot)` restores them and transitions.
 
 **Inventory:** `InventoryManager` -- slot-based, stacking. `ItemData` (id, name, desc, icon, maxStack). `ItemDatabase` ScriptableObjects in `Resources/Items/`. `ToSaveData()`/`LoadFromSaveData()` for persistence.
 
@@ -40,6 +40,6 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
 
-**Data:** `Data/Structs.cs` -- DialogueLine, DialogueData, ItemData, ItemSlot, SaveData. `Data/ItemDatabase.cs` -- ScriptableObject wrapper (CreateAssetMenu: `LOTW/Item Data`).
+**Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/ItemDatabase.cs` -- ScriptableObject wrapper (CreateAssetMenu: `LOTW/Item Data`). `Data/Table/` -- table row classes (`TableRowData` subclasses).
 
 **Namespaces:** Mirror folder paths -- `Project.Scripts.Core(.Managers)`, `Project.Scripts.System.World/.UI`, `Project.Scripts.Content.Controller/.World/.UI`, `Project.Scripts.Data`, `Project.Scripts.Editor`.

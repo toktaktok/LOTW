@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 1122334455667788901}
   - component: {fileID: 2233445566778899012}
   - component: {fileID: 3344556677889900123}
+  - component: {fileID: 4455667788990011234}
   m_Layer: 0
   m_Name: SubSystemCollection
   m_TagString: Untagged
@@ -146,3 +147,15 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.Core.Managers.InventoryManager
   maxSlots: 20
+--- !u!114 &4455667788990011234
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 285053121928157655}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30b76d84c68c95346a6849c2b8469381, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::Project.Scripts.Core.Managers.DataManager

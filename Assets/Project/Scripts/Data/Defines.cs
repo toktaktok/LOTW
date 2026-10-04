@@ -5,6 +5,7 @@ namespace Project.Scripts.Data
     public readonly struct UIDefines
     {
         public const float DefaultFadeDuration = 0.3f;
+        public const float ChoiceButtonSpacing = 4f;
     }
     public readonly struct AnimDefines
     {
