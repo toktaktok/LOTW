@@ -17,6 +17,8 @@ namespace Project.Scripts.System.World
         
         private GameObject _targetGameObject;
         private Vector3 _autoOffset;
+        private Renderer[] _renderers;
+        private bool _isVisible = true;
         
         private void Start()
         {
@@ -34,6 +36,7 @@ namespace Project.Scripts.System.World
                 transform.SetParent(null);
             }
             
+            _renderers = GetComponentsInChildren<Renderer>(true);
             CinemachineCore.CameraUpdatedEvent.AddListener(OnCameraUpdated);
         }
 
@@ -47,6 +50,9 @@ namespace Project.Scripts.System.World
             if(followTarget == null)
                 return;
             
+            if(!CameraManager.HasInstance)
+                return;
+
             Camera targetCamera = CameraManager.Instance.GetCurrentCamera();
             if(targetCamera == null)
                 return;
@@ -74,9 +80,16 @@ namespace Project.Scripts.System.World
             if(_targetGameObject != null)
             {
                 bool isParentActive = _targetGameObject.activeInHierarchy;
-                if(gameObject.activeSelf != isParentActive)
-                    gameObject.SetActive(isParentActive);
+                if(_isVisible != isParentActive)
+                    SetRenderersEnabled(isParentActive);
             }
+        }
+
+        private void SetRenderersEnabled(bool value)
+        {
+            _isVisible = value;
+            foreach(Renderer childRenderer in _renderers)
+                childRenderer.enabled = value;
         }
     }
 }
