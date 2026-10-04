@@ -20,8 +20,10 @@ namespace Project.Scripts.Core.Managers
         
         private CinemachineBlendDefinition _initialBlend; 
         private Coroutine _currentBlendRoutine;
-        
+
         #endregion
+
+        public CinemachineCamera CurrentCamera => _currentCamera;
 
         #region Methods
         

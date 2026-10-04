@@ -44,6 +44,8 @@ namespace Project.Scripts.Data
         public const int LowResMarginPixels = 1;
         /// <summary>화면 지우기 전용 카메라가 쓰는 렌더러(기능 없음). PC/Mobile RP 에셋 렌더러 목록의 같은 인덱스.</summary>
         public const int DisplayRendererIndex = 1;
+        /// <summary>NPC 대화 카메라 전환 블렌드 시간(초).</summary>
+        public const float DialogueBlendDuration = 0.5f;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>
@@ -63,5 +65,6 @@ namespace Project.Scripts.Data
     {
         public const string Character = "Character";
         public const string SetUp = "SetUp";
+        public const string Plaza = "Plaza";
     }
 }
