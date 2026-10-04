@@ -34,6 +34,9 @@ MonoBehaviour:
   highQualityFiltering:
     m_OverrideState: 1
     m_Value: 1
+  filter:
+    m_OverrideState: 0
+    m_Value: 0
   downscale:
     m_OverrideState: 0
     m_Value: 0
@@ -75,6 +78,37 @@ MonoBehaviour:
   rounded:
     m_OverrideState: 0
     m_Value: 0
+--- !u!114 &-2966092235554340744
+MonoBehaviour:
+  m_ObjectHideFlags: 3
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9572f18289850884684f1516cd553ef8, type: 3}
+  m_Name: TiltShiftVolume
+  m_EditorClassIdentifier: Project.Scripts::Project.Scripts.System.World.TiltShiftVolume
+  active: 1
+  focusOffset:
+    m_OverrideState: 1
+    m_Value: 0
+  focusWidth:
+    m_OverrideState: 1
+    m_Value: 0.2
+  falloff:
+    m_OverrideState: 1
+    m_Value: 0.3
+  maxRadius:
+    m_OverrideState: 1
+    m_Value: 1.5
+  sampleCount:
+    m_OverrideState: 1
+    m_Value: 12
+  focusSaturation:
+    m_OverrideState: 1
+    m_Value: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -92,6 +126,7 @@ MonoBehaviour:
   - {fileID: -7893295128165547882}
   - {fileID: 7391319092446245454}
   - {fileID: -3357603926938260329}
+  - {fileID: -2966092235554340744}
 --- !u!114 &849379129802519247
 MonoBehaviour:
   m_ObjectHideFlags: 3

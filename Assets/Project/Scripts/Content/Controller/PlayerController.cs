@@ -28,8 +28,14 @@ namespace Project.Scripts.Content.Controller
         private Vector3 _cachedPathDir;
         private float _cachedPathSqrLength;
 
+        // 진행 방향 기억: 마지막으로 떠나온 노드와, 그때의 입력 부호(0 = 아직 없음)
+        private RailNode _cameFrom;
+        private int _moveSign;
+
         private bool _isFreeMoving = false;
         
+        public Character CurrentCharacter => currentCharacter;
+
         private void OnEnable() => _controls.Enable();
         private void OnDisable() => _controls.Disable();
 
@@ -42,6 +48,9 @@ namespace Project.Scripts.Content.Controller
         {
             if(currentCharacter != null)
                 currentCharacter.Init();
+
+            if(currentBaseNode == null && currentCharacter != null)
+                currentBaseNode = RailNode.FindNearest(currentCharacter.Position);
 
             if(currentBaseNode != null)
             {
@@ -76,7 +85,8 @@ namespace Project.Scripts.Content.Controller
 
             RailNode foundTargetNode = (targetNode.neighbors.Count > 0) ? targetNode.neighbors[0] : targetNode;
             currentTargetNode = foundTargetNode;
-            
+            ResetMoveDirection();
+
             RecalculatePathData();
             TransitionToIdle();
         }
@@ -94,10 +104,14 @@ namespace Project.Scripts.Content.Controller
             if(currentCharacter != null)
                 currentCharacter.Warp(position);
 
+            if(startNode == null)
+                startNode = RailNode.FindNearest(position);
+
             if(startNode != null)
             {
                 currentBaseNode = startNode;
                 currentTargetNode = startNode.neighbors.Count > 0 ? startNode.neighbors[0] : startNode;
+                ResetMoveDirection();
                 RecalculatePathData();
             }
 
@@ -128,6 +142,7 @@ namespace Project.Scripts.Content.Controller
                 currentTargetNode = targetNode.neighbors[0];
             else
                 currentTargetNode = targetNode;
+            ResetMoveDirection();
 
             TransitionToIdle();
             RecalculatePathData();
@@ -183,25 +198,30 @@ namespace Project.Scripts.Content.Controller
             Vector3 camRight = cam.transform.right;
             camRight.y = 0;
             Vector3 inputWorldDir = (camRight * inputX).normalized;
+            int inputSign = inputX > 0f ? 1 : -1;
 
             if(currentBaseNode == currentTargetNode)
             {
-                RailNode next = FindNeighborByDirection(inputWorldDir);
+                RailNode next = SelectNextNode(inputSign, inputWorldDir);
                 if(next == null)
                     return;
 
                 currentTargetNode = next;
+                _moveSign = inputSign;
                 RecalculatePathData();
             }
-            else
+            else if(_moveSign == 0)
             {
-                float dot = Vector3.Dot(inputWorldDir, _cachedPathDir);
-
-                if(dot < WorldDefines.DirectionReversalThreshold)
-                {
-                    (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);
-                    RecalculatePathData();
-                }
+                // 워프 직후처럼 진행 방향이 없으면 카메라 기준으로 정함
+                if(Vector3.Dot(inputWorldDir, _cachedPathDir) < WorldDefines.DirectionReversalThreshold)
+                    SwapBaseAndTarget();
+                _moveSign = inputSign;
+            }
+            else if(inputSign != _moveSign)
+            {
+                // 진행 중에는 카메라 각도와 무관하게 입력 부호가 바뀌면 되돌아감
+                SwapBaseAndTarget();
+                _moveSign = inputSign;
             }
 
             Vector3 basePos = currentBaseNode.transform.position;
@@ -219,6 +239,7 @@ namespace Project.Scripts.Content.Controller
                 Vector3 snapPos = currentTargetNode.transform.position;
                 snapPos.y = currentPos.y;
                 currentCharacter.MoveOnRail(snapPos);
+                _cameFrom = currentBaseNode;
                 currentBaseNode = currentTargetNode;
                 _cachedPathVector = Vector3.zero;
                 _cachedPathSqrLength = 1f;
@@ -243,6 +264,30 @@ namespace Project.Scripts.Content.Controller
             _cachedPathDir = _cachedPathVector.normalized;
         }
 
+        private void SwapBaseAndTarget()
+        {
+            (currentBaseNode, currentTargetNode) = (currentTargetNode, currentBaseNode);
+            RecalculatePathData();
+        }
+
+        private void ResetMoveDirection()
+        {
+            _cameFrom = null;
+            _moveSign = 0;
+        }
+
+        /// <summary>
+        /// 노드에 도착한 상태에서 다음 노드를 고릅니다. 같은 방향 입력이면 온 노드가 아닌 이웃으로 계속 가고,
+        /// 반대면 온 노드로 되돌아갑니다. 카메라와 거의 직각인 레일도 지나갈 수 있도록 카메라 방향 판정은 첫 출발에만 씁니다.
+        /// </summary>
+        private RailNode SelectNextNode(int inputSign, Vector3 inputWorldDir)
+        {
+            if(_cameFrom != null && _moveSign != 0)
+                return inputSign == _moveSign ? currentBaseNode.GetOtherNeighbor(_cameFrom) : _cameFrom;
+
+            return FindNeighborByDirection(inputWorldDir);
+        }
+
         private RailNode FindNeighborByDirection(Vector3 desiredDir)
         {
             RailNode bestNode = null;
@@ -250,6 +295,9 @@ namespace Project.Scripts.Content.Controller
 
             foreach(var neighbor in currentBaseNode.neighbors)
             {
+                if(neighbor == null)
+                    continue;
+
                 Vector3 dirToNode = (neighbor.transform.position - currentBaseNode.transform.position).normalized;
                 float dot = Vector3.Dot(desiredDir, dirToNode);
 

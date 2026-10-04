@@ -53,4 +53,5 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 
 ## Import settings
 - Character sprites: PPU 25, Point filter, no compression (see pixel render style).
+- Voxel models: VoxelImporter `importScale` 0.2 (1 voxel = 5 low-res RT pixels, `CameraDefines.VoxelScale`). The voxel object, its prefab root, and scene instances and groups all keep scale 1. Change size by voxel count in MagicaVoxel, not by Transform scale. Check with `LOTW/Voxel/Validate Voxel Scale`.
 - UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`).
