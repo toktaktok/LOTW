@@ -29,11 +29,26 @@ namespace Project.Scripts.Core.Managers
         {
             _playerController = FindFirstObjectByType<PlayerController>();
             
-            if(brain == null && Camera.main != null)
-                brain = Camera.main.GetComponent<CinemachineBrain>();
-
             if(brain != null)
                 _initialBlend = brain.DefaultBlend;
+            else
+                TryResolveBrain();
+        }
+
+        private bool TryResolveBrain()
+        {
+            if(brain != null)
+                return true;
+
+            if(Camera.main == null)
+                return false;
+
+            brain = Camera.main.GetComponent<CinemachineBrain>();
+            if(brain == null)
+                return false;
+
+            _initialBlend = brain.DefaultBlend;
+            return true;
         }
 
         public Camera GetCurrentCamera()
@@ -44,6 +59,9 @@ namespace Project.Scripts.Core.Managers
         }
         public void SwitchCamera(CinemachineCamera targetCamera, float blendDuration = -1f)
         {
+            if(targetCamera == null)
+                return;
+
             if(_currentCamera == targetCamera)
                 return;
     
@@ -64,17 +82,27 @@ namespace Project.Scripts.Core.Managers
         }
         private IEnumerator BlendRoutine(float duration)
         {
+            if(!TryResolveBrain())
+            {
+                _currentBlendRoutine = null;
+                yield break;
+            }
+
             brain.DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Styles.EaseInOut, duration);
     
             yield return null;
             yield return new WaitForSeconds(duration + 0.1f);
             
-            brain.DefaultBlend = _initialBlend;
+            if(brain != null)
+                brain.DefaultBlend = _initialBlend;
             _currentBlendRoutine = null;
         }
     
         public void SetInput(bool isEnabled)
         {
+            if(_playerController == null)
+                _playerController = FindFirstObjectByType<PlayerController>();
+
             if(_playerController != null)
                 _playerController.enabled = isEnabled;
         }

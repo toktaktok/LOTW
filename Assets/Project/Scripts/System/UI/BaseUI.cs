@@ -97,7 +97,7 @@ namespace Project.Scripts.System.UI
 
             while(timer < fadeDuration)
             {
-                timer += Time.deltaTime;
+                timer += Time.unscaledDeltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
                 canvasGroup.alpha = Mathf.Lerp(start, end, t);
             
