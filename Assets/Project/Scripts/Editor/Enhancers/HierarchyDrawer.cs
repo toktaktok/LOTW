@@ -17,6 +17,7 @@ namespace Project.Scripts.Editor.Enhancers
         private static readonly Dictionary<int, string> _keyCache = new Dictionary<int, string>();
         private static readonly List<Component> _components = new List<Component>();
         private static GUIStyle _headerStyle;
+        private static GUIStyle _labelStyle;
 
         static HierarchyDrawer()
         {
@@ -78,7 +79,7 @@ namespace Project.Scripts.Editor.Enhancers
 
             Rect iconRect = new Rect(rect.x, rect.y, ToolDefines.HierarchyIconSize, ToolDefines.HierarchyIconSize);
             if(settings.HasHierarchyStyles && settings.TryGetHierarchyStyle(GetKey(go), out HierarchyStyle style))
-                DrawStyle(style, rect, iconRect, Selection.Contains(instanceID));
+                DrawStyle(go, style, rect, iconRect, Selection.Contains(instanceID));
 
             float right = rect.xMax;
             if(settings.ShowActiveToggle)
@@ -141,33 +142,83 @@ namespace Project.Scripts.Editor.Enhancers
             return t.GetSiblingIndex() == t.parent.childCount - 1;
         }
 
-        private static void DrawStyle(HierarchyStyle style, Rect rect, Rect iconRect, bool selected)
+        /// <summary>
+        /// 콜백은 Unity가 행을 그린 뒤 호출되므로, 아이콘/이름 영역을 행 배경색으로 지우고
+        /// 색 띠를 깐 다음 아이콘과 이름을 다시 그려 색이 글자 뒤에 깔리게 합니다.
+        /// </summary>
+        private static void DrawStyle(GameObject go, HierarchyStyle style, Rect rect, Rect iconRect, bool selected)
         {
-            if(style.color.a > 0f && !selected)
-                DrawGradient(rect, style.color, ToolDefines.HierarchyBackgroundAlpha);
-
-            Texture2D icon = EnhancerIcons.Get(style.icon);
-            if(icon == null)
+            if(Event.current.type != EventType.Repaint)
                 return;
 
-            // 기본 아이콘을 행 배경색으로 가린 뒤 커스텀 아이콘을 그림
-            EditorGUI.DrawRect(iconRect, GetRowBackground(selected));
-            GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+            bool hasColor = style.color.a > 0f && !selected;
+            Texture2D customIcon = EnhancerIcons.Get(style.icon);
+            if(!hasColor && customIcon == null)
+                return;
+
+            GUIStyle labelStyle = GetLabelStyle(go, selected);
+            var content = new GUIContent(go.name);
+            float labelX = rect.x + ToolDefines.HierarchyLabelOffset;
+            float labelWidth = labelStyle.CalcSize(content).x;
+            EditorGUI.DrawRect(new Rect(rect.x, rect.y, labelX - rect.x + labelWidth, rect.height), GetRowBackground(selected));
+
+            if(hasColor)
+                DrawGradient(rect, style.color, ToolDefines.HierarchyBackgroundAlpha);
+
+            Texture icon = customIcon != null ? customIcon : AssetPreview.GetMiniThumbnail(go);
+            if(icon != null)
+            {
+                Color previous = GUI.color;
+                if(!go.activeInHierarchy)
+                    GUI.color = new Color(1f, 1f, 1f, ToolDefines.HierarchyInactiveAlpha);
+                GUI.DrawTexture(iconRect, icon, ScaleMode.ScaleToFit);
+                GUI.color = previous;
+            }
+
+            GUI.Label(new Rect(labelX, rect.y, rect.xMax - labelX, rect.height), content, labelStyle);
+        }
+
+        private static GUIStyle GetLabelStyle(GameObject go, bool selected)
+        {
+            if(_labelStyle == null)
+                _labelStyle = new GUIStyle(EditorStyles.label) { padding = new RectOffset() };
+
+            bool pro = EditorGUIUtility.isProSkin;
+            Color text;
+            if(selected)
+                text = Color.white;
+            else if(PrefabUtility.IsPrefabAssetMissing(go))
+                text = pro ? ToolDefines.HierarchyMissingPrefabTextColor : ToolDefines.HierarchyMissingPrefabTextColorLight;
+            else if(PrefabUtility.IsPartOfPrefabInstance(go))
+                text = pro ? ToolDefines.HierarchyPrefabTextColor : ToolDefines.HierarchyPrefabTextColorLight;
+            else
+                text = EditorStyles.label.normal.textColor;
+
+            if(!go.activeInHierarchy)
+                text.a *= ToolDefines.HierarchyInactiveAlpha;
+
+            _labelStyle.normal.textColor = text;
+            return _labelStyle;
         }
 
         /// <summary>
         /// 왼쪽은 startAlpha, 오른쪽 끝으로 갈수록 투명해지는 색 띠.
+        /// 세로 띠 여러 개를 겹치지 않게 이어 붙여 그립니다.
         /// </summary>
         private static void DrawGradient(Rect rect, Color color, float startAlpha)
         {
             if(Event.current.type != EventType.Repaint)
                 return;
 
-            Color previous = GUI.color;
-            color.a = startAlpha;
-            GUI.color = color;
-            GUI.DrawTexture(rect, EnhancerIcons.GetGradient(), ScaleMode.StretchToFill);
-            GUI.color = previous;
+            int steps = ToolDefines.HierarchyGradientSteps;
+            float step = rect.width / steps;
+            for(int i = 0; i < steps; i++)
+            {
+                float x0 = Mathf.Round(rect.x + i * step);
+                float x1 = Mathf.Round(rect.x + (i + 1) * step);
+                color.a = startAlpha * (1f - (i + 0.5f) / steps);
+                EditorGUI.DrawRect(new Rect(x0, rect.y, x1 - x0, rect.height), color);
+            }
         }
 
         private static Color GetRowBackground(bool selected)
