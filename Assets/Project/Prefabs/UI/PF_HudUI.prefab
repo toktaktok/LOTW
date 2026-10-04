@@ -15,7 +15,7 @@ GameObject:
   - component: {fileID: 8976375127735751443}
   - component: {fileID: 1532780703009320440}
   m_Layer: 5
-  m_Name: HudUI
+  m_Name: PF_HudUI
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

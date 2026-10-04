@@ -38,7 +38,7 @@ namespace Project.Scripts.Core.Managers
 
         private bool _isProcessing = false;
 
-        // HudUI.prefab CanvasScaler 설정과 동일
+        // PF_HudUI.prefab CanvasScaler 설정과 동일
         private const int LayerSortingOrderStep = 10;
         private static readonly Vector2 ReferenceResolution = new Vector2(1920f, 1080f);
         private const float MatchWidthOrHeight = 0.5f;
