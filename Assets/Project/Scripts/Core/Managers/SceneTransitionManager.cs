@@ -118,24 +118,40 @@ namespace Project.Scripts.Core.Managers
         private async Awaitable ExecuteTransition(string sceneName, string entranceId)
         {
             IsTransitioning = true;
-            OnTransitionStarted?.Invoke();
+            bool succeeded = false;
 
-            _handler?.OnBeforeTransition();
+            try
+            {
+                OnTransitionStarted?.Invoke();
 
-            await FadeRoutine(0f, 1f);
+                _handler?.OnBeforeTransition();
 
-            AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
-            while(!op.isDone)
+                await FadeRoutine(0f, 1f);
+
+                AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
+                while(!op.isDone)
+                    await Awaitable.NextFrameAsync();
+
                 await Awaitable.NextFrameAsync();
 
-            await Awaitable.NextFrameAsync();
+                _handler?.OnSceneLoaded(sceneName, entranceId);
 
-            _handler?.OnSceneLoaded(sceneName, entranceId);
+                await FadeRoutine(1f, 0f);
 
-            await FadeRoutine(1f, 0f);
+                succeeded = true;
+            }
+            finally
+            {
+                if(!succeeded && _fadeCanvas != null)
+                {
+                    SetFadeAlpha(0f);
+                    _fadeCanvas.gameObject.SetActive(false);
+                }
 
-            _handler?.OnAfterTransition();
-            IsTransitioning = false;
+                IsTransitioning = false;
+                _handler?.OnAfterTransition();
+            }
+
             OnTransitionCompleted?.Invoke();
         }
 
@@ -151,7 +167,7 @@ namespace Project.Scripts.Core.Managers
 
             while(timer < fadeDuration)
             {
-                timer += Time.deltaTime;
+                timer += Time.unscaledDeltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
                 SetFadeAlpha(Mathf.Lerp(from, to, t));
                 await Awaitable.NextFrameAsync();
