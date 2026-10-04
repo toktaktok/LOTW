@@ -9,7 +9,7 @@ Excel XML Spreadsheet 2003 (.xml) → JSON 변환 스크립트
 
 출력 경로 (두 곳 동시):
   Table/Json/                          ← 소스 관리용
-  Assets/Project/Resources/Table/      ← Unity DataManager 로드 경로
+  Game/Assets/Project/Resources/Table/ ← Unity DataManager 로드 경로
 
 표(AutoFilter) 규칙:
   - Excel에서 데이터 범위를 선택 후 [삽입 > 표]로 반드시 표를 정의해야 함
@@ -30,7 +30,7 @@ import xml.etree.ElementTree as ET
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 EXCEL_DIR  = os.path.join(SCRIPT_DIR, "Excel")
 JSON_DIR   = os.path.join(SCRIPT_DIR, "Json")
-UNITY_RES  = os.path.join(SCRIPT_DIR, "..", "Assets", "Project", "Resources", "Table")
+UNITY_RES  = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Resources", "Table")
 
 OUTPUT_DIRS = [JSON_DIR, UNITY_RES]
 

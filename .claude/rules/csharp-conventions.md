@@ -1,7 +1,7 @@
 ---
 paths:
-  - "Assets/Project/Scripts/**/*.cs"
-  - "Assets/Tests/**/*.cs"
+  - "Game/Assets/Project/Scripts/**/*.cs"
+  - "Game/Assets/Tests/**/*.cs"
 ---
 
 # LOTW C# Conventions

@@ -1,6 +1,6 @@
 # LOTW Asset Naming and Layout
 
-Applies to `Assets/Project/` only. Third-party folders (`VoxelImporter`, `TextMesh Pro`) keep their own layout.
+Applies to `Game/Assets/Project/` only. Third-party folders (`VoxelImporter`, `TextMesh Pro`) keep their own layout.
 
 ## Placement
 - `Resources/` only for assets loaded by string path (see CLAUDE.md). Everything else is referenced via Inspector.
