@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEditor;
 using Project.Scripts.Content.World;
+using Project.Scripts.Editor.Data;
 
 namespace Project.Scripts.Editor
 {
@@ -21,6 +22,7 @@ namespace Project.Scripts.Editor
         public override void OnInspectorGUI()
         {
             serializedObject.Update();
+            bool createNext = false;
             
             //Color, Radius
             EditorGUILayout.PropertyField(_colorProp);
@@ -32,16 +34,19 @@ namespace Project.Scripts.Editor
             if(_neighborsProp.arraySize < 2)
             {
                 GUILayout.Space(20);
-                RailNode currentNode = (RailNode)target;
         
                 GUI.backgroundColor = Color.goldenRod;
                 if(GUILayout.Button("Create Next Node & Connect", GUILayout.Height(40)))
                 {
-                    CreateNextNode(currentNode);
+                    createNext = true;
                 }
             }
             GUI.backgroundColor = Color.white;
             serializedObject.ApplyModifiedProperties();
+
+            //직접 수정하므로 ApplyModifiedProperties 이후에 실행
+            if(createNext)
+                CreateNextNode((RailNode)target);
         }
         private void DrawNeighborProperty()
         {
@@ -49,6 +54,7 @@ namespace Project.Scripts.Editor
             EditorGUILayout.LabelField("Connections (Max 2)", EditorStyles.boldLabel);
             
             int nodeCount = _neighborsProp.arraySize;
+            int removeIndex = -1;
             for(int index=0; index<nodeCount; ++index)
             {
                 EditorGUILayout.BeginHorizontal();
@@ -56,11 +62,16 @@ namespace Project.Scripts.Editor
                 EditorGUILayout.PropertyField(element, new GUIContent($"Slot {index+1}"));
 
                 if(GUILayout.Button("X", GUILayout.Width(20)))
-                {
-                    _neighborsProp.DeleteArrayElementAtIndex(index);
-                    break;
-                }
+                    removeIndex = index;
                 EditorGUILayout.EndHorizontal();
+            }
+
+            if(removeIndex >= 0)
+            {
+                //non-null 오브젝트 참조는 첫 Delete에서 null 처리만 될 수 있음
+                _neighborsProp.DeleteArrayElementAtIndex(removeIndex);
+                if(_neighborsProp.arraySize == nodeCount)
+                    _neighborsProp.DeleteArrayElementAtIndex(removeIndex);
             }
             
             if(nodeCount < 2)
@@ -99,14 +110,16 @@ namespace Project.Scripts.Editor
                 newName = $"{currentName}_1";
 
             GameObject go = new GameObject(newName);
-            go.transform.position = current.transform.position + Vector3.right * 2.0f;
+            Undo.RegisterCreatedObjectUndo(go, "Create Connected Rail Node");
+            go.transform.position = current.transform.position + Vector3.right * ToolDefines.NodeEditorSpacing;
             go.transform.parent = current.transform.parent;
 
             RailNode newNode = go.AddComponent<RailNode>();
+            Undo.RecordObject(current, "Connect Rail Node");
+            Undo.RecordObject(newNode, "Connect Rail Node");
             current.ConnectTo(newNode);
 
             Selection.activeGameObject = go;
-            Undo.RegisterCreatedObjectUndo(go, "Create Connected Rail Node");
             EditorUtility.SetDirty(current);
         }
     }
