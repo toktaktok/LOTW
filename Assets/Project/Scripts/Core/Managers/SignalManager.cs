@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 namespace Project.Scripts.Core.Managers
@@ -35,10 +36,10 @@ namespace Project.Scripts.Core.Managers
         #region Public API
 
         /// <summary>신호 타입 TSignal에 대한 핸들러를 구독합니다.</summary>
-        public void Subscribe<TSignal>(System.Action<TSignal> handler) => _bus.Subscribe(handler);
+        public void Subscribe<TSignal>(Action<TSignal> handler) => _bus.Subscribe(handler);
 
         /// <summary>구독을 해제합니다.</summary>
-        public void Unsubscribe<TSignal>(System.Action<TSignal> handler) => _bus.Unsubscribe(handler);
+        public void Unsubscribe<TSignal>(Action<TSignal> handler) => _bus.Unsubscribe(handler);
 
         /// <summary>신호를 게시해 구독자에게 전달합니다.</summary>
         public void Publish<TSignal>(TSignal signal) => _bus.Publish(signal);

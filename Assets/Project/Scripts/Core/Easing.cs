@@ -1,3 +1,5 @@
+using System;
+
 namespace Project.Scripts.Core
 {
     /// <summary>
@@ -30,8 +32,10 @@ namespace Project.Scripts.Core
         /// <summary>t를 [0,1] 범위로 제한합니다.</summary>
         public static float Clamp01(float t)
         {
-            if (t < 0f) return 0f;
-            if (t > 1f) return 1f;
+            if(t < 0f)
+                return 0f;
+            if(t > 1f)
+                return 1f;
             return t;
         }
 
@@ -45,7 +49,7 @@ namespace Project.Scripts.Core
         public static float Evaluate(float t, EaseType type)
         {
             t = Clamp01(t);
-            switch (type)
+            switch(type)
             {
                 case EaseType.SmoothStep: return SmoothStep(t);
                 case EaseType.QuadIn: return QuadIn(t);
@@ -89,7 +93,8 @@ namespace Project.Scripts.Core
         public static float QuadInOut(float t)
         {
             t = Clamp01(t);
-            if (t < 0.5f) return 2f * t * t;
+            if(t < 0.5f)
+                return 2f * t * t;
             float u = -2f * t + 2f;
             return 1f - u * u * 0.5f;
         }
@@ -97,19 +102,19 @@ namespace Project.Scripts.Core
         public static float SineIn(float t)
         {
             t = Clamp01(t);
-            return 1f - (float)System.Math.Cos(t * HalfPi);
+            return 1f - (float)Math.Cos(t * HalfPi);
         }
 
         public static float SineOut(float t)
         {
             t = Clamp01(t);
-            return (float)System.Math.Sin(t * HalfPi);
+            return (float)Math.Sin(t * HalfPi);
         }
 
         public static float SineInOut(float t)
         {
             t = Clamp01(t);
-            return -((float)System.Math.Cos(Pi * t) - 1f) * 0.5f;
+            return -((float)Math.Cos(Pi * t) - 1f) * 0.5f;
         }
     }
 }
