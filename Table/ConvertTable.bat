@@ -22,11 +22,11 @@ if %ERRORLEVEL% NEQ 0 (
 )
 
 :: ── 변환 실행 ─────────────────────────────────────────────────
-:: 인자 없이 실행하면 Excel/ 내 모든 .xml 변환
+:: 인자 없이 실행하면 Excel/ 내 모든 .xlsx, .xml 변환
 :: 테이블 이름을 인자로 넘기면 해당 테이블만 변환
 ::   예) ConvertTable.bat Dialogue
 if "%~1"=="" (
-    echo [전체 변환] Excel\*.xml 을 모두 변환합니다.
+    echo [전체 변환] Excel 폴더의 .xlsx, .xml 을 모두 변환합니다.
 ) else (
     echo [단일 변환] %~1 테이블만 변환합니다.
 )

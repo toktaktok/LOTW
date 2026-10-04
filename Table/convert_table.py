@@ -1,11 +1,13 @@
 """
 convert_table.py
 ────────────────────────────────────────────────────────────────
-Excel XML Spreadsheet 2003 (.xml) → JSON 변환 스크립트
+Excel (.xlsx / XML Spreadsheet 2003 .xml) → JSON 변환 스크립트
 
 사용법:
-  python convert_table.py           # Excel/ 내 모든 .xml 변환
-  python convert_table.py Dialogue  # Dialogue.xml 만 변환
+  python convert_table.py           # Excel/ 내 모든 .xlsx, .xml 변환
+  python convert_table.py Dialogue  # Dialogue.xlsx (또는 .xml) 만 변환
+
+.xlsx 변환에는 openpyxl 이 필요합니다:  pip install openpyxl
 
 출력 경로 (두 곳 동시):
   Table/Json/                          ← 소스 관리용
@@ -17,7 +19,7 @@ Excel XML Spreadsheet 2003 (.xml) → JSON 변환 스크립트
     예) DataId → dataId, SpeakerName → speakerName
   - 표 범위 바깥의 셀은 무시됨 (메모, 설명 등을 자유롭게 작성 가능)
   - dataId 는 반드시 정수여야 함 — 문자열·공백·비어있는 행은 자동 제외
-  - 이름 끝이 'Ids'이고 값에 쉼표가 있으면 int 배열로 자동 변환
+  - 이름 끝이 'Ids'인 컬럼은 int 배열로 변환 ("2,3" → [2, 3], 2 → [2])
 """
 
 import os
@@ -107,16 +109,19 @@ def parse_cell(cell) -> object:
 def coerce_value(key: str, value):
     """
     특수 컬럼 후처리:
-      - 이름 끝이 'ids'이고 문자열에 쉼표가 있으면 int 배열로 변환
-        예) "2,3" → [2, 3]
+      - 이름 끝이 'ids'이면 int 배열로 변환 (C# int[] 필드와 매칭)
+        예) "2,3" → [2, 3], 2 → [2]
     """
     if value is None or value == "":
         return None
-    if key.lower().endswith("ids") and isinstance(value, str) and "," in value:
-        try:
-            return [int(x.strip()) for x in value.split(",") if x.strip()]
-        except ValueError:
-            pass
+    if key.lower().endswith("ids"):
+        if isinstance(value, int) and not isinstance(value, bool):
+            return [value]
+        if isinstance(value, str):
+            try:
+                return [int(x.strip()) for x in value.split(",") if x.strip()]
+            except ValueError:
+                pass
     return value
 
 
@@ -161,35 +166,77 @@ def parse_xml(filepath: str) -> list:
 
     sr, sc, er, ec = table_range  # start_row, start_col, end_row, end_col (1-based)
 
-    # ── 행 인덱스 구성 ────────────────────────────────────────
+    # ── 표 범위를 값 그리드로 변환 ────────────────────────────
     row_map = build_row_map(table_elem)
+    grid = []
+    for row_num in range(sr, er + 1):
+        row_elem = row_map.get(row_num)
+        cells = get_cells_in_range(row_elem, sc, ec) if row_elem is not None else {}
+        grid.append([parse_cell(cells[c]) if c in cells else None for c in range(sc, ec + 1)])
 
-    # ── 헤더 행 파싱 (표의 첫 번째 행) ───────────────────────
-    header_row = row_map.get(sr)
-    if header_row is None:
+    return grid_to_rows(grid)
+
+
+# ── XLSX 파싱 메인 ────────────────────────────────────────────
+def parse_xlsx(filepath: str) -> list:
+    try:
+        from openpyxl import load_workbook
+        from openpyxl.utils import range_boundaries
+    except ImportError:
+        raise RuntimeError("openpyxl 이 없습니다. 'pip install openpyxl' 후 다시 실행하세요.")
+
+    wb = load_workbook(filepath, data_only=True)
+    table, sheet = None, None
+    for ws in wb.worksheets:
+        if ws.tables:
+            sheet = ws
+            table = next(iter(ws.tables.values()))
+            break
+
+    if table is None:
+        raise ValueError(
+            "워크시트에 '표(Table)'가 정의되어 있지 않습니다.\n"
+            "  Excel에서 데이터 범위를 선택한 뒤 [삽입 > 표]를 클릭하여 표를 만드세요."
+        )
+
+    min_col, min_row, max_col, max_row = range_boundaries(table.ref)
+    grid = []
+    for row in sheet.iter_rows(min_row=min_row, max_row=max_row,
+                               min_col=min_col, max_col=max_col, values_only=True):
+        grid.append([normalize_xlsx_value(v) for v in row])
+
+    return grid_to_rows(grid)
+
+
+def normalize_xlsx_value(value):
+    """openpyxl 셀 값을 XML 파서와 같은 형태로 맞춥니다. 빈 셀이면 None."""
+    if value is None:
+        return None
+    if isinstance(value, str):
+        value = value.strip()
+        return value or None
+    if isinstance(value, float) and value.is_integer():
+        return int(value)
+    return value
+
+
+# ── 그리드 → 행 객체 ──────────────────────────────────────────
+def grid_to_rows(grid: list) -> list:
+    """
+    grid[0] = 헤더 행, grid[1:] = 데이터 행 (표 범위 내 값만, 빈 셀은 None).
+    """
+    if not grid:
         return []
 
-    headers = {}  # col_num → camelCase key
-    for col, cell in get_cells_in_range(header_row, sc, ec).items():
-        val = parse_cell(cell)
-        if val is not None:
-            name = to_camel(str(val).strip())
-            if name:
-                headers[col] = name
+    headers = [to_camel(str(v).strip()) if v is not None else "" for v in grid[0]]
 
-    # ── 데이터 행 파싱 (표의 2번째 행부터 마지막 행까지) ────
     result = []
-    for row_num in range(sr + 1, er + 1):
-        row_elem = row_map.get(row_num)
-        if row_elem is None:
-            continue
-
+    for values in grid[1:]:
         row_obj = {}
-        for col_num, cell in get_cells_in_range(row_elem, sc, ec).items():
-            key = headers.get(col_num, "")
+        for key, raw in zip(headers, values):
             if not key:
                 continue
-            value = coerce_value(key, parse_cell(cell))
+            value = coerce_value(key, raw)
             if value is not None:
                 row_obj[key] = value
 
@@ -227,33 +274,36 @@ def convert(filter_name: str = "") -> bool:
         print(f"[오류] {EXCEL_DIR} 디렉토리가 없습니다.")
         return False
 
-    xml_files = [
+    parsers = {".xlsx": parse_xlsx, ".xml": parse_xml}
+
+    # '~$' 로 시작하는 파일은 Excel 이 열려 있을 때 생기는 잠금 파일
+    table_files = [
         f for f in os.listdir(EXCEL_DIR)
-        if f.endswith(".xml") and (
-            not filter_name or filter_name.lower() in f.lower()
-        )
+        if os.path.splitext(f)[1].lower() in parsers
+        and not f.startswith("~$")
+        and (not filter_name or filter_name.lower() in f.lower())
     ]
 
-    if not xml_files:
-        print(f"[경고] 변환할 XML 파일이 없습니다 (필터: '{filter_name}').")
+    if not table_files:
+        print(f"[경고] 변환할 테이블 파일이 없습니다 (필터: '{filter_name}').")
         return True
 
     ok = 0
-    for xml_file in xml_files:
-        table_name = os.path.splitext(xml_file)[0]
-        xml_path   = os.path.join(EXCEL_DIR, xml_file)
-        print(f"  [{xml_file}] 변환 중...")
+    for table_file in table_files:
+        table_name, ext = os.path.splitext(table_file)
+        table_path = os.path.join(EXCEL_DIR, table_file)
+        print(f"  [{table_file}] 변환 중...")
 
         try:
-            data = parse_xml(xml_path)
+            data = parsers[ext.lower()](table_path)
             write_json(table_name, data)
             print(f"    ✓ {len(data)}개 행 완료\n")
             ok += 1
         except Exception as e:
             print(f"    ✗ 오류: {e}\n")
 
-    print(f"결과: {ok}/{len(xml_files)} 성공")
-    return ok == len(xml_files)
+    print(f"결과: {ok}/{len(table_files)} 성공")
+    return ok == len(table_files)
 
 
 if __name__ == "__main__":
