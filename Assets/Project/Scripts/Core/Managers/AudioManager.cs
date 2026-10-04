@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using Project.Scripts.Data;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -29,6 +30,10 @@ namespace Project.Scripts.Core.Managers
 
         [Header("Settings")]
         [SerializeField] private float crossfadeDuration = 1f;
+
+        [Header("Library")]
+        [Tooltip("키(클립 이름)로 재생할 때 찾는 목록")]
+        [SerializeField] private AudioLibrary library;
 
         private Coroutine _crossfadeRoutine;
         private IVolumeProvider _volumeProvider;
@@ -117,6 +122,13 @@ namespace Project.Scripts.Core.Managers
             }
         }
 
+        /// <summary>AudioLibrary의 클립 이름으로 BGM을 재생합니다.</summary>
+        public void PlayBGM(string key, bool crossfade = true)
+        {
+            if(TryGetLibraryClip(key, out AudioClip clip))
+                PlayBGM(clip, crossfade);
+        }
+
         public void StopBGM(bool fadeOut = true)
         {
             if(!bgmSource.isPlaying)
@@ -192,11 +204,33 @@ namespace Project.Scripts.Core.Managers
             sfxSource.PlayOneShot(clip, GetSfxVolume());
         }
 
+        /// <summary>AudioLibrary의 클립 이름으로 SFX를 재생합니다.</summary>
+        public void PlaySFX(string key)
+        {
+            if(TryGetLibraryClip(key, out AudioClip clip))
+                PlaySFX(clip);
+        }
+
         public void PlaySFXAtPoint(AudioClip clip, Vector3 position)
         {
             if(clip == null)
                 return;
             AudioSource.PlayClipAtPoint(clip, position, GetSfxVolume());
+        }
+
+        private bool TryGetLibraryClip(string key, out AudioClip clip)
+        {
+            clip = null;
+            if(library == null)
+            {
+                Debug.LogWarning($"[AudioManager] No AudioLibrary assigned; can't play '{key}'.");
+                return false;
+            }
+            if(library.TryGetClip(key, out clip))
+                return true;
+
+            Debug.LogWarning($"[AudioManager] Clip '{key}' not found in {library.name}.");
+            return false;
         }
 
         #endregion

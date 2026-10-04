@@ -28,18 +28,22 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs in `Prefabs/UI/`, registered in `UIManager.uiPrefabs` on SubSystemCollection (looked up by type). Panels: HudUI, DialogueUI, InventoryUI.
 
-**Dialogue:** Table-driven. `DataManager` loads `Resources/Table/*.json` (generated from `Table/Excel/*.xlsx` by `Table/ConvertTable.bat`) once at boot and caches rows by `dataId` until quit. `Data.Table.DialogueData` row: speakerName, text, `nextId` (-1 ends), `choiceIds`. `NPC` holds a start `dialogueId`; `DialogueUI.SetupDialogue(row)` follows `nextId` and clones ConfirmButton per choice.
+**Dialogue:** Table-driven. `DataManager` loads `Resources/Table/*.json` (generated from `Table/Excel/*.xlsx` by `Table/ConvertTable.bat`; each sheet needs an Excel Table) once at boot and caches rows by `dataId` until quit. `Data.Table.DialogueData` row: speakerName, text, `nextId` (-1 ends), `choiceIds`, `conditions`, `actions`. `System/Dialogue/DialogueCommands` parses conditions (`flag:key>=2;!item:rose`) and actions (`setFlag/addFlag/clearFlag/giveItem/takeItem/sfx/bgm`); a row with empty text + choiceIds is a router that jumps to the first choice whose conditions pass (else `nextId`). `ManagerDialogueContext` binds them to Flag/Inventory/Audio managers. `NPC` holds a start `dialogueId` and a `CharacterProfile` (Data/Characters, sprite/animator/name); place `PF_NPC_Base` per NPC. `DialogueUI.SetupDialogue(row)` follows `nextId`, filters choices by conditions, clones ConfirmButton per choice.
 
-**Audio:** `AudioManager` -- BGM (crossfade), SFX. Volume = MasterVolume * BgmVolume/SfxVolume. Listens to `GameInstance.OnSettingsChanged`.
+**Localization:** `Core/Localization.Resolve(text)` turns `@key` into the current-language string from `Text` table (`TextData`: key, ko, en; falls back to ko, shows `@key` if missing). Non-`@` strings pass through. Used for dialogue text/speaker, prompts, HUD hint.
+
+**Audio:** `AudioManager` -- BGM (crossfade), SFX. Volume = MasterVolume * BgmVolume/SfxVolume. Listens to `GameInstance.OnSettingsChanged`. `PlayBGM/PlaySFX(string key)` look up `AudioLibrary` (Data/Audio/AudioLibrary_Main, key = clip name) assigned on SubSystemCollection. `SceneBgm` component plays a clip on scene start.
 
 **Save:** `SaveManager` serializes `SaveData` (scene, entrance, inventory, flags, timestamp) to JSON in `persistentDataPath/Saves/`. 3 slots. Integrates with `GameInstance.SelectSaveSlot()`. `SaveCurrent(slot)` collects scene, `SceneTransitionManager.CurrentEntranceId`, inventory, flags; `LoadAndApply(slot)` restores them and transitions.
 
-**Inventory:** `InventoryManager` -- slot-based, stacking. `ItemData` (id, name, desc, icon, maxStack). `ItemDatabase` ScriptableObjects in `Resources/Items/`. `ToSaveData()`/`LoadFromSaveData()` for persistence.
+**Inventory:** `InventoryManager` -- slot-based, stacking. `ItemData` (id, name, desc, icon, maxStack) built by `TableItemDataProvider` from `Item` table (`ItemTableData`); icon sprite loaded from `Resources/Items/{icon}`. `ToSaveData()`/`LoadFromSaveData()` for persistence.
+
+**WorldObject IDs:** `WorldManager.Register` gives objects with `objectID` 0 or a duplicate ID a negative runtime ID; map-placed objects keep positive IDs from `MapModel.nextId`.
 
 **GameInstance:** Global settings (volumes, language) via PlayerPrefs. Current save slot. Fires `OnSettingsChanged`.
 
 **Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
 
-**Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/ItemDatabase.cs` -- ScriptableObject wrapper (CreateAssetMenu: `LOTW/Item Data`). `Data/Table/` -- table row classes (`TableRowData` subclasses).
+**Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/CharacterProfile.cs`, `Data/AudioLibrary.cs` -- ScriptableObjects (`LOTW/Character Profile`, `LOTW/Audio Library`), assets in `Assets/Project/Data/`. `Data/Table/` -- table row classes (`TableRowData` subclasses: Dialogue, Map, ItemTable, Text).
 
 **Namespaces:** Mirror folder paths -- `Project.Scripts.Core(.Managers)`, `Project.Scripts.System.World/.UI`, `Project.Scripts.Content.Controller/.World/.UI`, `Project.Scripts.Data`, `Project.Scripts.Editor`.

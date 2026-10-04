@@ -1,5 +1,6 @@
 using TMPro;
 using UnityEngine;
+using Project.Scripts.Core;
 using Project.Scripts.System.UI;
 
 namespace Project.Scripts.Content.UI
@@ -16,12 +17,15 @@ namespace Project.Scripts.Content.UI
 
         private bool _hintVisible;
 
+        // 씬 전환으로 HUD가 닫혔다 다시 열릴 때 이전 씬의 힌트가 남지 않도록 함
+        private void OnDisable() => HideInteractionHint();
+
         public void ShowInteractionHint(string prompt)
         {
             if(interactionHintRoot == null)
                 return;
 
-            interactionHintText.text = prompt;
+            interactionHintText.text = Localization.Resolve(prompt);
 
             if(!_hintVisible)
             {

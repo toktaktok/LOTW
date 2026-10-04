@@ -7,34 +7,11 @@ namespace Project.Scripts.Core.Managers
 {
     /// <summary>
     /// 아이템 ID로부터 아이템 데이터를 조회하는 인터페이스.
-    /// Resources 기반 기본 구현 외에 다른 데이터 소스로 교체 가능합니다.
+    /// 기본 구현(TableItemDataProvider) 외에 다른 데이터 소스로 교체 가능합니다.
     /// </summary>
     public interface IItemDataProvider
     {
         ItemData? GetItemData(string itemId);
-    }
-
-    /// <summary>
-    /// Resources/Items/{itemId}에서 ItemDatabase SO를 로드하는 기본 구현.
-    /// </summary>
-    public class ResourceItemDataProvider : IItemDataProvider
-    {
-        private readonly Dictionary<string, ItemData> _cache = new();
-
-        public ItemData? GetItemData(string itemId)
-        {
-            if(_cache.TryGetValue(itemId, out ItemData data))
-                return data;
-
-            var loaded = Resources.Load<ItemDatabase>($"Items/{itemId}");
-            if(loaded != null)
-            {
-                _cache[itemId] = loaded.Data;
-                return loaded.Data;
-            }
-
-            return null;
-        }
     }
 
     /// <summary>
@@ -70,7 +47,7 @@ namespace Project.Scripts.Core.Managers
         protected override void Awake()
         {
             base.Awake();
-            _itemDataProvider = new ResourceItemDataProvider();
+            _itemDataProvider = new TableItemDataProvider();
             InitializeSlots();
         }
 
@@ -86,7 +63,7 @@ namespace Project.Scripts.Core.Managers
         #region Item Data Provider
 
         /// <summary>
-        /// 아이템 데이터 제공자를 교체합니다. 기본값은 ResourceItemDataProvider입니다.
+        /// 아이템 데이터 제공자를 교체합니다. 기본값은 TableItemDataProvider입니다.
         /// </summary>
         public void SetItemDataProvider(IItemDataProvider provider)
         {

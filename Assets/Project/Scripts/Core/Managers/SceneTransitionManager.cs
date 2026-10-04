@@ -26,6 +26,8 @@ namespace Project.Scripts.Core.Managers
         public void OnBeforeTransition()
         {
             CameraManager.Instance.SetInput(false);
+            // UI는 DontDestroyOnLoad라 이전 씬 대상을 붙든 페이지가 남음. HUD는 새 씬 PlayerController가 다시 연다.
+            UIManager.Instance.ClearAllPages();
         }
 
         public void OnSceneLoaded(string sceneName, string entranceId)

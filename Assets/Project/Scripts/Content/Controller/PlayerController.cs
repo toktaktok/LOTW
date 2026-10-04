@@ -40,9 +40,6 @@ namespace Project.Scripts.Content.Controller
         }
         private void Start()
         {
-            if(currentCharacter != null)
-                currentCharacter.Init();
-
             if(currentBaseNode != null)
             {
                 if(currentCharacter != null)
@@ -112,8 +109,8 @@ namespace Project.Scripts.Content.Controller
             currentCharacter.MoveTo(targetNode.transform.position);
 
             float timeout = WorldDefines.MoveAndSwitchTimeout;
-            while(Vector3.Distance(currentCharacter.transform.position, targetNode.transform.position) >
-                  WorldDefines.InteractionDistance && timeout>0)
+            float arrivalSqr = WorldDefines.RailArrivalDistance * WorldDefines.RailArrivalDistance;
+            while(HorizontalSqrDistance(currentCharacter.Position, targetNode.transform.position) > arrivalSqr && timeout > 0)
             {
                 timeout -= Time.deltaTime;
                 yield return null;
@@ -122,6 +119,8 @@ namespace Project.Scripts.Content.Controller
             if(timeout <= 0)
                 Debug.LogWarning($"[PlayerController] MoveAndSwitchRoutine timed out moving to {targetNode.name}");
 
+            // 남은 오차(또는 타임아웃)로 레일 밖에 서 있으면 다음 이동 입력 때 레일로 순간이동하므로 노드에 맞춘다
+            currentCharacter.Warp(targetNode.transform.position);
             currentBaseNode = targetNode;
 
             if(targetNode.neighbors.Count > 0)
@@ -134,6 +133,13 @@ namespace Project.Scripts.Content.Controller
             if(newCam != null)
                 CameraManager.Instance.SwitchCamera(newCam, camDuration);
             _isFreeMoving = false;
+        }
+
+        private static float HorizontalSqrDistance(Vector3 a, Vector3 b)
+        {
+            Vector3 delta = a - b;
+            delta.y = 0f;
+            return delta.sqrMagnitude;
         }
 
         private Vector2 GetMoveInput()
