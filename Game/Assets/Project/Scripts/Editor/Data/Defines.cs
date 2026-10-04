@@ -17,6 +17,25 @@ namespace Project.Scripts.Editor.Data
         // 새로 변환한 머티리얼의 toon 명암 단계 수
         public const float VoxelDssDefaultToonSteps = 3f;
 
+        // --- Plaza Builder ---
+        public const string PlazaScenePath = "Assets/Project/Scenes/Plaza.unity";
+        // 카메라 피치(도). yaw 0 고정
+        public const float PlazaCameraPitch = 20f;
+        public const float PlazaExploreOrthoSize = 10f;
+        public const float PlazaDialogueOrthoSize = 7.2f;
+        public const float PlazaCameraDistance = 20f;
+        // 빌더가 매번 지우고 다시 만드는 루트 오브젝트 이름
+        public const string PlazaGeneratedRootName = "--- Generated ---";
+        // 복셀 프리팹 생성 시 VoxelObject importScale (복셀 1칸 = RT 5픽셀 규칙)
+        public const float VoxelImportScale = Project.Scripts.Data.CameraDefines.VoxelScale;
+        public const string PlazaPrefabFolder = "Assets/Project/Prefabs/Environments";
+        public const string PlazaVolumeProfilePath = "Assets/Project/Settings/Plaza_VolumeProfile.asset";
+        public const string PlazaMaterialFolder = "Assets/Project/Art/Materials";
+        // 복셀 모델(.vox) 루트. 끝에 / 포함
+        public const string PlazaModelRoot = "Assets/Project/Art/Environments/Models/";
+        // SnowMan 원본 계층이 있는 개발 씬
+        public const string CharacterScenePath = "Assets/Project/Scenes/Test/Character.unity";
+
         // --- Editor Enhancers ---
         // 로컬 설정 파일 (UserSettings는 gitignore 대상)
         public const string EnhancerSettingsPath = "UserSettings/LOTW/EditorEnhancers.asset";
