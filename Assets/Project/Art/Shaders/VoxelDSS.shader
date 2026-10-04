@@ -26,6 +26,8 @@ Shader "LOTW/VoxelDSS"
         [Toggle(_DSS_CENTROID)] _UseCentroid ("Use Centroid Normal (A.2)", Float) = 0
         [Toggle(_DSS_WEIGHTED_LOOP)] _UseWeightedLoop ("Exact (2r+1)^3 Gaussian Loop", Float) = 0
 
+        [Toggle(_DSS_VOXEL_LIGHTING)] _UseVoxelLighting ("Per-Voxel Lighting (snap to voxel faces)", Float) = 0
+
         [Header(Toon Ramp)]
         [Toggle(_DSS_TOON)] _UseToon ("Toon Ramp Lighting", Float) = 0
         [IntRange] _ToonSteps ("Toon Bands", Range(2,6)) = 3
@@ -73,6 +75,7 @@ Shader "LOTW/VoxelDSS"
             #pragma shader_feature_local_fragment _DSS_CENTROID
             #pragma shader_feature_local_fragment _DSS_WEIGHTED_LOOP
             #pragma shader_feature_local_fragment _DSS_TOON
+            #pragma shader_feature_local_fragment _DSS_VOXEL_LIGHTING
 
             #pragma multi_compile_instancing
 

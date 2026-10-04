@@ -53,8 +53,16 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
     UNITY_SETUP_INSTANCE_ID(IN);
     UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(IN);
 
+    // Lighting position: the pixel itself, or the center of its voxel face so each voxel face
+    // gets one flat normal/shadow/attenuation value (stable under camera motion, no pixel noise).
+    float3 lightPosOS = IN.positionOS;
+#if defined(_DSS_VOXEL_LIGHTING)
+    lightPosOS = DSS_SnapToVoxelFaceOS(IN.positionOS, IN.faceNormalOS);
+#endif
+    float3 lightPosWS = TransformObjectToWorld(lightPosOS);
+
     // Derived normal in object space, then to world.
-    float3 normalOS = DSS_DeriveNormalOS(IN.positionOS, IN.faceNormalOS);
+    float3 normalOS = DSS_DeriveNormalOS(lightPosOS, IN.faceNormalOS);
     float3 normalWS = normalize(TransformObjectToWorldNormal(normalOS));
 
     half4 baseTex = SAMPLE_TEXTURE2D(_BaseMap, sampler_BaseMap, IN.uv);
@@ -64,15 +72,24 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
     surfaceData.albedo     = albedo;
     surfaceData.metallic   = _Metallic;
     surfaceData.smoothness = _Smoothness;
-    surfaceData.occlusion  = DSS_AmbientOcclusion(IN.positionOS);
+    surfaceData.occlusion  = DSS_AmbientOcclusion(lightPosOS);
     surfaceData.alpha      = 1.0;
     surfaceData.normalTS   = half3(0,0,1);
 
     InputData inputData = (InputData)0;
-    inputData.positionWS = IN.positionWS;
+    inputData.positionWS = lightPosWS;
     inputData.normalWS   = normalWS;
-    inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(IN.positionWS);
+    inputData.viewDirectionWS = GetWorldSpaceNormalizeViewDir(lightPosWS);
+    // Mirrors stock Lit: with shadow cascades the cascade must be picked per fragment. The
+    // vertex coord interpolated across large combined voxel faces picks the wrong cascade, so
+    // shadows shifted as the camera (and the cascade splits) moved.
+#if defined(_MAIN_LIGHT_SHADOWS_SCREEN) && !defined(_SURFACE_TYPE_TRANSPARENT)
     inputData.shadowCoord = IN.shadowCoord;
+#elif defined(MAIN_LIGHT_CALCULATE_SHADOWS)
+    inputData.shadowCoord = TransformWorldToShadowCoord(lightPosWS);
+#else
+    inputData.shadowCoord = float4(0, 0, 0, 0);
+#endif
     inputData.fogCoord    = IN.fogFactor;
     inputData.bakedGI     = SAMPLE_GI(IN.staticLightmapUV, IN.vertexSH, normalWS);
     inputData.normalizedScreenSpaceUV = GetNormalizedScreenSpaceUV(IN.positionCS);

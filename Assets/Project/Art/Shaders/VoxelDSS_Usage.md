@@ -62,8 +62,13 @@ mesh (importOffset minus the padding), so the volume aligns regardless of non-un
   - `_ToonSteps` (2..6) - band count including the shadow band.
   - `_ToonSoftness` (0..1) - band edge width; 0 = hard pixel-art edges.
   - `_ToonSpecular` (0..1) - one hard highlight; `_Smoothness` sets its size.
-  - Ignores `_Metallic` and reflection probes. Ambient GI, SSAO, shadows, Forward+ lights
-    and light layers still apply.
+  - Shadows are hard-stepped (no soft-shadow fractions between bands).
+  - Ignores `_Metallic`, reflection probes and SSAO (screen-space, so noisy and view-dependent
+    at low resolution; use `_AOStrength` for stable voxel-space AO). Ambient GI, Forward+
+    lights and light layers still apply.
+- `_DSS_VOXEL_LIGHTING` toggle (`Per-Voxel Lighting`) - evaluates normal, shadow, light
+  attenuation and AO at the center of each voxel face instead of per pixel, so every voxel
+  face gets one flat value. Pairs with toon for clean, camera-stable pixel-art shading.
 
 ## Notes
 

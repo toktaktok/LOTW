@@ -117,6 +117,17 @@ float3 DSS_DeriveNormalOS(float3 positionOS, float3 faceNormalOS)
     return normalize(lerp(faceN, n, _DSSStrength));
 }
 
+// Center of the voxel face this fragment lies on, in OBJECT space. Voxel mesh faces are
+// axis-aligned, so stepping half a voxel against the face normal lands inside the owning voxel.
+float3 DSS_SnapToVoxelFaceOS(float3 positionOS, float3 faceNormalOS)
+{
+    float3 offset = _LocalOffset.xyz + _ImportOffset.xyz;
+    float3 grid = positionOS / _ImportScale.xyz - offset;
+    float3 n = normalize(faceNormalOS);
+    float3 cell = floor(grid - n * 0.5) + 0.5;
+    return (cell + n * 0.5 + offset) * _ImportScale.xyz;
+}
+
 // Derived-Surface AO: more nearby occupied voxels => more occluded. Returns 0..1 (1 = unoccluded).
 float DSS_AmbientOcclusion(float3 positionOS)
 {
