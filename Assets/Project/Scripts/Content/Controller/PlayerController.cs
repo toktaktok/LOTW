@@ -60,7 +60,7 @@ namespace Project.Scripts.Content.Controller
         }
         private void Update()
         {
-            if(_isFreeMoving)
+            if(_isFreeMoving || UIManager.Instance.HasBlockingPage)
                 return;
             
             _fsm.Update();

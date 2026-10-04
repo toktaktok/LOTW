@@ -32,6 +32,9 @@ namespace Project.Scripts.Content.Controller
 
         private void Update()
         {
+            if(UIManager.Instance.HasBlockingPage)
+                return;
+
             DetectNearbyInteractable();
 
             if(_controls.Player.Interact.WasPressedThisFrame())

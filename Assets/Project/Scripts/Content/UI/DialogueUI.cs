@@ -27,11 +27,35 @@ namespace Project.Scripts.Content.UI
         private int _lineIndex;
         private bool _isDialogueMode;
 
+        private PlayerControls _controls;
+        private int _setupFrame = -1;
+
         protected override void Awake()
         {
+            // base.Awake()에서 비활성화되며 OnDisable이 호출되므로 먼저 생성
+            _controls = new PlayerControls();
             base.Awake();
             confirmButton?.onClick.AddListener(OnConfirm);
             cancelButton?.onClick.AddListener(OnCancel);
+        }
+
+        private void OnEnable() => _controls.Enable();
+        private void OnDisable() => _controls.Disable();
+
+        private void OnDestroy() => _controls.Dispose();
+
+        private void Update()
+        {
+            if(!IsVisible || Time.frameCount == _setupFrame)
+                return;
+
+            if(!_controls.Player.Interact.WasPressedThisFrame() && !_controls.UI.Submit.WasPressedThisFrame())
+                return;
+
+            if(_isDialogueMode)
+                AdvanceLine();
+            else
+                OnConfirm();
         }
 
         /// <summary>
@@ -44,6 +68,7 @@ namespace Project.Scripts.Content.UI
             _isDialogueMode = false;
             _lines = null;
             _lineIndex = 0;
+            _setupFrame = Time.frameCount;
 
             SetSpeaker(null);
 
@@ -63,8 +88,9 @@ namespace Project.Scripts.Content.UI
             _isDialogueMode = true;
             _lines = data.lines;
             _lineIndex = 0;
+            _setupFrame = Time.frameCount;
 
-            SetButtonVisibility(false);
+            SetButtonVisibility(true);
             ShowCurrentLine();
         }
 
@@ -110,11 +136,17 @@ namespace Project.Scripts.Content.UI
         private void OnConfirm()
         {
             if(_isDialogueMode)
+            {
+                AdvanceLine();
                 return;
+            }
 
-            _pending?.Interact(_interactor);
+            // Interact가 같은 DialogueUI를 다시 열 수 있으므로 닫기를 먼저 큐에 넣음
+            IInteractable pending = _pending;
+            GameObject interactor = _interactor;
             _pending = null;
             UIManager.Instance.PopPage();
+            pending?.Interact(interactor);
         }
 
         private void OnCancel()

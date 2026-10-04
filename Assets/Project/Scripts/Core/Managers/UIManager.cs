@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using Project.Scripts.System.UI;
 using Project.Scripts.Data;
@@ -8,7 +9,13 @@ namespace Project.Scripts.Core.Managers
 {
     public class UIPage
     {
+        public UILayer Layer { get; private set; }
         public List<BaseUI> UIComponents { get; private set; } = new List<BaseUI>();
+
+        public UIPage(UILayer layer)
+        {
+            Layer = layer;
+        }
 
         public void Add(BaseUI ui) => UIComponents.Add(ui);
     }
@@ -27,9 +34,74 @@ namespace Project.Scripts.Core.Managers
 
         private bool _isProcessing = false;
 
+        // HudUI.prefab CanvasScaler 설정과 동일
+        private const int LayerSortingOrderStep = 10;
+        private static readonly Vector2 ReferenceResolution = new Vector2(1920f, 1080f);
+        private const float MatchWidthOrHeight = 0.5f;
+
         #endregion
 
+        /// <summary>
+        /// HUD 레이어를 제외한 페이지가 열려 있는지 여부. 플레이어 입력 차단에 사용.
+        /// </summary>
+        public bool HasBlockingPage
+        {
+            get
+            {
+                foreach(var page in _pageNavigationStack)
+                {
+                    if(page.Layer != UILayer.HUD)
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        protected override void Awake()
+        {
+            base.Awake();
+            if(Instance != this)
+                return;
+
+            EnsureLayerParents();
+        }
+
         #region Methods
+
+        private void EnsureLayerParents()
+        {
+            int layerCount = Enum.GetValues(typeof(UILayer)).Length;
+            if(layerParents != null && layerParents.Length >= layerCount)
+                return;
+
+            Transform[] parents = new Transform[layerCount];
+            for(int i = 0; i < layerCount; i++)
+            {
+                if(layerParents != null && i < layerParents.Length && layerParents[i] != null)
+                {
+                    parents[i] = layerParents[i];
+                    continue;
+                }
+
+                UILayer layer = (UILayer)i;
+                GameObject root = new GameObject($"[UILayer] {layer}");
+                root.transform.SetParent(transform, false);
+
+                Canvas canvas = root.AddComponent<Canvas>();
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+                canvas.sortingOrder = i * LayerSortingOrderStep;
+
+                CanvasScaler scaler = root.AddComponent<CanvasScaler>();
+                scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+                scaler.referenceResolution = ReferenceResolution;
+                scaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+                scaler.matchWidthOrHeight = MatchWidthOrHeight;
+
+                root.AddComponent<GraphicRaycaster>();
+                parents[i] = root.transform;
+            }
+            layerParents = parents;
+        }
 
         public void PushPage<T>(UILayer layer = UILayer.Popup) where T : BaseUI
         {
@@ -96,12 +168,17 @@ namespace Project.Scripts.Core.Managers
 
         private async Awaitable ProcessPushPage<T>(UILayer layer, Action<T> setup) where T : BaseUI
         {
-            UIPage newPage = new UIPage();
+            UIPage newPage = new UIPage(layer);
             T ui = await GetOrCreateUI<T>(layer);
 
             if(ui != null)
             {
                 setup?.Invoke(ui);
+
+                // 이미 열린 UI는 내용만 갱신하고 페이지를 중복으로 쌓지 않음
+                if(ui.IsVisible)
+                    return;
+
                 newPage.Add(ui);
                 ui.transform.SetAsLastSibling();
                 await ui.ShowAsync();
@@ -112,7 +189,7 @@ namespace Project.Scripts.Core.Managers
 
         private async Awaitable ProcessPushPageGroup(UILayer layer, Type[] uiTypes)
         {
-            UIPage newPage = new UIPage();
+            UIPage newPage = new UIPage(layer);
             List<Awaitable> tasks = new List<Awaitable>();
 
             foreach(var type in uiTypes)
