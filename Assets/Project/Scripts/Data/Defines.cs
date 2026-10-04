@@ -36,6 +36,8 @@ namespace Project.Scripts.Data
         public const float PixelsPerUnit = 25f;
         /// <summary>저해상도 RT 표시 캔버스. UIManager 레이어(0 이상)보다 아래.</summary>
         public const int LowResViewSortingOrder = -100;
+        /// <summary>서브픽셀 보정용 저해상도 RT 가장자리 여백(픽셀, 한쪽 기준).</summary>
+        public const int LowResMarginPixels = 1;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>
