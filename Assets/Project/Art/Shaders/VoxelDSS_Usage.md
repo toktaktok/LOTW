@@ -16,25 +16,37 @@ Files:
 
 1. `LOTW > Bake Voxel Occupancy (DSS)` opens the baker window.
 2. For a real asset: drag a VoxelImporter `VoxelObject` into `Voxel Object`, drag the
-   `MAT_VoxelDSS` material into `Target Material`, press `Bake From Voxel Object`.
+   model's DSS material into `Target Material`, press `Bake From Voxel Object`.
 3. For an instant demo: press `Bake Test Sphere`. It writes the mapping uniforms for a
-   unit cube `[-0.5,0.5]` mesh so you can demo on a default Cube + `MAT_VoxelDSS`.
+   unit cube `[-0.5,0.5]` mesh so you can demo on a default Cube + `Mat_VoxelDSS`.
 4. The baker writes `Assets/Project/Art/Textures/Voxel/TEX3D_<name>_Occupancy.asset`
-   (R8_UNorm, linear, Clamp, Trilinear, optional mip chain) and sets the material's
+   (R8_UNorm, linear, Clamp, Bilinear, no mips) and sets the material's
    `_OccupancyTex`, `_VoxelDims`, `_ImportScale`, `_ImportOffset`, `_LocalOffset`.
+5. The volume has a 1-voxel empty border so Clamp sampling past the model bounds reads
+   empty, not filled. `_VoxelDims` is the padded size and `_ImportOffset` is shifted by -1.
+
+## Material setup (VoxelImporter)
+
+- Mapping uniforms live on the material, so each voxel model needs its OWN material.
+- The VoxelObject material slot is read-only (no drag and drop). Instead: inspector top bar
+  `Advanced` -> `Material` list -> `Save` on the row to export the embedded material as a
+  `.mat` asset (the slot then points to it) -> set that asset's shader to `LOTW/VoxelDSS`.
+  `_BaseMap` (color atlas) carries over because both shaders use the same property name.
+- Do not assign the material on the MeshRenderer directly: with `updateMeshRendererMaterials`
+  on, VoxelImporter overwrites renderer materials on refresh. Avoid the row's `Reset` button.
 
 ## Object-space -> voxel mapping (must match the baker)
 
     grid = (objectPos / _ImportScale) - (_LocalOffset + _ImportOffset)   // VoxelImporter inverse
-    uvw  = (grid + 0.5) / _VoxelDims                                       // cell center at +0.5
+    uvw  = grid / _VoxelDims                                               // no +0.5: grid already has cell centers at i+0.5
 
-The baker copies the SAME importScale/importOffset/localOffset VoxelImporter used to
-build the mesh, so the volume aligns regardless of non-uniform scale or axis flips.
+The baker copies the importScale/importOffset/localOffset VoxelImporter used to build the
+mesh (importOffset minus the padding), so the volume aligns regardless of non-uniform scale.
 
 ## Material knobs
 
 - `_KernelRadius` / `_StepScale` - gradient reach. Small = local detail (reacts to
-  stair-steps), large = global form. Bake mips and the large-r form comes cheap.
+  stair-steps), large = global form.
 - `_Sigma` - Gaussian width for the exact `(2r+1)^3` loop (enable `_DSS_WEIGHTED_LOOP`).
   Default off: cheap 6-tap central differences on the trilinear volume.
 - `_FallbackThreshold` - below this `|gradient|` (thin sheet / lone voxel) the normal
@@ -50,7 +62,8 @@ build the mesh, so the volume aligns regardless of non-uniform scale or axis fli
 - The custom DepthNormals pass feeds the DSS normal to SSAO (active on PC and Mobile
   renderers) so occlusion matches the derived surface, not the cube faces.
 - Volume is linear R8 (occupancy is data, not color) - do not import it as sRGB.
-- Mobile is plain Forward; keep `_KernelRadius` modest or rely on the mip LOD form.
+- Cost: `_DSS_WEIGHTED_LOOP` is 6 x (2r+1)^3 samples per pixel (r=4 -> 4374); centroid and
+  AO loops are (2r+1)^3. Keep both toggles off and `_KernelRadius` at 1-2, especially on Mobile.
   Escalation path (not built): compute-bake RGB normals into a 2nd Texture3D and sample
   one texel instead of looping - zero shader-interface change.
 - Lighting uses main + Forward+ (cluster) additional lights, reflection probes, soft shadows,
