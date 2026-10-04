@@ -3,6 +3,7 @@
 
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Lighting.hlsl"
 #include "VoxelDSSCommon.hlsl"
+#include "VoxelDSSToonLighting.hlsl"
 
 struct Attributes
 {
@@ -79,7 +80,11 @@ half4 VoxelDSSForwardFragment(Varyings IN) : SV_Target
 
     // SSAO is applied once inside UniversalFragmentPBR (via inputData.normalizedScreenSpaceUV);
     // do not min() it into surfaceData.occlusion here or it darkens twice.
+#if defined(_DSS_TOON)
+    half4 color = DSS_ToonFragment(inputData, surfaceData);
+#else
     half4 color = UniversalFragmentPBR(inputData, surfaceData);
+#endif
     color.rgb = MixFog(color.rgb, inputData.fogCoord);
     return color;
 }

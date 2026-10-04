@@ -10,6 +10,7 @@ Files:
 - `VoxelDSSInput.hlsl` - SRP-Batcher CBUFFER + Texture3D/sampler.
 - `VoxelDSSCommon.hlsl` - reusable DSS math (gradient A.1, centroid A.2, sign, fallback, AO).
 - `VoxelDSSForwardPass.hlsl`, `VoxelDSSDepthNormalsPass.hlsl` - the two passes that derive normals.
+- `VoxelDSSToonLighting.hlsl` - optional stepped (toon ramp) lighting, `_DSS_TOON`.
 - `VoxelOccupancyBaker.cs`, `VoxelDssMath.cs` - editor baker (Project.Scripts.Editor).
 
 ## Bake the occupancy volume
@@ -55,6 +56,14 @@ mesh (importOffset minus the padding), so the volume aligns regardless of non-un
 - `_AOStrength` / `_AORadius` - optional derived-surface AO from neighborhood occupancy.
 - `_DSS_CENTROID` toggle - use occupancy centroid (A.2) instead of gradient (A.1).
   Centroid(r) ~= Gradient(r-1).
+- `_DSS_TOON` toggle (`Toon Ramp Lighting`) - replaces PBR with stepped lighting: direct
+  light (N.L x shadow x attenuation) is quantized into `_ToonSteps` bands, the lowest band
+  being ambient only. Off by default, so existing materials are unchanged.
+  - `_ToonSteps` (2..6) - band count including the shadow band.
+  - `_ToonSoftness` (0..1) - band edge width; 0 = hard pixel-art edges.
+  - `_ToonSpecular` (0..1) - one hard highlight; `_Smoothness` sets its size.
+  - Ignores `_Metallic` and reflection probes. Ambient GI, SSAO, shadows, Forward+ lights
+    and light layers still apply.
 
 ## Notes
 
