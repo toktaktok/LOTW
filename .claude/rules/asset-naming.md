@@ -53,3 +53,4 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 
 ## Import settings
 - Character sprites: PPU 25, Point filter, no compression (see pixel render style).
+- UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`).
