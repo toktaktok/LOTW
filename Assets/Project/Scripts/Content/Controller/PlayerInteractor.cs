@@ -87,13 +87,15 @@ namespace Project.Scripts.Content.Controller
                 _hud.HideInteractionHint();
         }
 
+        /// <summary>
+        /// 대상별 동작은 각 IInteractable이 결정합니다 (RailConnector: 이동, NPC: 대화 UI 등).
+        /// </summary>
         private void TryInteract()
         {
-            if(_currentNearby != null)
-            {
-                UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup,
-                    ui => ui.Setup(_currentNearby, gameObject));
-            }
+            if(_currentNearby == null)
+                return;
+
+            _currentNearby.Interact(gameObject);
         }
     }
 }
