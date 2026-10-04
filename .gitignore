@@ -74,3 +74,4 @@ crashlytics-build.properties
 # Local tool state
 .claude/settings.local.json
 .openchrome/
+.claude/worktrees/
