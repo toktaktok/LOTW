@@ -22,7 +22,10 @@ namespace Project.Scripts.Editor.Data
         public const float HierarchyIconSize = 16f;
         public const float HierarchyComponentIconSize = 14f;
         public const int HierarchyMaxComponentIcons = 6;
-        public const float HierarchyBackgroundAlpha = 0.3f;
+        // 색상 그라데이션 시작(왼쪽) 알파. 오른쪽 끝은 0
+        public const float HierarchyBackgroundAlpha = 0.45f;
+        public const float HierarchyHeaderGradientAlpha = 0.7f;
+        public const int HierarchyGradientResolution = 64;
         public static readonly Color HierarchyTreeLineColor = new Color(0.5f, 0.5f, 0.5f, 0.5f);
         public static readonly Color HierarchyHeaderColor = new Color(0.16f, 0.16f, 0.16f, 1f);
         public static readonly Color HierarchyHeaderColorLight = new Color(0.62f, 0.62f, 0.62f, 1f);
