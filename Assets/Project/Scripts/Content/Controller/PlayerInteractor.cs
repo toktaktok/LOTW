@@ -35,6 +35,10 @@ namespace Project.Scripts.Content.Controller
             if(UIManager.Instance.HasBlockingPage)
                 return;
 
+            // 페이드/로딩 중 상호작용하면 사라질 씬의 대상으로 UI가 열림
+            if(SceneTransitionManager.HasInstance && SceneTransitionManager.Instance.IsTransitioning)
+                return;
+
             DetectNearbyInteractable();
 
             if(_controls.Player.Interact.WasPressedThisFrame())

@@ -1,0 +1,9 @@
+[
+  {
+    "dataId": 1,
+    "itemId": "rose",
+    "displayName": "@item.rose.name",
+    "description": "@item.rose.desc",
+    "maxStack": 99
+  }
+]

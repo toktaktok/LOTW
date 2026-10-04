@@ -4,9 +4,12 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
+using Project.Scripts.Content.Dialogue;
+using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
+using Project.Scripts.System.Dialogue;
 using Project.Scripts.System.UI;
 using Project.Scripts.System.World;
 
@@ -15,6 +18,7 @@ namespace Project.Scripts.Content.UI
     /// <summary>
     /// 대화 UI. 단순 상호작용 프롬프트와 Dialogue 테이블 기반 다단계 대화를 모두 지원합니다.
     /// 대화 모드는 행의 nextId를 따라가며, choiceIds가 있으면 ConfirmButton을 복제해 선택지를 표시합니다.
+    /// 행의 conditions/actions와 분기 행은 DialogueCommands가 처리합니다.
     /// </summary>
     public class DialogueUI : BaseUI
     {
@@ -30,6 +34,7 @@ namespace Project.Scripts.Content.UI
         private DialogueData _currentLine;
         private bool _isDialogueMode;
         private readonly List<Button> _choiceButtons = new();
+        private readonly IDialogueContext _context = new ManagerDialogueContext();
 
         private PlayerControls _controls;
         private int _setupFrame = -1;
@@ -85,7 +90,7 @@ namespace Project.Scripts.Content.UI
             SetSpeaker(null);
 
             if(promptText != null)
-                promptText.text = interactable.InteractionPrompt;
+                promptText.text = Localization.Resolve(interactable.InteractionPrompt);
 
             SetButtonVisibility(true);
         }
@@ -118,6 +123,7 @@ namespace Project.Scripts.Content.UI
         {
             ClearChoices();
 
+            line = DialogueCommands.ResolveRoute(line, GetLine, _context);
             if(line == null)
             {
                 FinishDialogue();
@@ -125,10 +131,11 @@ namespace Project.Scripts.Content.UI
             }
 
             _currentLine = line;
-            SetSpeaker(line.speakerName);
+            DialogueCommands.RunActions(line.actions, _context);
+            SetSpeaker(Localization.Resolve(line.speakerName));
 
             if(promptText != null)
-                promptText.text = line.text;
+                promptText.text = Localization.Resolve(line.text);
 
             bool hasChoices = line.choiceIds != null && line.choiceIds.Length > 0;
             SetButtonVisibility(!hasChoices);
@@ -152,6 +159,8 @@ namespace Project.Scripts.Content.UI
                     Debug.LogWarning($"[DialogueUI] 선택지 dataId {choiceId} 행이 없습니다.");
                     continue;
                 }
+                if(!DialogueCommands.CheckConditions(choice.conditions, _context))
+                    continue;
 
                 Button button = Instantiate(confirmButton, template.parent);
                 button.gameObject.SetActive(true);
@@ -160,10 +169,9 @@ namespace Project.Scripts.Content.UI
 
                 TMP_Text label = button.GetComponentInChildren<TMP_Text>();
                 if(label != null)
-                    label.text = choice.text;
+                    label.text = Localization.Resolve(choice.text);
 
-                int nextId = choice.nextId;
-                button.onClick.AddListener(() => OnChoose(nextId));
+                button.onClick.AddListener(() => OnChoose(choice));
                 _choiceButtons.Add(button);
             }
 
@@ -189,14 +197,15 @@ namespace Project.Scripts.Content.UI
             return _choiceButtons[0];
         }
 
-        private void OnChoose(int nextId)
+        private void OnChoose(DialogueData choice)
         {
             // Interact와 EventSystem Submit이 같은 프레임에 겹쳐 두 번 선택되는 것을 방지
             if(Time.frameCount == _setupFrame)
                 return;
 
             _setupFrame = Time.frameCount;
-            ShowLine(GetLine(nextId));
+            DialogueCommands.RunActions(choice.actions, _context);
+            ShowLine(GetLine(choice.nextId));
         }
 
         private void ClearChoices()

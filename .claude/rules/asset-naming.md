@@ -21,6 +21,7 @@ Applies to `Assets/Project/` only. Third-party folders (`VoxelImporter`, `TextMe
 | UI sprites | `Art/UI/` |
 | Audio | `Audio/{BGM\|SFX}/` |
 | Generated 3D textures | `Art/Textures/Voxel/` |
+| Item icons (path-loaded) | `Resources/Items/` (file name = Item table `Icon`) |
 
 Character IDs: `0xx` player characters, `1xx` town NPCs, `2xx` other NPCs.
 
@@ -36,7 +37,7 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 | Animator controller | `AC_` | `AC_Snowman` |
 | Model (vox/fbx) | `M_E_` | `M_E_CommonBuilding_001`, `M_E_Bench_1` |
 | Material | `MAT_` | `MAT_VoxelDSS`, `MAT_BusStop_Pillar` |
-| Prefab | `PF_` | `PF_FlowerShop`, `PF_NPC_Test` |
+| Prefab | `PF_` | `PF_FlowerShop`, `PF_NPC_Base` |
 | Generated 3D texture | `TEX3D_` | `TEX3D_PF_FlowerShop_Occupancy` |
 | BGM / SFX | `BGM_` / `SFX_` | `BGM_Village` |
 
@@ -44,7 +45,7 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 - State order: action, then direction or sub-state (`Move_Front`, `Move_Intro`).
 - A single unnamed pose has no state (`TX_C_Mayor`). Extra variants get `_2`, `_3`. Keep existing numbering width in a series (`_001`).
 - Shaders: PascalCase, no prefix, no spaces (`VoxelDSS.shader`, `SpriteShadow.shadergraph`).
-- ScriptableObject data: `{Type}_{Name}` (`Dialogue_Cat`).
+- ScriptableObject data: `{Type}_{Name}` in `Data/{Category}/` (`Data/Characters/CharacterProfile_Gumman`, `Data/Audio/AudioLibrary_Main`).
 
 ## Exceptions (do not rename)
 - Font files keep the distributed name (`Galmuri11.ttf`, `DungGeunMo.otf`) and license text. TMP font assets: `{Family} {Kind}.asset`.

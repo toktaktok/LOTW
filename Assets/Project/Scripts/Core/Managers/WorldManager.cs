@@ -27,6 +27,16 @@ namespace Project.Scripts.Core.Managers
             _objects.Remove(id);
         }
 
+        /// <summary>id에 등록된 객체가 obj일 때만 해제합니다. 같은 id를 다른 객체가 쓰고 있으면 건드리지 않습니다.</summary>
+        public bool Unregister(int id, T obj)
+        {
+            if(!_objects.TryGetValue(id, out T current) || !ReferenceEquals(current, obj))
+                return false;
+            return _objects.Remove(id);
+        }
+
+        public bool Contains(int id) => _objects.ContainsKey(id);
+
         public T Get(int id)
         {
             _objects.TryGetValue(id, out T obj);
@@ -53,6 +63,9 @@ namespace Project.Scripts.Core.Managers
 
         private readonly ObjectRegistry<WorldObject> _registry = new();
 
+        // 맵 할당자(MapModel.nextId)는 1부터 양수를 쓰므로 런타임 자동 발급은 음수로 분리
+        private int _lastRuntimeId;
+
         #endregion
 
         #region Properties
@@ -63,18 +76,35 @@ namespace Project.Scripts.Core.Managers
 
         #region Methods
 
+        /// <summary>
+        /// objectID 0(미할당)이거나 다른 객체가 이미 쓰는 ID면 음수 런타임 ID를 발급해 등록합니다.
+        /// </summary>
         public void Register(WorldObject obj)
         {
             if(obj == null)
                 return;
-            _registry.Register(obj.ObjectID, obj);
+
+            int id = obj.ObjectID;
+            WorldObject current = _registry.Get(id);
+            if(current == obj)
+                return;
+
+            if(id == 0 || current != null)
+            {
+                if(current != null && id != 0)
+                    Debug.LogWarning($"[WorldManager] Duplicate objectID {id}: '{current.name}' and '{obj.name}'. Assigning a runtime ID to '{obj.name}'.");
+                id = --_lastRuntimeId;
+                obj.AssignRuntimeID(id);
+            }
+
+            _registry.Register(id, obj);
         }
 
-        public void Unregister(WorldObject obj)
+        public bool Unregister(WorldObject obj)
         {
             if(obj == null)
-                return;
-            _registry.Unregister(obj.ObjectID);
+                return false;
+            return _registry.Unregister(obj.ObjectID, obj);
         }
 
         public WorldObject GetObject(int objectID)

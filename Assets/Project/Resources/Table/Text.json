@@ -1,0 +1,32 @@
+[
+  {
+    "dataId": 1,
+    "key": "ui.talk",
+    "ko": "대화하기",
+    "en": "Talk"
+  },
+  {
+    "dataId": 2,
+    "key": "ui.move",
+    "ko": "이동하기",
+    "en": "Move"
+  },
+  {
+    "dataId": 3,
+    "key": "npc.shopkeeper",
+    "ko": "상점 주인",
+    "en": "Shopkeeper"
+  },
+  {
+    "dataId": 4,
+    "key": "item.rose.name",
+    "ko": "장미",
+    "en": "Rose"
+  },
+  {
+    "dataId": 5,
+    "key": "item.rose.desc",
+    "ko": "오늘 들어온 붉은 장미.",
+    "en": "A red rose that arrived today."
+  }
+]

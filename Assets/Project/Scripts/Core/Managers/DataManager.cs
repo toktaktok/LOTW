@@ -4,6 +4,8 @@ using UnityEngine;
 using Project.Scripts.Data;
 using DialogueData = Project.Scripts.Data.Table.DialogueData;
 using MapData = Project.Scripts.Data.Table.MapData;
+using ItemTableData = Project.Scripts.Data.Table.ItemTableData;
+using TextData = Project.Scripts.Data.Table.TextData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -15,10 +17,10 @@ namespace Project.Scripts.Core.Managers
     /// 새 테이블을 추가하는 절차:
     ///   1. TableRowData 를 상속받는 데이터 클래스 생성 (Data/Table/XxxData.cs)
     ///   2. LoadAllTables() 에 LoadTable&lt;XxxData&gt;("Xxx") 한 줄 추가
-    ///   3. Table/Excel/ 에 Xxx.xml 작성 (표 정의 필수) → ConvertTable.bat 실행
+    ///   3. Table/Excel/ 에 Xxx.xlsx 작성 (표 정의 필수) → ConvertTable.bat 실행
     ///
     /// 테이블 파일 명명 규칙:
-    ///   XxxTable.xml 에서 'Table' 을 뺀 이름 사용. 예) Dialogue.xml, Item.xml
+    ///   접미사 'Table' 없이 사용. 예) Dialogue.xlsx, Item.xlsx
     /// ──────────────────────────────────────────────────────────
     ///
     /// 사용 예:
@@ -86,14 +88,14 @@ namespace Project.Scripts.Core.Managers
         {
             await LoadTable<DialogueData>("Dialogue");
             await LoadTable<MapData>("Map");
+            await LoadTable<ItemTableData>("Item");
+            await LoadTable<TextData>("Text");
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
-            // await LoadTable<ItemData>("Item");
             // await LoadTable<QuestData>("Quest");
             // ────────────────────────────────────────────────────────
 
             IsLoaded = true;
-            Debug.Log("[DataManager] 모든 테이블 로드 완료");
         }
 
         #endregion
@@ -130,7 +132,6 @@ namespace Project.Scripts.Core.Managers
             }
 
             _cache[typeof(T)] = dict;
-            Debug.Log($"[DataManager] {tableName}: {dict.Count}개 행 로드");
         }
 
         #endregion
