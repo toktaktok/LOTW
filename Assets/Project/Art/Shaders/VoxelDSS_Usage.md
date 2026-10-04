@@ -26,7 +26,21 @@ Files:
 5. The volume has a 1-voxel empty border so Clamp sampling past the model bounds reads
    empty, not filled. `_VoxelDims` is the padded size and `_ImportOffset` is shifted by -1.
 
-## Material setup (VoxelImporter)
+## Automatic setup (recommended)
+
+`LOTW > Voxel DSS > Apply To Selected Prefabs` (select prefabs in the Project window) or
+`Apply To All Voxel Prefabs` (every prefab under `Assets/Project` with a `VoxelObject`):
+
+1. Exports embedded VoxelImporter materials to `{Prefab}_mat{i}.mat` next to the prefab.
+2. Switches them to `LOTW/VoxelDSS` with toon + per-voxel lighting on (3 bands, hard edges).
+3. Bakes the occupancy volume if the material has none, and recreates the voxel object.
+4. Removes embedded materials the prefab no longer references.
+
+Already-DSS materials keep their values and are not re-baked; transparent materials are
+skipped. Re-bake after editing a model with the baker window below. Only VoxelImporter
+models are supported: plain meshes have no occupancy data.
+
+## Material setup (VoxelImporter, manual)
 
 - Mapping uniforms live on the material, so each voxel model needs its OWN material.
 - The VoxelObject material slot is read-only (no drag and drop). Instead: inspector top bar
