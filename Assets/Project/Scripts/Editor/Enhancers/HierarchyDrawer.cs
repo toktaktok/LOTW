@@ -95,12 +95,19 @@ namespace Project.Scripts.Editor.Enhancers
             if(_headerStyle == null)
                 _headerStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter };
 
-            // 왼쪽 폴드아웃 화살표는 가리지 않도록 아이콘 위치부터 덮음
-            Color background = EditorGUIUtility.isProSkin ? ToolDefines.HierarchyHeaderColor : ToolDefines.HierarchyHeaderColorLight;
-            EditorGUI.DrawRect(rect, background);
+            // 원래 아이콘/이름을 행 배경색으로 지움. 왼쪽 폴드아웃 화살표는 가리지 않도록 아이콘 위치부터.
+            // 그라데이션이 오른쪽 끝에서 일반 행 배경과 자연스럽게 이어지도록 어두운 단색 바탕은 깔지 않음.
+            EditorGUI.DrawRect(rect, GetRowBackground(Selection.Contains(go)));
 
             if(EnhancerSettings.instance.TryGetHierarchyStyle(GetKey(go), out HierarchyStyle style) && style.color.a > 0f)
+            {
                 DrawGradient(rect, style.color, ToolDefines.HierarchyHeaderGradientAlpha);
+            }
+            else
+            {
+                Color neutral = EditorGUIUtility.isProSkin ? ToolDefines.HierarchyHeaderColor : ToolDefines.HierarchyHeaderColorLight;
+                DrawGradient(rect, neutral, neutral.a);
+            }
 
             string title = go.name.Trim('-', ' ').ToUpperInvariant();
             EditorGUI.LabelField(rect, title, _headerStyle);
