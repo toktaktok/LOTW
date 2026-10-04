@@ -7,6 +7,53 @@ using Project.Scripts.Content.Controller;
 
 namespace Project.Scripts.Core.Managers
 {
+    /// <summary>
+    /// 씬 전환 시 호출되는 콜백.
+    /// 프로젝트별 로직(플레이어 배치, 카메라 세팅 등)을 주입합니다.
+    /// </summary>
+    public interface ISceneTransitionHandler
+    {
+        void OnBeforeTransition();
+        void OnSceneLoaded(string sceneName, string entranceId);
+        void OnAfterTransition();
+    }
+
+    /// <summary>
+    /// 기본 핸들러: PlayerController를 SceneEntrance 위치에 배치하고 카메라 입력을 제어합니다.
+    /// </summary>
+    public class DefaultSceneTransitionHandler : ISceneTransitionHandler
+    {
+        public void OnBeforeTransition()
+        {
+            CameraManager.Instance.SetInput(false);
+        }
+
+        public void OnSceneLoaded(string sceneName, string entranceId)
+        {
+            if (string.IsNullOrEmpty(entranceId)) return;
+
+            SceneEntrance[] entrances = UnityEngine.Object.FindObjectsByType<SceneEntrance>(FindObjectsSortMode.None);
+            foreach (SceneEntrance entrance in entrances)
+            {
+                if (entrance.EntranceId != entranceId) continue;
+
+                PlayerController player = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
+                if (player != null)
+                    player.WarpToEntrance(entrance.SpawnPosition, entrance.StartNode);
+                break;
+            }
+        }
+
+        public void OnAfterTransition()
+        {
+            CameraManager.Instance.SetInput(true);
+        }
+    }
+
+    /// <summary>
+    /// 페이드 기반 씬 전환 매니저.
+    /// ISceneTransitionHandler를 통해 프로젝트별 전환 로직을 주입합니다.
+    /// </summary>
     public class SceneTransitionManager : Singleton<SceneTransitionManager>
     {
         #region Settings
@@ -26,6 +73,7 @@ namespace Project.Scripts.Core.Managers
 
         private Canvas _fadeCanvas;
         private Image _fadeImage;
+        private ISceneTransitionHandler _handler;
 
         #endregion
 
@@ -35,15 +83,25 @@ namespace Project.Scripts.Core.Managers
         {
             base.Awake();
             CreateFadeCanvas();
+            _handler = new DefaultSceneTransitionHandler();
+        }
+
+        #endregion
+
+        #region Handler
+
+        /// <summary>
+        /// 씬 전환 핸들러를 교체합니다. 기본값은 DefaultSceneTransitionHandler입니다.
+        /// </summary>
+        public void SetHandler(ISceneTransitionHandler handler)
+        {
+            _handler = handler;
         }
 
         #endregion
 
         #region Public API
 
-        /// <summary>
-        /// 씬을 전환합니다. entranceId와 일치하는 SceneEntrance 위치에 플레이어를 배치합니다.
-        /// </summary>
         public void TransitionTo(string sceneName, string entranceId = "")
         {
             if (IsTransitioning) return;
@@ -59,43 +117,23 @@ namespace Project.Scripts.Core.Managers
             IsTransitioning = true;
             OnTransitionStarted?.Invoke();
 
-            CameraManager.Instance.SetInput(false);
+            _handler?.OnBeforeTransition();
 
-            // 1. 화면을 검게 페이드
             await FadeRoutine(0f, 1f);
 
-            // 2. 씬 비동기 로드
             AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
             while (!op.isDone)
                 await Awaitable.NextFrameAsync();
 
-            // 3. 씬의 Start() 호출 완료 대기
             await Awaitable.NextFrameAsync();
 
-            // 4. 플레이어를 입장 지점에 배치
-            if (!string.IsNullOrEmpty(entranceId))
-                PlacePlayerAtEntrance(entranceId);
+            _handler?.OnSceneLoaded(sceneName, entranceId);
 
-            // 5. 화면 페이드 인
             await FadeRoutine(1f, 0f);
 
-            CameraManager.Instance.SetInput(true);
+            _handler?.OnAfterTransition();
             IsTransitioning = false;
             OnTransitionCompleted?.Invoke();
-        }
-
-        private void PlacePlayerAtEntrance(string entranceId)
-        {
-            SceneEntrance[] entrances = FindObjectsByType<SceneEntrance>(FindObjectsSortMode.None);
-            foreach (SceneEntrance entrance in entrances)
-            {
-                if (entrance.EntranceId != entranceId) continue;
-
-                PlayerController player = FindFirstObjectByType<PlayerController>();
-                if (player != null)
-                    player.WarpToEntrance(entrance.SpawnPosition, entrance.StartNode);
-                break;
-            }
         }
 
         #endregion
