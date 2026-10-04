@@ -108,7 +108,7 @@ namespace Project.Scripts.Core.Managers
                 return false;
 
             ItemData? data = GetItemData(itemId);
-            int maxStack = data?.maxStack ?? 99;
+            int maxStack = Mathf.Max(1, data?.maxStack ?? 99);
 
             for(int i = 0; i < _slots.Count; i++)
             {
