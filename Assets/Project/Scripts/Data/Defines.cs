@@ -40,6 +40,11 @@ namespace Project.Scripts.Data
         public const int LowResMarginPixels = 1;
         /// <summary>화면 지우기 전용 카메라가 쓰는 렌더러(기능 없음). PC/Mobile RP 에셋 렌더러 목록의 같은 인덱스.</summary>
         public const int DisplayRendererIndex = 1;
+
+        /// <summary>카메라 기준 태양 고도(도). 45 미만이어야 카메라를 보는 벽에서 1:1 그림자 대각선이 성립.</summary>
+        public const float SunDefaultPitch = 30f;
+        public const float SunMinPitch = 5f;
+        public const float SunMaxPitch = 44f;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>
