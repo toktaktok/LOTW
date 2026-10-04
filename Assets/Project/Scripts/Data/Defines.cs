@@ -38,6 +38,8 @@ namespace Project.Scripts.Data
         public const int LowResViewSortingOrder = -100;
         /// <summary>서브픽셀 보정용 저해상도 RT 가장자리 여백(픽셀, 한쪽 기준).</summary>
         public const int LowResMarginPixels = 1;
+        /// <summary>화면 지우기 전용 카메라가 쓰는 렌더러(기능 없음). PC/Mobile RP 에셋 렌더러 목록의 같은 인덱스.</summary>
+        public const int DisplayRendererIndex = 1;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>

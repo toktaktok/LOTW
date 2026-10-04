@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Rendering.Universal;
 using Unity.Cinemachine;
 using Project.Scripts.Data;
 
@@ -17,6 +18,7 @@ namespace Project.Scripts.System.World
         private Camera _camera;
         private RenderTexture _renderTexture;
         private RawImage _view;
+        private Camera _displayCamera;
         private int _scale;
 
         private void OnEnable()
@@ -36,6 +38,8 @@ namespace Project.Scripts.System.World
             rect.offsetMin = Vector2.zero;
             rect.offsetMax = Vector2.zero;
 
+            _displayCamera = CreateDisplayCamera();
+
             CinemachineCore.CameraUpdatedEvent.AddListener(OnCameraUpdated);
         }
 
@@ -46,6 +50,8 @@ namespace Project.Scripts.System.World
             _camera.targetTexture = null;
             if(_view != null)
                 Destroy(_view.gameObject);
+            if(_displayCamera != null)
+                Destroy(_displayCamera.gameObject);
             if(_renderTexture != null)
                 _renderTexture.Release();
             _renderTexture = null;
@@ -79,6 +85,30 @@ namespace Project.Scripts.System.World
             // RT를 정확히 _scale 배로 표시하고, 여백과 화면을 넘는 부분은 잘라냄
             _view.uvRect = new Rect((margin + subPixel.x) / width, (margin + subPixel.y) / height,
                 Screen.width / (float)(width * _scale), Screen.height / (float)(height * _scale));
+        }
+
+        /// <summary>
+        /// 화면(Display 1)을 매 프레임 검은색으로 지우기만 하는 카메라. 메인 카메라가 RT로 그리면
+        /// 화면에 그리는 카메라가 없어져 "No cameras rendering" 경고가 뜨고 백버퍼가 지워지지 않음.
+        /// 기능 없는 Display 렌더러를 써서 SSAO/외곽선 등이 빈 화면에 돌지 않게 함.
+        /// </summary>
+        private Camera CreateDisplayCamera()
+        {
+            var displayObject = new GameObject("[LowResDisplayCamera]", typeof(Camera));
+            var displayCamera = displayObject.GetComponent<Camera>();
+            displayCamera.cullingMask = 0;
+            displayCamera.clearFlags = CameraClearFlags.SolidColor;
+            displayCamera.backgroundColor = Color.black;
+            displayCamera.depth = _camera.depth - 1;
+
+            var data = displayCamera.GetUniversalAdditionalCameraData();
+            data.SetRenderer(CameraDefines.DisplayRendererIndex);
+            data.renderPostProcessing = false;
+            data.renderShadows = false;
+            data.requiresDepthOption = CameraOverrideOption.Off;
+            data.requiresColorOption = CameraOverrideOption.Off;
+            data.antialiasing = AntialiasingMode.None;
+            return displayCamera;
         }
 
         private void EnsureRenderTexture(int width, int height)
