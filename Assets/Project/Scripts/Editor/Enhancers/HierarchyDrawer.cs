@@ -8,14 +8,16 @@ using Project.Scripts.Editor.Data;
 namespace Project.Scripts.Editor.Enhancers
 {
     /// <summary>
-    /// Hierarchy 행 꾸미기: 헤더, 트리 라인, 배경색/커스텀 아이콘, 컴포넌트 아이콘, 활성 토글.
+    /// Hierarchy 행 꾸미기: 헤더, 트리 라인, 배경색/커스텀 아이콘(직접 지정 또는 이름 규칙),
+    /// 활성 토글(마우스 오버 시), Missing Script 경고.
     /// Alt+클릭(아이콘 영역)으로 스타일 선택 창을 엽니다.
     /// </summary>
     [InitializeOnLoad]
     public static class HierarchyDrawer
     {
         private static readonly Dictionary<int, string> _keyCache = new Dictionary<int, string>();
-        private static readonly List<Component> _components = new List<Component>();
+        private static int _hoveredId;
+        private static GUIContent _missingScriptContent;
         private static GUIStyle _headerStyle;
         private static GUIStyle _labelStyle;
 
@@ -68,6 +70,9 @@ namespace Project.Scripts.Editor.Enhancers
             if(go == null)
                 return;
 
+            if(settings.ShowActiveToggle)
+                TrackHover(instanceID, rect);
+
             if(settings.ShowHeaders && go.name.StartsWith(ToolDefines.HierarchyHeaderPrefix))
             {
                 DrawHeader(go, rect);
@@ -78,16 +83,68 @@ namespace Project.Scripts.Editor.Enhancers
                 DrawTreeLines(go.transform, rect);
 
             Rect iconRect = new Rect(rect.x, rect.y, ToolDefines.HierarchyIconSize, ToolDefines.HierarchyIconSize);
-            if(settings.HasHierarchyStyles && settings.TryGetHierarchyStyle(GetKey(go), out HierarchyStyle style))
+            if(TryGetStyle(go, out HierarchyStyle style))
                 DrawStyle(go, style, rect, iconRect, Selection.Contains(instanceID));
 
             float right = rect.xMax;
-            if(settings.ShowActiveToggle)
-                right = DrawActiveToggle(go, rect, right);
-            if(settings.ShowComponentIcons)
-                DrawComponentIcons(go, rect, right);
+            if(settings.ShowActiveToggle && _hoveredId == instanceID)
+                right = DrawActiveToggle(go, rect);
+            if(settings.ShowMissingScripts)
+                DrawMissingScriptWarning(go, rect, right);
 
             HandleAltClick(go, iconRect);
+        }
+
+        /// <summary>
+        /// 직접 지정한 스타일이 우선이고, 없으면 이름 규칙을 적용합니다.
+        /// </summary>
+        private static bool TryGetStyle(GameObject go, out HierarchyStyle style)
+        {
+            EnhancerSettings settings = EnhancerSettings.instance;
+            style = default;
+            if(!settings.HasHierarchyStyles)
+                return false;
+            if(settings.TryGetHierarchyStyle(GetKey(go), out style))
+                return true;
+
+            if(settings.UseHierarchyRules && HierarchyStyleResolver.TryMatchRule(go.name, settings.HierarchyRules, out FolderRule rule))
+            {
+                style = new HierarchyStyle { color = rule.color, icon = rule.icon };
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 마우스가 올라간 행을 기록합니다. 기본 Hierarchy 창은 마우스 이동 이벤트를 받지 않으므로 켜 줍니다.
+        /// </summary>
+        private static void TrackHover(int instanceID, Rect rect)
+        {
+            Event e = Event.current;
+            EditorWindow window = EditorWindow.mouseOverWindow;
+            if(window != null && !window.wantsMouseMove && window.GetType().Name == ToolDefines.HierarchyWindowTypeName)
+            {
+                window.wantsMouseMove = true;
+                window.wantsMouseEnterLeaveWindow = true;
+            }
+
+            if(e.type == EventType.MouseLeaveWindow && _hoveredId != 0)
+            {
+                _hoveredId = 0;
+                EditorApplication.RepaintHierarchyWindow();
+                return;
+            }
+
+            if(e.type != EventType.MouseMove && e.type != EventType.MouseDrag)
+                return;
+
+            // rect는 들여쓰기 이후부터 시작하므로 행 전체 폭으로 넓혀서 판정
+            Rect row = new Rect(0f, rect.y, rect.xMax, rect.height);
+            if(row.Contains(e.mousePosition) && _hoveredId != instanceID)
+            {
+                _hoveredId = instanceID;
+                EditorApplication.RepaintHierarchyWindow();
+            }
         }
 
         private static void DrawHeader(GameObject go, Rect rect)
@@ -99,7 +156,7 @@ namespace Project.Scripts.Editor.Enhancers
             // 그라데이션이 오른쪽 끝에서 일반 행 배경과 자연스럽게 이어지도록 어두운 단색 바탕은 깔지 않음.
             EditorGUI.DrawRect(rect, GetRowBackground(Selection.Contains(go)));
 
-            if(EnhancerSettings.instance.TryGetHierarchyStyle(GetKey(go), out HierarchyStyle style) && style.color.a > 0f)
+            if(TryGetStyle(go, out HierarchyStyle style) && style.color.a > 0f)
             {
                 DrawGradient(rect, style.color, ToolDefines.HierarchyHeaderGradientAlpha);
             }
@@ -236,10 +293,10 @@ namespace Project.Scripts.Editor.Enhancers
             return pro ? ToolDefines.HierarchyRowColor : ToolDefines.HierarchyRowColorLight;
         }
 
-        private static float DrawActiveToggle(GameObject go, Rect rect, float right)
+        private static float DrawActiveToggle(GameObject go, Rect rect)
         {
             float size = ToolDefines.HierarchyIconSize;
-            Rect toggleRect = new Rect(right - size, rect.y, size, rect.height);
+            Rect toggleRect = new Rect(rect.xMax - size, rect.y, size, rect.height);
 
             EditorGUI.BeginChangeCheck();
             bool active = GUI.Toggle(toggleRect, go.activeSelf, GUIContent.none);
@@ -254,36 +311,18 @@ namespace Project.Scripts.Editor.Enhancers
             return toggleRect.x - 2f;
         }
 
-        private static void DrawComponentIcons(GameObject go, Rect rect, float right)
+        private static void DrawMissingScriptWarning(GameObject go, Rect rect, float right)
         {
-            float size = ToolDefines.HierarchyComponentIconSize;
-            float y = rect.y + (rect.height - size) * 0.5f;
-            int drawn = 0;
+            if(Event.current.type != EventType.Repaint)
+                return;
+            if(GameObjectUtility.GetMonoBehavioursWithMissingScriptCount(go) == 0)
+                return;
 
-            go.GetComponents(_components);
-            for(int i = _components.Count - 1; i >= 0 && drawn < ToolDefines.HierarchyMaxComponentIcons; i--)
-            {
-                Component component = _components[i];
-                if(component is Transform)
-                    continue;
+            if(_missingScriptContent == null)
+                _missingScriptContent = new GUIContent(EnhancerIcons.Get(ToolDefines.HierarchyMissingScriptIcon), "Missing Script");
 
-                Texture image = component == null
-                    ? EnhancerIcons.Get("console.warnicon.sml")
-                    : EditorGUIUtility.ObjectContent(component, component.GetType()).image;
-                if(image == null)
-                    continue;
-
-                right -= size;
-                Rect iconRect = new Rect(right, y, size, size);
-                bool enabled = !(component is Behaviour behaviour) || behaviour.enabled;
-                Color previous = GUI.color;
-                if(!enabled)
-                    GUI.color = new Color(1f, 1f, 1f, ToolDefines.HierarchyDisabledIconAlpha);
-                GUI.DrawTexture(iconRect, image, ScaleMode.ScaleToFit);
-                GUI.color = previous;
-                drawn++;
-            }
-            _components.Clear();
+            float size = ToolDefines.HierarchyIconSize;
+            GUI.Label(new Rect(right - size, rect.y, size, rect.height), _missingScriptContent);
         }
 
         private static void HandleAltClick(GameObject go, Rect iconRect)

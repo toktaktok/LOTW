@@ -28,7 +28,8 @@ namespace Project.Scripts.Editor.Data
     }
 
     /// <summary>
-    /// 폴더 이름 규칙. 이름이 일치하는(대소문자 무시) 폴더에 자동 적용.
+    /// 이름 규칙. 이름이 일치하는(대소문자 무시) 폴더에 자동 적용.
+    /// Hierarchy 규칙에도 쓰이며, 그때 name은 '*' 와일드카드 패턴입니다.
     /// </summary>
     [Serializable]
     public struct FolderRule

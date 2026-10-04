@@ -17,9 +17,11 @@ namespace Project.Scripts.Editor.Enhancers
         [SerializeField] private bool hierarchyEnabled = true;
         [SerializeField] private bool showHeaders = true;
         [SerializeField] private bool showTreeLines = true;
-        [SerializeField] private bool showComponentIcons = true;
         [SerializeField] private bool showActiveToggle = true;
+        [SerializeField] private bool showMissingScripts = true;
+        [SerializeField] private bool useHierarchyRules = true;
         [SerializeField] private List<HierarchyStyle> hierarchyStyles = new List<HierarchyStyle>();
+        [SerializeField] private List<FolderRule> hierarchyRules = new List<FolderRule>();
 
         [Header("Project")]
         [SerializeField] private bool folderEnabled = true;
@@ -35,12 +37,15 @@ namespace Project.Scripts.Editor.Enhancers
         public bool HierarchyEnabled { get => hierarchyEnabled; set => hierarchyEnabled = value; }
         public bool ShowHeaders { get => showHeaders; set => showHeaders = value; }
         public bool ShowTreeLines { get => showTreeLines; set => showTreeLines = value; }
-        public bool ShowComponentIcons { get => showComponentIcons; set => showComponentIcons = value; }
         public bool ShowActiveToggle { get => showActiveToggle; set => showActiveToggle = value; }
+        public bool ShowMissingScripts { get => showMissingScripts; set => showMissingScripts = value; }
+        public bool UseHierarchyRules { get => useHierarchyRules; set => useHierarchyRules = value; }
         public bool FolderEnabled { get => folderEnabled; set => folderEnabled = value; }
         public bool UseFolderRules { get => useFolderRules; set => useFolderRules = value; }
-        public bool HasHierarchyStyles => hierarchyStyles.Count > 0;
+        public bool HasHierarchyStyles => hierarchyStyles.Count > 0 || (useHierarchyRules && hierarchyRules.Count > 0);
+        public int HierarchyStyleCount => hierarchyStyles.Count;
         public List<FolderRule> FolderRules => folderRules;
+        public List<FolderRule> HierarchyRules => hierarchyRules;
 
         public bool TryGetHierarchyStyle(string key, out HierarchyStyle style)
         {
@@ -70,6 +75,14 @@ namespace Project.Scripts.Editor.Enhancers
             if(style.color.a > 0f || !string.IsNullOrEmpty(style.icon))
                 folderStyles.Add(style);
             _folderLookup = null;
+        }
+
+        public int RemoveHierarchyStyles(Predicate<HierarchyStyle> match)
+        {
+            int removed = hierarchyStyles.RemoveAll(match);
+            if(removed > 0)
+                _hierarchyLookup = null;
+            return removed;
         }
 
         public void ClearHierarchyStyles()

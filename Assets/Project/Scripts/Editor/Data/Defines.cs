@@ -20,8 +20,12 @@ namespace Project.Scripts.Editor.Data
         // Hierarchy 들여쓰기 한 단계 폭
         public const float HierarchyIndent = 14f;
         public const float HierarchyIconSize = 16f;
-        public const float HierarchyComponentIconSize = 14f;
-        public const int HierarchyMaxComponentIcons = 6;
+        public const string HierarchyMissingScriptIcon = "console.warnicon.sml";
+        // 마우스 이동 이벤트를 켜 줄 내장 Hierarchy 창 타입 이름
+        public const string HierarchyWindowTypeName = "SceneHierarchyWindow";
+        // 설정 창에서 규칙 추가 시 기본 이름
+        public const string HierarchyRuleDefaultName = "Name*";
+        public const string FolderRuleDefaultName = "NewFolder";
         // 색상 그라데이션 시작(왼쪽) 알파. 오른쪽 끝은 0
         public const float HierarchyBackgroundAlpha = 0.45f;
         public const float HierarchyHeaderGradientAlpha = 0.7f;
@@ -42,8 +46,6 @@ namespace Project.Scripts.Editor.Data
         public static readonly Color HierarchyRowColorLight = new Color(0.78f, 0.78f, 0.78f);
         public static readonly Color HierarchySelectedColor = new Color(0.17f, 0.36f, 0.53f);
         public static readonly Color HierarchySelectedColorLight = new Color(0.23f, 0.45f, 0.69f);
-        // 비활성 컴포넌트 아이콘 투명도
-        public const float HierarchyDisabledIconAlpha = 0.35f;
         // 폴더 위에 겹쳐 그리는 커스텀 아이콘 비율
         public const float FolderBadgeScale = 0.6f;
         // 스타일 선택 창

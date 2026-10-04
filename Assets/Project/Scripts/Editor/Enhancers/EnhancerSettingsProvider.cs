@@ -35,10 +35,23 @@ namespace Project.Scripts.Editor.Enhancers
             {
                 settings.ShowHeaders = EditorGUILayout.Toggle($"Headers (\"{ToolDefines.HierarchyHeaderPrefix}\" prefix)", settings.ShowHeaders);
                 settings.ShowTreeLines = EditorGUILayout.Toggle("Tree Lines", settings.ShowTreeLines);
-                settings.ShowComponentIcons = EditorGUILayout.Toggle("Component Icons", settings.ShowComponentIcons);
-                settings.ShowActiveToggle = EditorGUILayout.Toggle("Active Toggle", settings.ShowActiveToggle);
+                settings.ShowActiveToggle = EditorGUILayout.Toggle("Active Toggle (Hover)", settings.ShowActiveToggle);
+                settings.ShowMissingScripts = EditorGUILayout.Toggle("Missing Script Warning", settings.ShowMissingScripts);
+
+                EditorGUILayout.BeginHorizontal();
                 if(GUILayout.Button("Clear All Object Styles", GUILayout.Width(200f)))
                     settings.ClearHierarchyStyles();
+                if(GUILayout.Button("Remove Orphan Styles", GUILayout.Width(200f)))
+                {
+                    int removed = HierarchyStyleCleaner.RemoveOrphans();
+                    EditorUtility.DisplayDialog("Remove Orphan Styles", $"Removed {removed} style(s). {settings.HierarchyStyleCount} remaining.\nStyles in scenes that are not open are kept.", "OK");
+                }
+                EditorGUILayout.EndHorizontal();
+
+                EditorGUILayout.Space();
+                settings.UseHierarchyRules = EditorGUILayout.Toggle("Object Name Rules (* wildcard)", settings.UseHierarchyRules);
+                using(new EditorGUI.DisabledScope(!settings.UseHierarchyRules))
+                    DrawRules(settings.HierarchyRules, ToolDefines.HierarchyRuleDefaultName, null);
             }
 
             EditorGUILayout.Space();
@@ -52,16 +65,18 @@ namespace Project.Scripts.Editor.Enhancers
                 EditorGUILayout.Space();
                 settings.UseFolderRules = EditorGUILayout.Toggle("Folder Name Rules", settings.UseFolderRules);
                 using(new EditorGUI.DisabledScope(!settings.UseFolderRules))
-                    DrawRules(settings);
+                    DrawRules(settings.FolderRules, ToolDefines.FolderRuleDefaultName, settings.ResetFolderRules);
             }
 
             if(EditorGUI.EndChangeCheck())
                 settings.Commit();
         }
 
-        private static void DrawRules(EnhancerSettings settings)
+        /// <summary>
+        /// 이름 규칙 목록 편집 UI. reset이 null이면 "Reset To Defaults" 버튼을 숨깁니다.
+        /// </summary>
+        private static void DrawRules(List<FolderRule> rules, string defaultName, Action reset)
         {
-            List<FolderRule> rules = settings.FolderRules;
             string[] options = GetIconOptions();
 
             for(int i = 0; i < rules.Count; i++)
@@ -87,9 +102,9 @@ namespace Project.Scripts.Editor.Enhancers
 
             EditorGUILayout.BeginHorizontal();
             if(GUILayout.Button("Add Rule", GUILayout.Width(100f)))
-                rules.Add(new FolderRule { name = "NewFolder", color = ToolDefines.EnhancerPalette[0], icon = string.Empty });
-            if(GUILayout.Button("Reset To Defaults", GUILayout.Width(140f)))
-                settings.ResetFolderRules();
+                rules.Add(new FolderRule { name = defaultName, color = ToolDefines.EnhancerPalette[0], icon = string.Empty });
+            if(reset != null && GUILayout.Button("Reset To Defaults", GUILayout.Width(140f)))
+                reset();
             EditorGUILayout.EndHorizontal();
         }
 
