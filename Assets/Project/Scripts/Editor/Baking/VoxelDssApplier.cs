@@ -75,6 +75,7 @@ namespace Project.Scripts.Editor.Baking
                 {
                     PrefabUtility.UnloadPrefabContents(root);
                 }
+                RemoveOrphanMaterials(path);
             }
 
             AssetDatabase.SaveAssets();
@@ -124,6 +125,25 @@ namespace Project.Scripts.Editor.Baking
                 new VoxelObjectCore(voxelObject).ReCreate();
 
             return materialsChanged || needsBake.Count > 0;
+        }
+
+        /// <summary>내보낸 뒤 프리팹 안에 남은, 어디서도 참조하지 않는 내장 머티리얼을 지운다.</summary>
+        private static void RemoveOrphanMaterials(string prefabPath)
+        {
+            var root = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+            var used = new HashSet<Object>(EditorUtility.CollectDependencies(new Object[] { root }));
+            bool removed = false;
+            foreach(var asset in AssetDatabase.LoadAllAssetsAtPath(prefabPath))
+            {
+                if(asset is Material && !used.Contains(asset))
+                {
+                    AssetDatabase.RemoveObjectFromAsset(asset);
+                    Object.DestroyImmediate(asset, true);
+                    removed = true;
+                }
+            }
+            if(removed)
+                AssetDatabase.SaveAssets();
         }
 
         private static bool IsTransparent(VoxelObject voxelObject, int index)
