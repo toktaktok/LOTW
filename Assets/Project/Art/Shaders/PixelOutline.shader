@@ -8,7 +8,7 @@ Shader "Hidden/LOTW/PixelOutline"
     // - Normal crease: brightens one side of a convex crease in the derived normals.
     Properties
     {
-        _DepthThreshold ("Depth Edge Threshold (units)", Range(0.05, 4)) = 0.4
+        _DepthThreshold ("Depth Edge Threshold (units)", Range(0.05, 4)) = 0.8
         _NormalThreshold ("Normal Crease Threshold", Range(0.01, 2)) = 0.4
         _OutlineDarken ("Outline Darken", Range(0, 1)) = 0.45
         _HighlightBrighten ("Crease Highlight", Range(0, 1)) = 0.25
