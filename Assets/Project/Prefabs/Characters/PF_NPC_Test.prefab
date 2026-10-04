@@ -73,12 +73,12 @@ MonoBehaviour:
   dialogue:
     lines:
     - speaker: Gumman
-      text: "안녕! 나는 테스트용 NPC야."
+      text: "\uC548\uB155! \uB098\uB294 \uD14C\uC2A4\uD2B8\uC6A9 NPC\uC57C."
     - speaker: Gumman
-      text: "대화가 잘 넘어가나?"
+      text: "\uB300\uD654\uAC00 \uC798 \uB118\uC5B4\uAC00\uB098?"
     - speaker: 
-      text: "검맨은 손을 흔들었다."
-  promptText: "대화하기"
+      text: "\uAC80\uB9E8\uC740 \uC190\uC744 \uD754\uB4E4\uC5C8\uB2E4."
+  promptText: "\uB300\uD654\uD558\uAE30"
 --- !u!1 &1000000000000000011
 GameObject:
   m_ObjectHideFlags: 0
@@ -106,7 +106,7 @@ Transform:
   m_GameObject: {fileID: 1000000000000000011}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: 0}
+  m_LocalPosition: {x: 0, y: 1.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

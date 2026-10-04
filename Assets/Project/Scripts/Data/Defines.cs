@@ -31,6 +31,11 @@ namespace Project.Scripts.Data
     {
         public const int DefaultCameraPriority = 10;
         public const int FirstCameraPriority = 20;
+
+        /// <summary>캐릭터 스프라이트 기준 밀도(1유닛당 텍스처 픽셀 수).</summary>
+        public const float PixelsPerUnit = 25f;
+        /// <summary>저해상도 RT 표시 캔버스. UIManager 레이어(0 이상)보다 아래.</summary>
+        public const int LowResViewSortingOrder = -100;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>
