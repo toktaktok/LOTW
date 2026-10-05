@@ -43,6 +43,7 @@ namespace Project.Scripts.Editor.UI
         private const float HudMargin = 32f;
         private static readonly Vector2 NotebookButtonSize = new Vector2(128f, 128f);
         private static readonly Vector2 BadgeSize = new Vector2(36f, 36f);
+        private static readonly Vector2 KeyHintSize = new Vector2(36f, 36f);
         private static readonly Vector2 QuestPanelSize = new Vector2(440f, 0f);
         private const int QuestPanelPadding = 12;
         private const float QuestLineSpacing = 4f;
@@ -51,6 +52,8 @@ namespace Project.Scripts.Editor.UI
 
         private static readonly Color TabActiveColor = new Color(0.82f, 0.71f, 0.58f, 1f);
         private static readonly Color BadgeColor = new Color(0.64f, 0.25f, 0.17f, 1f);
+        private static readonly Color KeyHintColor = new Color(0.20f, 0.15f, 0.11f, 0.9f);
+        private static readonly Color KeyHintTextColor = new Color(0.93f, 0.86f, 0.74f, 1f);
         private static readonly Color EntryHighlightColor = new Color(0.55f, 0.40f, 0.27f, 0.25f);
 
         private static readonly string[] TabKeys =
@@ -233,6 +236,9 @@ namespace Project.Scripts.Editor.UI
                 RectTransform rootRect = (RectTransform)root.transform;
                 Button notebookButton = FindOrCreate(rootRect, "NotebookButton", r => CreateNotebookButton(r, font)).GetComponent<Button>();
                 Transform badge = notebookButton.transform.Find("UnreadBadge");
+                Transform keyHint = notebookButton.transform.Find("KeyHint");
+                if(keyHint == null)
+                    keyHint = CreateKeyHint((RectTransform)notebookButton.transform, font);
                 RectTransform questPanel = FindOrCreate(rootRect, "QuestList", r => CreateQuestPanel(r, font));
                 RectTransform toast = FindOrCreate(rootRect, "Toast", r => CreateToast(r, font));
 
@@ -240,6 +246,7 @@ namespace Project.Scripts.Editor.UI
                 Set(so, "notebookButton", notebookButton);
                 Set(so, "unreadBadge", badge != null ? badge.gameObject : null);
                 Set(so, "unreadCountText", badge != null ? badge.GetComponentInChildren<TMP_Text>(true) : null);
+                Set(so, "notebookKeyText", keyHint.GetComponentInChildren<TMP_Text>(true));
                 Set(so, "questListRoot", questPanel.gameObject);
                 SetArray(so, "questLines", questPanel.GetComponentsInChildren<TMP_Text>(true));
                 Set(so, "toastRoot", toast.gameObject);
@@ -275,6 +282,23 @@ namespace Project.Scripts.Editor.UI
             count.raycastTarget = false;
             badge.gameObject.SetActive(false);
             return rect;
+        }
+
+        /// <summary>버튼 왼쪽 아래 모서리의 키 표시 (사각 키캡, 글자는 런타임에 Notebook 바인딩으로 채움).</summary>
+        private static Transform CreateKeyHint(RectTransform button, TMP_FontAsset font)
+        {
+            RectTransform hint = CreateUIObject("KeyHint", button);
+            Anchor(hint, Vector2.zero);
+            hint.sizeDelta = KeyHintSize;
+            Image cap = hint.gameObject.AddComponent<Image>();
+            cap.color = KeyHintColor;
+            cap.raycastTarget = false;
+            TMP_Text label = CreateText("Key", hint, font, HudFontSize, TextAlignmentOptions.Center);
+            Stretch((RectTransform)label.transform);
+            label.color = KeyHintTextColor;
+            label.raycastTarget = false;
+            label.text = "Q";
+            return hint;
         }
 
         private static RectTransform CreateQuestPanel(RectTransform root, TMP_FontAsset font)

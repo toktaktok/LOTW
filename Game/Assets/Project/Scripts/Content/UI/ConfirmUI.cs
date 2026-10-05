@@ -43,6 +43,13 @@ namespace Project.Scripts.Content.UI
                 EventSystem.current.SetSelectedGameObject(noButton.gameObject);
         }
 
+        /// <summary>취소 = '아니오'.</summary>
+        public override bool OnCancel()
+        {
+            Answer(false);
+            return true;
+        }
+
         private void Answer(bool yes)
         {
             Action callback = yes ? _onYes : _onNo;

@@ -332,6 +332,12 @@ namespace Project.Scripts.Content.UI
             return pool[index];
         }
 
+        public override bool OnCancel()
+        {
+            OnClose();
+            return true;
+        }
+
         private void OnClose()
         {
             UIManager.Instance.Close<NotebookUI>();

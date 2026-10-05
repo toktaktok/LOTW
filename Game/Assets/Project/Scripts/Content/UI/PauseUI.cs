@@ -41,6 +41,12 @@ namespace Project.Scripts.Content.UI
                 CoreManager.Instance.ResumeGame();
         }
 
+        public override bool OnCancel()
+        {
+            UIManager.Instance.Close<PauseUI>();
+            return true;
+        }
+
         private void OnTitle()
         {
             UIManager.Instance.PushPage<ConfirmUI>(UILayer.System, ui => ui.Setup("@ui.pause.title.confirm", GoToTitle));

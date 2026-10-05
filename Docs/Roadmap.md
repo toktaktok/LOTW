@@ -28,7 +28,9 @@
 - [x] `DataManager` 테이블 동기 로드 (첫 프레임 null / `@key` 경합 제거)
 - [x] `CoreManager.OnApplicationPause` 가 플레이어가 연 일시정지를 풀던 버그
 - [x] `BaseUI` 애니메이션 대기, `CameraManager` 블렌드 대기를 unscaled 시간으로 (timeScale 0 에서 멈춤 방지)
-- [ ] (미니게임 브랜치 머지 후) 입력 단일 소유자: Player 맵에 `Notebook`(Q), `Pause`(Esc) 추가, `UI/Cancel` 로 최상단 페이지 닫기. `PlayerController`/`PlayerInteractor`/`DialogueUI` 각자 만드는 `PlayerControls` 통합
+- [x] Player 맵에 `Notebook`(Q / 게임패드 Select), `Pause`(Esc / Start) 추가. `MenuInput` 이 메뉴 입력을 한 곳에서 처리: Esc/`UI/Cancel` 은 최상단 창의 `BaseUI.OnCancel`(수첩/일시정지/설정/확인/인벤토리), 창이 없으면 일시정지. HUD 수첩 버튼에 키 표시 `KeyHint`
+- [ ] `PlayerController`/`PlayerInteractor`/`DialogueUI` 가 각자 만드는 `PlayerControls` 통합 (지금은 동작에 문제 없음)
+- [ ] 키 표시를 마지막 입력 장치(키보드/게임패드)에 맞춰 바꾸기
 - [x] `UIManager`: `Get<T>()`, `Close<T>()`, `IsOpen<T>()` 추가. `PlayerInteractor` 의 `FindFirstObjectByType<HudUI>` 제거
 - [x] `Dialogue.xlsx` 가 8행, `Dialogue.json` 이 50행으로 어긋나 있던 것 복구 (JSON 기준 재생성, 변환 왕복 일치 확인). 이전에는 ConvertTable.bat 실행 시 Plaza 대화가 지워졌음
 - [ ] `NPC.Interact`: 페이지 push 실패 시 카메라 복구

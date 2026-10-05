@@ -123,6 +123,12 @@ namespace Project.Scripts.System.UI
             }
         }
         
+        /// <summary>
+        /// 취소 입력(Esc, 게임패드 B/Start)이 최상단 페이지인 이 UI 에 왔을 때 호출됩니다 (MenuInput).
+        /// 스스로 닫았으면 true. 기본은 무시(대화처럼 취소로 닫히면 안 되는 UI).
+        /// </summary>
+        public virtual bool OnCancel() => false;
+
         public void SetVisibility(bool visible)
         {
             if(canvasGroup == null)

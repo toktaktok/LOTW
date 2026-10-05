@@ -117,6 +117,21 @@ namespace Project.Scripts.Core.Managers
             return _uiCache.TryGetValue(typeof(T), out BaseUI ui) ? ui as T : null;
         }
 
+        /// <summary>UI 열기/닫기 작업이 처리 중인지 여부.</summary>
+        public bool IsProcessing => _isProcessing;
+
+        /// <summary>최상단 페이지의 마지막 UI. 페이지가 없거나 최상단이 HUD 면 null.</summary>
+        public BaseUI GetTopUI()
+        {
+            if(_pageNavigationStack.Count == 0)
+                return null;
+
+            UIPage top = _pageNavigationStack.Peek();
+            if(top.Layer == UILayer.HUD || top.UIComponents.Count == 0)
+                return null;
+            return top.UIComponents[top.UIComponents.Count - 1];
+        }
+
         public bool IsOpen<T>() where T : BaseUI
         {
             T ui = Get<T>();

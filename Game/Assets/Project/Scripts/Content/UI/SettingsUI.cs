@@ -48,6 +48,12 @@ namespace Project.Scripts.Content.UI
         }
 
         // 언어 이름 라벨은 LocalizedText(@ui.language.name)라 바꾸는 즉시 새 언어 이름으로 보임
+        public override bool OnCancel()
+        {
+            UIManager.Instance.Close<SettingsUI>();
+            return true;
+        }
+
         private void OnLanguage()
         {
             string[] languages = MenuDefines.Languages;

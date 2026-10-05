@@ -9,6 +9,8 @@ namespace Project.Scripts.Data
         public const int HudQuestLines = 3;
         /// <summary>"수첩에 기록됨" 알림 표시 시간(초, unscaled).</summary>
         public const float ToastDuration = 2.5f;
+        /// <summary>HUD 키 표시에 쓰는 입력 컨트롤 스킴 (InputSystem_Actions).</summary>
+        public const string KeyboardControlScheme = "Keyboard&Mouse";
         /// <summary>수첩 표지에 붙이는 포스트잇 최대 수.</summary>
         public const int MaxStickyNotes = 4;
     }

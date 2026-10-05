@@ -27,6 +27,8 @@ namespace Project.Scripts.Content.UI
         [SerializeField] private Button notebookButton;
         [SerializeField] private GameObject unreadBadge;
         [SerializeField] private TMP_Text unreadCountText;
+        [Tooltip("수첩 버튼 모서리의 키 표시 (Notebook 액션 바인딩)")]
+        [SerializeField] private TMP_Text notebookKeyText;
 
         [Header("Quest List")]
         [Tooltip("진행 중 의뢰가 없으면 숨기는 목록 배경")]
@@ -56,6 +58,8 @@ namespace Project.Scripts.Content.UI
             SaveManager.OnGameSaved += OnGameSaved;
             if(toastRoot != null)
                 toastRoot.SetActive(false);
+            if(notebookKeyText != null)
+                notebookKeyText.text = MenuInput.Instance.NotebookKeyLabel;
             RefreshStory();
         }
 
