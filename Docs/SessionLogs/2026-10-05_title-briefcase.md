@@ -63,3 +63,9 @@
 - 참고: `ProjectSettings.asset`의 `runInBackground`가 1이 되었다. 빌드에서 창이 포커스를 잃어도 게임이 계속 돈다.
 - 확인 안 함: 바뀐 폰트가 의도한 것인지. 사용자가 확인한다.
 - 다음: main을 `origin/main`에 push할지 사용자가 정한다.
+
+## 2026-10-05 19:40 | main
+- 작업: main을 `origin/main`에 push했다. 대상 커밋은 `590281b`다.
+- 작업: 사용자가 DungGeunMo 폰트 변경이 의도라고 확인했다.
+- 작업: `PlayerSettings.runInBackground`를 0으로 되돌렸다. 에디터 API로 바꾸고 저장했다.
+- 다음: 없음.
