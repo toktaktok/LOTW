@@ -7,7 +7,7 @@ namespace Project.Scripts.Content.World
 {
     /// <summary>
     /// NPC 머리 위 땀 표시. 이 주민이 지금 챕터에 아직 시작하지 않은 의뢰(Quest.giverId)를 갖고 있을 때만 보입니다.
-    /// 의뢰가 시작되면(startQuest) 플래그 변경을 받아 바로 꺼집니다. PF_NPC_Base 의 자식에 두며 메뉴 LOTW/UI/Add Quest Mark To NPC Base 가 만듭니다.
+    /// 의뢰가 시작되면(startQuest) 플래그 변경을 받아 바로 꺼집니다. PF_NPC_Base 의 자식에 둡니다.
     /// </summary>
     public class QuestMarkIndicator : MonoBehaviour
     {

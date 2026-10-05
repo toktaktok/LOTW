@@ -15,7 +15,6 @@ namespace Project.Scripts.Content.UI
     /// 미니게임 창. 반투명 창틀 안에 스테이지 RT를 렌즈 머티리얼로 투사합니다.
     /// 열림: 창틀이 커진 뒤 화면이 사각 조리개처럼 열림. 닫힘은 그 반대.
     /// 창 크기는 스테이지 해상도 x 정수 배율, 위치는 정의의 layout을 따릅니다.
-    /// 프리팹은 LOTW/Minigame/Build Window Prefab 으로 만듭니다.
     /// </summary>
     public class MinigameWindow : BaseUI
     {

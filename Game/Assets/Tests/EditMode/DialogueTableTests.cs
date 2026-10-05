@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.IO;
 using NUnit.Framework;
 using Project.Scripts.Core;
-using Project.Scripts.Editor.Plaza;
 using UnityEngine;
 using DialogueRow = Project.Scripts.Data.Table.DialogueData;
 
@@ -52,14 +51,6 @@ namespace Tests.EditMode
                 foreach(int id in row.choiceIds)
                     Assert.IsTrue(_rows.ContainsKey(id), $"row {row.dataId} choiceId {id} missing");
             }
-        }
-
-        [Test]
-        public void PlazaNpcDialogueIds_Exist()
-        {
-            foreach(var npc in PlazaLayout.Npcs)
-                if(npc.dialogueId != 0)
-                    Assert.IsTrue(_rows.ContainsKey(npc.dialogueId), $"dialogueId {npc.dialogueId} missing");
         }
     }
 }
