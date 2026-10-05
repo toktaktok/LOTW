@@ -14,6 +14,11 @@
 7. 지역 게이트: 핵심 주민 수첩 정보가 차면 다음으로
 8. 메인 비트 진행 (다음 시간대 / 지그 만남) -> 반복
 
+## 병행 작업
+
+- 미니게임 프레임워크(8단계의 '창')는 별도 브랜치 `t3code/minigame-framework-design` (워크트리 t3code-89a2f4d0, `Docs/MinigameFramework.md`)에서 진행 중. 그쪽이 `InputSystem_Actions`(Minigame 맵), `SubSystemCollection.prefab`, `DialogueUI`, `DialogueCommands`(`minigame:`/`var:`), `Enums.cs`, `IInteractable.CanInteract` 를 고친다.
+- 이 브랜치는 머지 전까지 입력 액션 에셋, SubSystemCollection 프리팹, DialogueUI 를 고치지 않는다. 새 UI 프리팹은 에디터 메뉴 빌더로 만들고 머지 후 실행한다. `DialogueCommands`/`Enums.cs` 는 양쪽 모두 끝에 추가만 해서 충돌이 나도 합치기 쉽다.
+
 ## 단계
 
 상태: [x] 완료, [~] 진행 중, [ ] 대기
@@ -22,11 +27,11 @@
 - [x] `DataManager` 테이블 동기 로드 (첫 프레임 null / `@key` 경합 제거)
 - [x] `CoreManager.OnApplicationPause` 가 플레이어가 연 일시정지를 풀던 버그
 - [x] `BaseUI` 애니메이션 대기, `CameraManager` 블렌드 대기를 unscaled 시간으로 (timeScale 0 에서 멈춤 방지)
-- [ ] 입력 단일 소유자: Player 맵에 `Notebook`(Q), `Pause`(Esc) 추가, `UI/Cancel` 로 최상단 페이지 닫기. `PlayerController`/`PlayerInteractor`/`DialogueUI` 각자 만드는 `PlayerControls` 통합
+- [ ] (미니게임 브랜치 머지 후) 입력 단일 소유자: Player 맵에 `Notebook`(Q), `Pause`(Esc) 추가, `UI/Cancel` 로 최상단 페이지 닫기. `PlayerController`/`PlayerInteractor`/`DialogueUI` 각자 만드는 `PlayerControls` 통합
 - [x] `UIManager`: `Get<T>()`, `Close<T>()`, `IsOpen<T>()` 추가. `PlayerInteractor` 의 `FindFirstObjectByType<HudUI>` 제거
 - [x] `Dialogue.xlsx` 가 8행, `Dialogue.json` 이 50행으로 어긋나 있던 것 복구 (JSON 기준 재생성, 변환 왕복 일치 확인). 이전에는 ConvertTable.bat 실행 시 Plaza 대화가 지워졌음
 - [ ] `NPC.Interact`: 페이지 push 실패 시 카메라 복구
-- [ ] `GameInstance`, `FlagManager`, `SceneTransitionManager` 를 SubSystemCollection 에 배치 (프리팹 YAML 편집)
+- [ ] (미니게임 브랜치 머지 후) `GameInstance`, `FlagManager`, `SceneTransitionManager` 를 SubSystemCollection 에 배치
 
 ### 1단계. 스토리 진행 상태 (의뢰 / 챕터 / 시간대)
 상태는 전부 플래그(`StoryKeys`)로 둔다. 이미 세이브되는 `SaveData.flags` 에 실리고 대화 조건으로 바로 읽힌다.
@@ -77,7 +82,7 @@
 - [ ] 의뢰 표시 (말풍선/땀), 커서 당근/돋보기
 
 ### 8단계. 창 미니게임과 추리
-- [ ] 미니게임 창 프레임 (게임 화면 좌측 이동 + 창)
+- [~] 미니게임 창 프레임: 병행 브랜치에서 진행 중
 - [ ] 알리바이 미니게임 (설득/압박 선택)
 - [ ] 수첩 사건 블록 연결 추리 (지그 범인 결론은 완성 가능, 보물 사건 전체는 의도적으로 불완전)
 
