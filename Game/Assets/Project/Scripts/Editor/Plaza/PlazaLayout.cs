@@ -170,10 +170,14 @@ namespace Project.Scripts.Editor.Plaza
         public const float RampLX = -36f;
         public const float RampRX = 95f;
 
-        // 분수 (보정 1): 높이 약 14 (두꺼비 포함), 폭 15, 수반 앞면 Z 3
+        // 분수 (보정 1): 수반 복셀(폭 12, 깊이 11.8, 높이 4.8) 위에 물 스프라이트(폭 12, 높이 7.6)를 겹친다. 분무 파티클은 물 꼭대기
         private const float FountainZ = 9f;
-        private const int FountainArcCount = 8;
-        private const float ArcThickness = 0.3f;
+        private const float FountainBasinDepth = 11.8f;
+        private const float FountainWaterY = 0.2f;
+        private const float FountainWaterHeight = 7.6f;
+        private const float FountainTopY = FountainWaterY + FountainWaterHeight;
+        // 물 스프라이트는 위쪽 그릇(중심에서 최대 2.6) 앞에 두어 그릇이 물줄기를 가리지 않게 한다
+        private const float FountainWaterZ = FountainZ - 2.8f;
 
         #endregion
 
@@ -206,6 +210,7 @@ namespace Project.Scripts.Editor.Plaza
             // --- 광장 안쪽 (분수 뒤) ---
             new Placement { name = "Square_ShopL", group = SquareGroup, prefabPath = Vox("Central/M_E_CommonBuilding_001.vox"), x = -13f, frontZ = 15f, yaw = 12f },
             new Placement { name = "Square_ShopR", group = SquareGroup, prefabPath = Vox("Central/M_E_CommonBuilding_005.vox"), x = 13f, frontZ = 17f, yaw = -10f },
+            new Placement { name = "Fountain_Basin", group = FountainGroup, prefabPath = Vox("Central/M_E_Fountain.vox"), x = 0f, frontZ = FountainZ - FountainBasinDepth * 0.5f },
             new Placement { name = "Square_BushL", group = SquareGroup, prefabPath = Vox("Etc/M_E_FlowerBush.vox"), x = -9f, frontZ = 3.5f },
             new Placement { name = "Square_BushR", group = SquareGroup, prefabPath = Vox("Etc/M_E_FlowerBush.vox"), x = 9f, frontZ = 3.5f },
 
@@ -252,7 +257,8 @@ namespace Project.Scripts.Editor.Plaza
 
         public static readonly SpriteProp[] SpriteProps =
         {
-            new SpriteProp { name = "Toad", group = FountainGroup, spritePath = Chars + "127.Toad/Textures/TX_C_Toad_Idle.png", controllerPath = Controllers + "AC_Toad.controller", position = new Vector3(0f, 10.7f, FountainZ) },
+            new SpriteProp { name = "Toad", group = FountainGroup, spritePath = Chars + "127.Toad/Textures/TX_C_Toad_Idle.png", controllerPath = Controllers + "AC_Toad.controller", position = new Vector3(19.94f, 0f, 20.71f) },
+            new SpriteProp { name = "FountainWater", group = FountainGroup, spritePath = "Assets/Project/Art/Environments/Props/TX_E_FountainWater.png", controllerPath = Controllers + "AC_FountainWater.controller", position = new Vector3(0f, FountainWaterY, FountainWaterZ) },
             new SpriteProp { name = "TrashCan", group = LaneAGroup, spritePath = "Assets/Project/Art/Environments/Props/TX_E_TrashCan_Default.png", position = new Vector3(63.5f, 0f, 1.5f) },
             new SpriteProp { name = "TrashCan_Decal", group = LaneAGroup, spritePath = "Assets/Project/Art/Environments/Decors/TX_E_NumbDumb.png", position = new Vector3(63.5f, 0.6f, 1.45f) },
         };
@@ -294,12 +300,11 @@ namespace Project.Scripts.Editor.Plaza
 
         public static readonly BoxEntry[] Boxes = BuildBoxes();
 
-        public static readonly ParticleEntry FountainSpray = new ParticleEntry { name = "FX_FountainSpray", group = FountainGroup, position = new Vector3(0f, 10.8f, FountainZ) };
+        public static readonly ParticleEntry FountainSpray = new ParticleEntry { name = "FX_FountainSpray", group = FountainGroup, position = new Vector3(0f, FountainTopY + 0.1f, FountainWaterZ) };
         public static readonly ParticleEntry ChimneySmoke = new ParticleEntry { name = "FX_ChimneySmoke", group = VfxGroup, position = new Vector3(58f, LaneFY + 30f, 64f) };
 
         private static BoxEntry[] BuildBoxes()
         {
-            Color stoneTop = Hex("#A8CBF0");
             var boxes = new List<BoxEntry>
             {
                 // --- 바닥 (B Ground) ---
@@ -318,20 +323,10 @@ namespace Project.Scripts.Editor.Plaza
                 Box("UpperStop_Base", UpperGroup, PrimitiveType.Cylinder, new Vector3(-22f, LaneFY + 2f, 41.5f), new Vector3(6f, 4f, 6f), "MAT_Placeholder_UpperStop", Hex("#B7BCD3")),
                 Box("UpperStop_Dome", UpperGroup, PrimitiveType.Sphere, new Vector3(-22f, LaneFY + 4f, 41.5f), new Vector3(6f, 6f, 6f), "MAT_Placeholder_UpperStop", Hex("#B7BCD3")),
                 Box("Chimney", BackgroundGroup, PrimitiveType.Cylinder, new Vector3(58f, LaneFY + 15f, 64f), new Vector3(5f, 30f, 5f), "MAT_Placeholder_Chimney", Hex("#8E8A9A")),
-
-                // --- 분수 (단 쌓기) ---
-                Box("Basin", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 0.75f, FountainZ), new Vector3(15f, 1.5f, 12f), "MAT_FountainStone", Hex("#6F8FD8")),
-                Box("Basin_Water", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 1.45f, FountainZ), new Vector3(13.8f, 0.1f, 10.8f), "MAT_FountainWater", stoneTop),
-                Box("Pedestal", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 3.5f, FountainZ), new Vector3(4f, 4f, 4f), "MAT_FountainStone", Hex("#6F8FD8")),
-                Box("Bowl_Mid", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 6.1f, FountainZ), new Vector3(9f, 1.2f, 7f), "MAT_FountainStone", Hex("#6F8FD8")),
-                Box("Bowl_Mid_Water", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 6.72f, FountainZ), new Vector3(8f, 0.06f, 6f), "MAT_FountainWater", stoneTop),
-                Box("Column", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 8.2f, FountainZ), new Vector3(2.5f, 3f, 2.5f), "MAT_FountainStone", Hex("#6F8FD8")),
-                Box("Bowl_Top", FountainGroup, PrimitiveType.Cube, new Vector3(0f, 10.2f, FountainZ), new Vector3(5f, 1f, 4f), "MAT_FountainStone", Hex("#6F8FD8")),
             };
 
             AddStairs(boxes, "Stair_L", StairsLGroup, RampLX);
             AddStairs(boxes, "Stair_R", StairsRGroup, RampRX);
-            AddFountainArcs(boxes, stoneTop);
             return boxes.ToArray();
         }
 
@@ -374,30 +369,6 @@ namespace Project.Scripts.Editor.Plaza
                 Vector3 center = new Vector3(x, top * 0.5f, RampStartZ + (i + 0.5f) * run);
                 boxes.Add(Box($"{prefix}_{i:00}", group, PrimitiveType.Cube, center, new Vector3(StairWidth, top, run), "MAT_Placeholder_Stairs", Hex("#D9CFE6")));
             }
-        }
-
-        // 물줄기: 위 그릇 가장자리 -> 꼭짓점 -> 수반, 2개 마디로 휘어진 느낌
-        private static void AddFountainArcs(List<BoxEntry> boxes, Color water)
-        {
-            for(int i = 0; i < FountainArcCount; i++)
-            {
-                float a = i * Mathf.PI * 2f / FountainArcCount;
-                Vector3 dir = new Vector3(Mathf.Cos(a), 0f, Mathf.Sin(a) * 0.8f);
-                Vector3 start = new Vector3(0f, 10.6f, FountainZ) + dir * 2.4f;
-                Vector3 apex = new Vector3(0f, 11.8f, FountainZ) + dir * 4.2f;
-                Vector3 end = new Vector3(0f, 1.5f, FountainZ) + dir * 6.6f;
-                boxes.Add(Segment($"Arc_{i}_Up", start, apex, water));
-                boxes.Add(Segment($"Arc_{i}_Down", apex, end, water));
-            }
-        }
-
-        private static BoxEntry Segment(string name, Vector3 from, Vector3 to, Color color)
-        {
-            Vector3 delta = to - from;
-            BoxEntry box = Box(name, FountainGroup, PrimitiveType.Cube, (from + to) * 0.5f,
-                new Vector3(ArcThickness, delta.magnitude, ArcThickness), "MAT_FountainWater", color);
-            box.euler = Quaternion.FromToRotation(Vector3.up, delta).eulerAngles;
-            return box;
         }
 
         #endregion

@@ -31,9 +31,6 @@ namespace Project.Scripts.Editor.Plaza
 
         private const float SnowAlpha = 0.8f;
         private static readonly Color LampGlowColor = new Color(4f, 3f, 1.6f, 1f);
-        private const string FountainStoneHex = "#6F8FD8";
-        private const string FountainWaterHex = "#DDE6FF";
-        private const float FountainWaterAlpha = 0.85f;
 
         // D5 볼륨 값
         private const float BloomThreshold = 1f;
@@ -103,15 +100,6 @@ namespace Project.Scripts.Editor.Plaza
                     Debug.LogWarning($"[PlazaRenderSetup] {GroundSourceMaterialPath} not found, ground stays white");
                 else
                     m.SetColor("_BaseColor", source.GetColor("_BaseColor"));
-            });
-            CreateMaterial("MAT_FountainStone", LitShader, m => m.SetColor("_BaseColor", Hex(FountainStoneHex)));
-            CreateMaterial("MAT_FountainWater", UnlitShader, m =>
-            {
-                Color water = Hex(FountainWaterHex);
-                water.a = FountainWaterAlpha;
-                m.SetColor("_BaseColor", water);
-                SetTransparent(m);
-                BaseShaderGUI.SetMaterialKeywords(m);
             });
         }
 
@@ -239,12 +227,6 @@ namespace Project.Scripts.Editor.Plaza
             }
 
             EditorUtility.SetDirty(profile);
-        }
-
-        private static Color Hex(string hex)
-        {
-            ColorUtility.TryParseHtmlString(hex, out Color color);
-            return color;
         }
     }
 }

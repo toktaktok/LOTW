@@ -12,6 +12,7 @@ Applies to `Game/Assets/Project/` only. Third-party folders (`VoxelImporter`, `T
 | Character sprites | `Art/Characters/{NNN}.{Name}/Textures/` |
 | Character clips | `Art/Characters/{NNN}.{Name}/Animations/` |
 | Animator controllers | `Art/Animations/Controllers/` |
+| Environment clips | `Art/Environments/Animations/` |
 | Environment sprites | `Art/Environments/{Decors\|Props\|Tilesets}/` |
 | Voxel / mesh models | `Art/Environments/Models/{Area}/` (`Central`, `Middle`, `JerkStreet`, `Etc`) |
 | Model textures | `Art/Environments/Models/{Area}/Textures/` |

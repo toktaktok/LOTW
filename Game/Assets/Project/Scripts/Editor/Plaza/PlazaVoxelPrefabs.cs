@@ -30,6 +30,7 @@ namespace Project.Scripts.Editor.Plaza
             ToolDefines.PlazaModelRoot + "Central/M_E_CommonHouse_001.vox",
             ToolDefines.PlazaModelRoot + "Central/M_E_CandyShop.vox",
             ToolDefines.PlazaModelRoot + "Central/M_E_PostBox.vox",
+            ToolDefines.PlazaModelRoot + "Central/M_E_Fountain.vox",
             ToolDefines.PlazaModelRoot + "Central/M_E_MilkShop_Bottom.vox",
             ToolDefines.PlazaModelRoot + "Central/M_E_RabbitHouse.vox",
             ToolDefines.PlazaModelRoot + "Central/M_E_DogHouse.vox",
