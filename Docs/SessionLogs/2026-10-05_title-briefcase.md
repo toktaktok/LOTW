@@ -55,3 +55,11 @@
 - 참고: `PF_NPC_Base`에 있던 `QuestMark` 자식과 새 필드 직렬화를 같이 커밋했다. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base`가 만든 변경이다.
 - 결과: 편집 모드와 플레이 모드에서 NPC 6명이 각자의 스프라이트를 보였다.
 - 다음: 없음.
+
+## 2026-10-05 19:20 | main
+- 작업: `fix/title-menu`를 main에 병합했다. 병합 커밋은 `369931b`다. 로컬 브랜치 `fix/title-menu`를 지웠다.
+- 작업: 남은 에디터 변경을 커밋했다. 대상은 폰트 에셋 3개, `PF_DialogueUI`, `ProjectSettings.asset`이다.
+- 참고: `PF_DialogueUI`에 `ConfirmButton`이 생겼다. 텍스트 3개의 폰트가 Galmuri11에서 DungGeunMo로 바뀌었다.
+- 참고: `ProjectSettings.asset`의 `runInBackground`가 1이 되었다. 빌드에서 창이 포커스를 잃어도 게임이 계속 돈다.
+- 확인 안 함: 바뀐 폰트가 의도한 것인지. 사용자가 확인한다.
+- 다음: main을 `origin/main`에 push할지 사용자가 정한다.
