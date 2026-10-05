@@ -34,7 +34,7 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Audio:** `AudioManager` -- BGM (crossfade), SFX. Volume = MasterVolume * BgmVolume/SfxVolume. Listens to `GameInstance.OnSettingsChanged`. `PlayBGM/PlaySFX(string key)` look up `AudioLibrary` (Data/Audio/AudioLibrary_Main, key = clip name) assigned on SubSystemCollection. `SceneBgm` component plays a clip on scene start.
 
-**Save:** `SaveManager` serializes `SaveData` (scene, entrance, inventory, flags, timestamp) to JSON in `persistentDataPath/Saves/`. 3 slots. Integrates with `GameInstance.SelectSaveSlot()`. `SaveCurrent(slot)` collects scene, `SceneTransitionManager.CurrentEntranceId`, inventory, flags; `LoadAndApply(slot)` restores them and transitions.
+**Save:** `SaveManager` serializes `SaveData` (version, playTime, scene, entrance, inventory, flags, timestamp) via `SaveSystem<T>` (temp file + replace, returns null on unreadable files) to JSON in `persistentDataPath/Saves/`. `SaveDefines.MaxSlots` slots. Story state rides in flags. `LoadAndApply` bumps flag `loadCount`; `NewGame(slot)` clears flags/inventory/playTime; `Upgrade` migrates old versions. Integrates with `GameInstance.SelectSaveSlot()`. `SaveCurrent(slot)` collects scene, `SceneTransitionManager.CurrentEntranceId`, inventory, flags; `LoadAndApply(slot)` restores them and transitions.
 
 **Inventory:** `InventoryManager` -- slot-based, stacking. `ItemData` (id, name, desc, icon, maxStack) built by `TableItemDataProvider` from `Item` table (`ItemTableData`); icon sprite loaded from `Resources/Items/{icon}`. `ToSaveData()`/`LoadFromSaveData()` for persistence.
 

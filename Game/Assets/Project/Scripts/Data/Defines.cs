@@ -12,6 +12,12 @@ namespace Project.Scripts.Data
         /// <summary>수첩 표지에 붙이는 포스트잇 최대 수.</summary>
         public const int MaxStickyNotes = 4;
     }
+    public readonly struct SaveDefines
+    {
+        /// <summary>SaveData 형식 버전. 필드 의미가 바뀌면 올리고 SaveManager 에서 변환합니다.</summary>
+        public const int Version = 1;
+        public const int MaxSlots = 3;
+    }
     public readonly struct DialogueDefines
     {
         /// <summary>분기 행이 연달아 이어질 수 있는 최대 횟수. 분기 행끼리 순환하면 여기서 끊습니다.</summary>

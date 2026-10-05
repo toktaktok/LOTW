@@ -64,10 +64,13 @@
 - [ ] 스타일: 중간 톤 크래프트 브라운 종이(크림 금지), 보라 금지, 알약 버튼 금지, Galmuri11, PPU 25 픽셀. 수첩 스프라이트는 400px 를 3배 정수 배율
 
 ### 4단계. 저장
-- [ ] `SaveData` 확장: version, playTime, 레일 노드/위치, quests, notebook, loadCount(지그 메타 대사용)
-- [ ] 저장 대상 등록 방식(`ISaveable`)으로 `SaveCurrent`/`LoadAndApply` 하드코딩 제거
-- [ ] 새 게임 리셋 (플래그/인벤토리/의뢰/수첩)
-- [ ] I/O 예외 처리, 저장 위치 = 사무소 등 지정 지점 (타이틀 연출이 마지막 저장 위치를 따름)
+- [x] `SaveData` 확장: version(`SaveDefines.Version`, `SaveManager.Upgrade` 로 옛 세이브 변환), playTime(timeScale 0 중 정지). 의뢰/수첩/만남은 플래그라 따로 필드 불필요
+- [x] 불러온 횟수 = 플래그 `loadCount` (`LoadAndApply` 가 올림). 지그 메타 대사는 `flag:loadCount>=n` 조건으로
+- [x] 새 게임 리셋 `SaveManager.NewGame(slot)`: 플래그(의뢰/수첩 포함), 인벤토리, 플레이 시간. 불러오기/리셋은 변경 이벤트를 내지 않아 알림이 쏟아지지 않음
+- [x] I/O 예외 처리: 임시 파일에 쓰고 교체(쓰는 중 종료돼도 기존 세이브 보존), 빈/깨진 파일은 null. `SaveSystem<T>` 를 별도 파일로 분리, 테스트용 rootPath
+- [ ] 위치: 레일 노드 좌표 대신 `entranceId` 로 복원. 저장 지점(사무소 등)에 입구 ID 를 두는 방식으로 6단계에서 결정
+- [ ] `ISaveable` 등록 방식: 저장 대상이 인벤토리/플래그 둘뿐이라 보류. 세 번째 대상이 생기면 도입
+- [ ] 플레이 시간이 타이틀 화면에서도 늘어남 -> 5단계 타이틀 씬에서 제외
 
 ### 5단계. 메인 화면 / 설정 / 일시정지
 - [ ] Title 씬(빌드 인덱스 0): 사무소 서류가방, 종이 3장 이어하기 / 새로하기 / 설정, 선택된 종이가 살짝 올라옴

@@ -19,6 +19,8 @@ namespace Project.Scripts.Data
         public const string TimeSlot = "timeSlot";
         /// <summary>처음 만난 주민 수 (meet 액션이 올림).</summary>
         public const string MetCount = "metCount";
+        /// <summary>세이브를 불러온 횟수 (SaveManager.LoadAndApply 가 올림). 지그 메타 대사 조건용.</summary>
+        public const string LoadCount = "loadCount";
 
         public static string Quest(int questId) => QuestPrefix + questId;
         public static string Note(int noteId) => NotePrefix + noteId;

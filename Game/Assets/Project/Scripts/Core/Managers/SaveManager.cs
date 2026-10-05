@@ -1,5 +1,4 @@
 using System;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Project.Scripts.Data;
@@ -7,96 +6,12 @@ using Project.Scripts.Data;
 namespace Project.Scripts.Core.Managers
 {
     /// <summary>
-    /// 임의의 직렬화 가능 데이터를 JSON 파일로 저장/로드하는 범용 유틸리티.
-    /// Singleton이 아니므로 여러 데이터 타입에 대해 독립적으로 사용 가능합니다.
-    /// </summary>
-    public class SaveSystem<T> where T : struct
-    {
-        private readonly string _saveFolder;
-        private readonly string _fileFormat;
-        private readonly int _maxSlots;
-
-        public int MaxSlots => _maxSlots;
-
-        public SaveSystem(string saveFolder = "Saves", string fileFormat = "save_{0}.json", int maxSlots = 3)
-        {
-            _saveFolder = saveFolder;
-            _fileFormat = fileFormat;
-            _maxSlots = maxSlots;
-        }
-
-        public bool Save(int slot, T data)
-        {
-            if(!ValidateSlot(slot))
-                return false;
-
-            string json = JsonUtility.ToJson(data, true);
-            string path = GetSavePath(slot);
-
-            string dir = Path.GetDirectoryName(path);
-            if(!Directory.Exists(dir))
-                Directory.CreateDirectory(dir);
-
-            File.WriteAllText(path, json);
-            return true;
-        }
-
-        public T? Load(int slot)
-        {
-            if(!ValidateSlot(slot))
-                return null;
-
-            string path = GetSavePath(slot);
-            if(!File.Exists(path))
-                return null;
-
-            try
-            {
-                string json = File.ReadAllText(path);
-                return JsonUtility.FromJson<T>(json);
-            }
-            catch(Exception ex)
-            {
-                Debug.LogError($"[SaveSystem] Failed to load slot {slot}: {ex.Message}");
-                return null;
-            }
-        }
-
-        public bool HasSave(int slot)
-        {
-            return ValidateSlot(slot) && File.Exists(GetSavePath(slot));
-        }
-
-        public void DeleteSave(int slot)
-        {
-            if(!ValidateSlot(slot))
-                return;
-            string path = GetSavePath(slot);
-            if(File.Exists(path))
-                File.Delete(path);
-        }
-
-        private bool ValidateSlot(int slot) => slot >= 0 && slot < _maxSlots;
-
-        private string GetSavePath(int slot)
-        {
-            return Path.Combine(Application.persistentDataPath, _saveFolder,
-                string.Format(_fileFormat, slot));
-        }
-    }
-
-    /// <summary>
     /// 게임 세이브 데이터에 특화된 SaveManager 싱글턴.
-    /// SaveSystem&lt;SaveData&gt;를 내부에서 사용하며, GameInstance 슬롯 연동과 이벤트를 추가합니다.
+    /// SaveSystem&lt;SaveData&gt;를 내부에서 사용하며, GameInstance 슬롯 연동, 플레이 시간, 새 게임 초기화를 담당합니다.
+    /// 스토리 진행(의뢰/수첩/만남)은 플래그에 있으므로 flags 만으로 함께 저장됩니다.
     /// </summary>
     public class SaveManager : Singleton<SaveManager>
     {
-        #region Constants
-
-        public const int MaxSaveSlots = 3;
-
-        #endregion
-
         #region Events
 
         public static event Action<int> OnGameSaved;
@@ -107,6 +22,14 @@ namespace Project.Scripts.Core.Managers
         #region Fields
 
         private SaveSystem<SaveData> _saveSystem;
+        private float _playTime;
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>현재 세션 누적 플레이 시간(초). 일시정지(timeScale 0) 중에는 늘지 않습니다.</summary>
+        public float PlayTime => _playTime;
 
         #endregion
 
@@ -115,40 +38,47 @@ namespace Project.Scripts.Core.Managers
         protected override void Awake()
         {
             base.Awake();
-            _saveSystem = new SaveSystem<SaveData>(maxSlots: MaxSaveSlots);
+            _saveSystem = new SaveSystem<SaveData>(maxSlots: SaveDefines.MaxSlots);
+        }
+
+        private void Update()
+        {
+            _playTime += Time.deltaTime;
         }
 
         #endregion
 
         #region Public API
 
-        public void Save(int slot, SaveData data)
+        public bool Save(int slot, SaveData data)
         {
+            data.version = SaveDefines.Version;
+            data.playTime = _playTime;
             data.timestamp = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss");
 
-            if(_saveSystem.Save(slot, data))
-            {
-                Debug.Log($"[SaveManager] Saved to slot {slot}");
-                GameInstance.Instance.SelectSaveSlot(slot);
-                OnGameSaved?.Invoke(slot);
-            }
+            if(!_saveSystem.Save(slot, data))
+                return false;
+
+            GameInstance.Instance.SelectSaveSlot(slot);
+            OnGameSaved?.Invoke(slot);
+            return true;
         }
 
         public SaveData? Load(int slot)
         {
             SaveData? data = _saveSystem.Load(slot);
-            if(data.HasValue)
-            {
-                GameInstance.Instance.SelectSaveSlot(slot);
-                OnGameLoaded?.Invoke(slot);
-            }
-            return data;
+            if(!data.HasValue)
+                return null;
+
+            GameInstance.Instance.SelectSaveSlot(slot);
+            OnGameLoaded?.Invoke(slot);
+            return Upgrade(data.Value);
         }
 
         /// <summary>
         /// 현재 게임 상태(씬, 입구, 인벤토리, 플래그)를 모아 슬롯에 저장합니다.
         /// </summary>
-        public void SaveCurrent(int slot)
+        public bool SaveCurrent(int slot)
         {
             var data = new SaveData
             {
@@ -157,12 +87,12 @@ namespace Project.Scripts.Core.Managers
                 inventory = InventoryManager.Instance.ToSaveData(),
                 flags = FlagManager.Instance.ToSaveData()
             };
-            Save(slot, data);
+            return Save(slot, data);
         }
 
         /// <summary>
-        /// 슬롯을 로드해 인벤토리와 플래그를 복원하고 저장된 씬/입구로 전환합니다.
-        /// 세이브가 없으면 false.
+        /// 슬롯을 로드해 인벤토리, 플래그, 플레이 시간을 복원하고 저장된 씬/입구로 전환합니다.
+        /// 불러온 횟수(StoryKeys.LoadCount)를 1 올립니다. 세이브가 없거나 읽지 못하면 false.
         /// </summary>
         public bool LoadAndApply(int slot)
         {
@@ -171,17 +101,53 @@ namespace Project.Scripts.Core.Managers
                 return false;
 
             SaveData data = loaded.Value;
+            _playTime = data.playTime;
             InventoryManager.Instance.LoadFromSaveData(data.inventory);
             FlagManager.Instance.LoadFromSaveData(data.flags);
+            FlagManager.Instance.Add(StoryKeys.LoadCount);
 
             if(!string.IsNullOrEmpty(data.currentScene))
                 SceneTransitionManager.Instance.TransitionTo(data.currentScene, data.entranceId);
             return true;
         }
 
+        /// <summary>
+        /// 새 게임: 플래그(의뢰/수첩 포함), 인벤토리, 플레이 시간을 비웁니다. 첫 씬 전환은 호출한 쪽(타이틀)이 합니다.
+        /// 슬롯 파일은 지우지 않습니다. 처음 저장할 때 덮어씁니다.
+        /// </summary>
+        public void NewGame(int slot)
+        {
+            _playTime = 0f;
+            FlagManager.Instance.ResetAll();
+            InventoryManager.Instance.LoadFromSaveData(null);
+            GameInstance.Instance.SelectSaveSlot(slot);
+        }
+
         public bool HasSave(int slot) => _saveSystem.HasSave(slot);
         public void DeleteSave(int slot) => _saveSystem.DeleteSave(slot);
-        public SaveData? PeekSave(int slot) => _saveSystem.Load(slot);
+
+        /// <summary>슬롯 UI 미리보기용. 슬롯 선택/이벤트 없이 읽기만 합니다.</summary>
+        public SaveData? PeekSave(int slot)
+        {
+            SaveData? data = _saveSystem.Load(slot);
+            return data.HasValue ? Upgrade(data.Value) : (SaveData?)null;
+        }
+
+        /// <summary>
+        /// 옛 버전 세이브를 현재 형식으로 맞춥니다. 버전 0 -> 1: 새 필드(version, playTime)는 기본값 그대로.
+        /// 더 새 버전(다운그레이드)은 경고만 하고 그대로 씁니다.
+        /// </summary>
+        public static SaveData Upgrade(SaveData data)
+        {
+            if(data.version > SaveDefines.Version)
+            {
+                Debug.LogWarning($"[SaveManager] Save version {data.version} is newer than {SaveDefines.Version}");
+                return data;
+            }
+
+            data.version = SaveDefines.Version;
+            return data;
+        }
 
         #endregion
     }

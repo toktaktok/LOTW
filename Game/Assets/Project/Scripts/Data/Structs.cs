@@ -35,6 +35,10 @@ namespace Project.Scripts.Data
     [Serializable]
     public struct SaveData
     {
+        /// <summary>SaveDefines.Version. 0 이면 버전 도입 전 세이브.</summary>
+        public int version;
+        /// <summary>누적 플레이 시간(초). 슬롯 UI 표시용.</summary>
+        public float playTime;
         public string currentScene;
         public string entranceId;
         public ItemSlot[] inventory;
