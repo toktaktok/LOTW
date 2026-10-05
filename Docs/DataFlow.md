@@ -6,7 +6,7 @@
 
 | 원천 | 읽는 곳 | 쓰는 곳 |
 |---|---|---|
-| 테이블 JSON (`Resources/Table/*.json`) | `DataManager.GetRow<T>(dataId)` / `GetRows<T>()` 만 거친다. 소비자: `NPC.Interact`, `DialogueUI.GetLine`, `Localization` (Text, key 사전), `TableItemDataProvider` (Item, itemId 사전), `QuestLog` (Quest, QuestObjective), `NotebookLog` (Notebook), `NotebookUI`/`HudUI` (위 둘을 거쳐 `NotebookPageBuilder` 로 화면 내용 생성) | Excel `Table/Excel/*.xlsx` -> `Table/ConvertTable.bat` (`convert_table.py`) |
+| 테이블 JSON (`Resources/Table/*.json`) | `DataManager.GetRow<T>(dataId)` / `GetRows<T>()` 만 거친다. 소비자: `NPC.Interact`, `DialogueUI.GetLine`, `Localization` (Text, key 사전), `TableItemDataProvider` (Item, itemId 사전), `QuestLog` (Quest, QuestObjective), `NotebookLog` (Notebook), `NotebookUI`/`HudUI` (위 둘을 거쳐 `NotebookPageBuilder` 로 화면 내용 생성), `SequencePlayer` (Sequence) | Excel `Table/Excel/*.xlsx` -> `Table/ConvertTable.bat` (`convert_table.py`) |
 | `Map.json` | `DataManager` 가 로드만 함. 런타임 사용처 없음. 맵 에디터는 `MapSerializer` 로 persistentDataPath 를 읽음 | 에디터 `MapDefaultPromoter` |
 | `Resources/Items/{icon}` | `TableItemDataProvider` (직접 `Resources.Load`) | - |
 | `Resources/MapPrefabs/{prefabId}` | `MapBuilder` (직접 `Resources.Load`) | - |
@@ -24,7 +24,9 @@
 | 설정 (볼륨, 언어) | `GameInstance` | PlayerPrefs |
 | 의뢰 상태 `quest.{id}` | 대화 액션이 쓰고 `QuestLog` 가 읽음 | O (플래그) |
 | 수첩 상태 `note.{id}` | 대화 액션이 해금/취소선, `NotebookUI` 항목 클릭 -> `NotebookLog.MarkRead` 가 읽음 처리 | O (플래그) |
-| 첫 만남 `met.{id}`, `metCount`, `chapter`, `timeSlot` | 대화 액션 | O (플래그) |
+| 첫 만남 `met.{id}`, `metCount`, `chapter`, `timeSlot` | 대화 액션, 시퀀스 actions 스텝 | O (플래그) |
+| 불러온 횟수 `loadCount` | `SaveManager.LoadAndApply` | O (플래그) |
+| 시퀀스 재생 중 여부 | `SequencePlayer.IsPlaying` (플레이어 입력 차단) | X |
 
 ## 키 규칙
 

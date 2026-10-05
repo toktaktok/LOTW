@@ -1,3 +1,4 @@
+using Project.Scripts.Content.Story;
 using Project.Scripts.Content.UI;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
@@ -32,7 +33,7 @@ namespace Project.Scripts.Content.Controller
 
         private void Update()
         {
-            if(UIManager.Instance.HasBlockingPage)
+            if(UIManager.Instance.HasBlockingPage || SequencePlayer.IsPlaying)
                 return;
 
             // 페이드/로딩 중 상호작용하면 사라질 씬의 대상으로 UI가 열림

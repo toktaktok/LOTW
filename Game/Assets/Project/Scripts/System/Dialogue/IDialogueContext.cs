@@ -16,5 +16,8 @@ namespace Project.Scripts.System.Dialogue
 
         void PlaySfx(string key);
         void PlayBgm(string key);
+
+        /// <summary>대화가 닫힌 뒤 Sequence 테이블 스텝 sequenceId 부터 연출을 재생합니다.</summary>
+        void PlaySequence(int sequenceId);
     }
 }

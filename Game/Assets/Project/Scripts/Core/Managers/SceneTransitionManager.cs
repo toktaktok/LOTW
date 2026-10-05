@@ -109,6 +109,14 @@ namespace Project.Scripts.Core.Managers
 
         #region Public API
 
+        /// <summary>
+        /// 씬 전환 없이 화면만 페이드합니다 (시퀀스 연출용). to 1 = 완전히 가림. 가린 채로 씬 전환하면 깜박임 없이 이어집니다.
+        /// </summary>
+        public Awaitable FadeAsync(float to, float duration)
+        {
+            return FadeRoutine(CurrentFadeAlpha, to, duration);
+        }
+
         public void TransitionTo(string sceneName, string entranceId = "")
         {
             if(IsTransitioning)
@@ -131,7 +139,7 @@ namespace Project.Scripts.Core.Managers
 
                 _handler?.OnBeforeTransition();
 
-                await FadeRoutine(0f, 1f);
+                await FadeRoutine(CurrentFadeAlpha, 1f, fadeDuration);
 
                 AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
                 while(!op.isDone)
@@ -142,7 +150,7 @@ namespace Project.Scripts.Core.Managers
                 CurrentEntranceId = entranceId;
                 _handler?.OnSceneLoaded(sceneName, entranceId);
 
-                await FadeRoutine(1f, 0f);
+                await FadeRoutine(1f, 0f, fadeDuration);
 
                 succeeded = true;
             }
@@ -165,16 +173,18 @@ namespace Project.Scripts.Core.Managers
 
         #region Fade
 
-        private async Awaitable FadeRoutine(float from, float to)
+        private float CurrentFadeAlpha => _fadeImage != null && _fadeCanvas.gameObject.activeSelf ? _fadeImage.color.a : 0f;
+
+        private async Awaitable FadeRoutine(float from, float to, float duration)
         {
             float timer = 0f;
             _fadeCanvas.gameObject.SetActive(true);
             SetFadeAlpha(from);
 
-            while(timer < fadeDuration)
+            while(timer < duration)
             {
                 timer += Time.unscaledDeltaTime;
-                float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
+                float t = Mathf.SmoothStep(0f, 1f, timer / duration);
                 SetFadeAlpha(Mathf.Lerp(from, to, t));
                 await Awaitable.NextFrameAsync();
             }

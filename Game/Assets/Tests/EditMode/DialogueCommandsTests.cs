@@ -16,6 +16,9 @@ namespace Tests.EditMode
             public readonly Dictionary<string, int> Flags = new();
             public readonly Dictionary<string, int> Items = new();
             public readonly List<string> Sounds = new();
+            public readonly List<int> Sequences = new();
+
+            public void PlaySequence(int sequenceId) => Sequences.Add(sequenceId);
 
             public int GetFlag(string key) => Flags.TryGetValue(key, out int v) ? v : 0;
             public void SetFlag(string key, int value) => Flags[key] = value;
@@ -161,6 +164,14 @@ namespace Tests.EditMode
             DialogueCommands.RunActions("giveItem:rose=3;takeItem:rose", _context);
 
             Assert.AreEqual(2, _context.GetItemCount("rose"));
+        }
+
+        [Test]
+        public void RunActions_Sequence_PassesId()
+        {
+            DialogueCommands.RunActions("sequence:100", _context);
+
+            CollectionAssert.AreEqual(new[] { 100 }, _context.Sequences);
         }
 
         [Test]

@@ -52,4 +52,25 @@ namespace Project.Scripts.Data
         Questions,
         Documents
     }
+
+    /// <summary>시간대. 플래그 timeSlot 의 값. 시계가 아니라 스토리 비트(시퀀스 액션 setFlag:timeSlot=n)로 바뀝니다.</summary>
+    public enum TimeSlot
+    {
+        None = 0,
+        Morning = 1,
+        Evening = 2,
+        Night = 3
+    }
+
+    /// <summary>Sequence 테이블 type 열. SequenceData.TryGetStepType 이 소문자 이름으로 해석합니다.</summary>
+    public enum SequenceStepType
+    {
+        Dialogue,
+        Wait,
+        FadeOut,
+        FadeIn,
+        Camera,
+        Scene,
+        Actions
+    }
 }

@@ -354,5 +354,70 @@
     "speakerId": "npc_mayor",
     "text": "아무튼! 잘 부탁한다는 뜻일세.",
     "nextId": -1
+  },
+  {
+    "dataId": 9000,
+    "speakerId": "narrator",
+    "text": "12월 16일, 일요일 밤.",
+    "nextId": 9001
+  },
+  {
+    "dataId": 9001,
+    "speakerId": "narrator",
+    "text": "깨끗한 빨간 버스 한 대가 보라 마을에 도착했다.",
+    "nextId": 9002
+  },
+  {
+    "dataId": 9002,
+    "speakerId": "narrator",
+    "text": "코트에 모자를 쓴 누군가가 짐을 들고 긴 언덕길을 오른다.",
+    "nextId": -1
+  },
+  {
+    "dataId": 9010,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "탐정 양반! 기다리고 있었네.",
+    "nextId": 9011
+  },
+  {
+    "dataId": 9011,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "지난 수요일, 12월 12일에 마을의 보물이 사라진 걸 알았지.",
+    "nextId": 9012
+  },
+  {
+    "dataId": 9012,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "무엇보다 범인을 찾는 게 먼저일세. 범인은... 분명 이 마을 주민이야.",
+    "nextId": 9013
+  },
+  {
+    "dataId": 9013,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "그럼 잘 부탁하네! 난 이만 바빠서.",
+    "nextId": -1,
+    "actions": "meet:npc_mayor;addNote:101;startQuest:1"
+  },
+  {
+    "dataId": 9020,
+    "speakerId": "narrator",
+    "text": "오전 7시. 1층 간판을 뒤집었다.",
+    "nextId": 9021
+  },
+  {
+    "dataId": 9021,
+    "speakerId": "narrator",
+    "text": "'탐정 사무소 오픈. 도움이 필요하다면 언제든지 방문 환영.'",
+    "nextId": 9022
+  },
+  {
+    "dataId": 9022,
+    "speakerId": "narrator",
+    "text": "...공기가 차갑다.",
+    "nextId": -1
   }
 ]

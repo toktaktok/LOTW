@@ -187,7 +187,7 @@ namespace Project.Scripts.Content.UI
 
         private void OnNotebook()
         {
-            if(UIManager.Instance.HasBlockingPage)
+            if(UIManager.Instance.HasBlockingPage || SequencePlayer.IsPlaying)
                 return;
 
             UIManager.Instance.PushPage<NotebookUI>(UILayer.Popup);

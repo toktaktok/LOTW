@@ -24,6 +24,7 @@ namespace Project.Scripts.System.Dialogue
     ///   startQuest:id      completeQuest:id    (진행 / 완료. 시작은 상태가 None 일 때만)
     ///   addNote:id         strikeNote:id       (수첩 해금 / 무관 판정 취소선. 해금은 처음 한 번만)
     ///   meet:characterId   (첫 만남 기록 + metCount 증가. 두 번째부터는 무시)
+    ///   sequence:id        (대화가 닫힌 뒤 Sequence 테이블 연출 재생)
     /// 의뢰/수첩/만남 상태는 플래그(StoryKeys)라서 세이브에 같이 저장됩니다.
     ///
     /// 분기 행: text 가 비어 있고 choiceIds 가 있으면 조건을 만족하는 첫 행으로 바로 넘어갑니다.
@@ -206,6 +207,12 @@ namespace Project.Scripts.System.Dialogue
                 case "meet":
                     if(SetIfUnset(context, StoryKeys.MetPrefix + key, 1))
                         context.AddFlag(StoryKeys.MetCount, 1);
+                    break;
+                case "sequence":
+                    if(int.TryParse(key, out int sequenceId))
+                        context.PlaySequence(sequenceId);
+                    else
+                        Debug.LogWarning($"[DialogueCommands] Invalid sequence id in '{token}'.");
                     break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown action '{verb}' in '{token}'.");

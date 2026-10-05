@@ -9,6 +9,7 @@ using TextData = Project.Scripts.Data.Table.TextData;
 using QuestData = Project.Scripts.Data.Table.QuestData;
 using QuestObjectiveData = Project.Scripts.Data.Table.QuestObjectiveData;
 using NotebookData = Project.Scripts.Data.Table.NotebookData;
+using SequenceData = Project.Scripts.Data.Table.SequenceData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -97,6 +98,7 @@ namespace Project.Scripts.Core.Managers
             LoadTable<QuestData>("Quest");
             LoadTable<QuestObjectiveData>("QuestObjective");
             LoadTable<NotebookData>("Notebook");
+            LoadTable<SequenceData>("Sequence");
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
             // LoadTable<QuestData>("Quest");

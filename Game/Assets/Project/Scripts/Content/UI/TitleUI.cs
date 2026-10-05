@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Project.Scripts.Content.Story;
 using Project.Scripts.Content.Title;
 using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
@@ -86,7 +87,7 @@ namespace Project.Scripts.Content.UI
             int slot = SaveSlotSelector.GetNewGameSlot(GameInstance.Instance.CurrentSaveSlot, SaveDefines.MaxSlots);
             UIManager.Instance.ClearAllPages();
             SaveManager.Instance.NewGame(slot);
-            SceneTransitionManager.Instance.TransitionTo(SceneDefines.NewGameStart);
+            SequencePlayer.Instance.Play(StoryDefines.PrologueSequenceId);
         }
     }
 }

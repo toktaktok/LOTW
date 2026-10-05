@@ -87,8 +87,15 @@ namespace Project.Scripts.Data
         public const string Plaza = "Plaza";
         /// <summary>메인 화면 (빌드 인덱스 0).</summary>
         public const string Title = "Title";
-        /// <summary>새 게임 첫 씬. 프롤로그 씬이 생기면 교체.</summary>
-        public const string NewGameStart = Plaza;
+    }
+    public readonly struct StoryDefines
+    {
+        /// <summary>새 게임에서 재생하는 프롤로그 시퀀스 (Sequence 테이블 첫 스텝 dataId). 첫 스텝이 씬 이동.</summary>
+        public const int PrologueSequenceId = 1;
+        /// <summary>시퀀스 페이드 스텝의 duration 이 0 일 때 쓰는 시간(초).</summary>
+        public const float SequenceFadeDuration = 1f;
+        /// <summary>한 시퀀스가 실행할 수 있는 최대 스텝 수. nextId 가 순환하면 여기서 끊습니다.</summary>
+        public const int MaxSequenceSteps = 256;
     }
     public readonly struct MenuDefines
     {
