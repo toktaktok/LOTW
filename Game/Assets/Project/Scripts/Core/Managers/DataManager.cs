@@ -44,7 +44,8 @@ namespace Project.Scripts.Core.Managers
         protected override void Awake()
         {
             base.Awake();
-            LoadAllTables().Forget();
+            // 테이블 JSON 은 작아서 동기 로드한다. 비동기면 첫 프레임에 읽는 쪽이 null 을 받는다.
+            LoadAllTables();
         }
 
         #endregion
@@ -84,15 +85,15 @@ namespace Project.Scripts.Core.Managers
         /// 로드할 테이블을 여기에 등록합니다.
         /// 파일명 규칙: Resources/Table/{name}.json (접미사 'Table' 없음)
         /// </summary>
-        private async Awaitable LoadAllTables()
+        private void LoadAllTables()
         {
-            await LoadTable<DialogueData>("Dialogue");
-            await LoadTable<MapData>("Map");
-            await LoadTable<ItemTableData>("Item");
-            await LoadTable<TextData>("Text");
+            LoadTable<DialogueData>("Dialogue");
+            LoadTable<MapData>("Map");
+            LoadTable<ItemTableData>("Item");
+            LoadTable<TextData>("Text");
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
-            // await LoadTable<QuestData>("Quest");
+            // LoadTable<QuestData>("Quest");
             // ────────────────────────────────────────────────────────
 
             IsLoaded = true;
@@ -102,13 +103,9 @@ namespace Project.Scripts.Core.Managers
 
         #region Internal Loading
 
-        private async Awaitable LoadTable<T>(string tableName) where T : TableRowData
+        private void LoadTable<T>(string tableName) where T : TableRowData
         {
-            ResourceRequest req = Resources.LoadAsync<TextAsset>($"Table/{tableName}");
-            while(!req.isDone)
-                await Awaitable.NextFrameAsync();
-
-            if(req.asset is not TextAsset textAsset)
+            if(Resources.Load<TextAsset>($"Table/{tableName}") is not TextAsset textAsset)
             {
                 Debug.LogError(
                     $"[DataManager] 파일 없음: Resources/Table/{tableName}.json\n" +

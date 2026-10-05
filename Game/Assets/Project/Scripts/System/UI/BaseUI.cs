@@ -114,7 +114,13 @@ namespace Project.Scripts.System.UI
             await Awaitable.NextFrameAsync();
 
             float animLength = uiAnimator.GetCurrentAnimatorStateInfo(0).length;
-            await Awaitable.WaitForSecondsAsync(animLength);
+            // timeScale 0(일시정지)에서도 진행되도록 unscaled 시간으로 기다린다.
+            float timer = 0f;
+            while(timer < animLength)
+            {
+                timer += Time.unscaledDeltaTime;
+                await Awaitable.NextFrameAsync();
+            }
         }
         
         public void SetVisibility(bool visible)
