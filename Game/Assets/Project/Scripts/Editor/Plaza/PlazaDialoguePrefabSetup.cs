@@ -1,4 +1,4 @@
-// PF_DialogueUI 프리팹 꾸미기 (에디터 전용). 종이 대화창 배경과 3지선다 ChoicePanel을 만들고 DialogueUI 필드를 연결한다.
+// PF_DialogueUI 프리팹 꾸미기 (에디터 전용). 종이 대화창 배경과 4지선다 ChoicePanel을 만들고 DialogueUI 필드를 연결한다.
 // 이미 TextBox/ChoicePanel이 있으면 새로 만들지 않고 연결만 다시 한다.
 using Project.Scripts.Content.UI;
 using TMPro;
@@ -17,7 +17,7 @@ namespace Project.Scripts.Editor.Plaza
         private const string TextBoxName = "TextBox";
         private const string ChoicePanelName = "ChoicePanel";
         private const string ChoiceLabelName = "Label";
-        private const int ChoiceCount = 3;
+        private const int ChoiceCount = 4;
         private const int UILayer = 5;
 
         // 9-slice 테두리 (left, bottom, right, top). 오른쪽 아래 "ㄱ/" 표시가 늘어나지 않도록 오른쪽/아래를 넓게 둔다.
@@ -38,7 +38,7 @@ namespace Project.Scripts.Editor.Plaza
 
         private const float ChoiceMarginRight = 70f;
         private const float ChoiceGapAboveTextBox = 12f;
-        private static readonly Vector2 ChoicePanelSize = new Vector2(300f, 226f);
+        private static readonly Vector2 ChoicePanelSize = new Vector2(366f, 276f);
         private const int ChoicePaddingLeft = 40;
         private const int ChoicePaddingRight = 56;
         private const int ChoicePaddingTop = 36;

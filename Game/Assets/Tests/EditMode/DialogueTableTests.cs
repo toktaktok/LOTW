@@ -10,7 +10,7 @@ namespace Tests.EditMode
 {
     public class DialogueTableTests
     {
-        private const int MaxChoices = 3;
+        private const int MaxChoices = 4;
 
         private Dictionary<int, DialogueRow> _rows;
         private List<DialogueRow> _list;
@@ -41,7 +41,7 @@ namespace Tests.EditMode
         }
 
         [Test]
-        public void ChoiceIds_Resolve_AndAtMostThree()
+        public void ChoiceIds_Resolve_AndAtMostFour()
         {
             foreach(DialogueRow row in _list)
             {

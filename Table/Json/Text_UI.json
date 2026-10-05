@@ -14,20 +14,20 @@
   {
     "dataId": 3,
     "key": "ui.talk_menu.chat",
-    "ko": "사담 나누기",
-    "en": "Chat"
+    "ko": "사담",
+    "en": "Small talk"
   },
   {
     "dataId": 4,
     "key": "ui.talk_menu.evidence",
-    "ko": "증거 구하기",
-    "en": "Find evidence"
+    "ko": "조사할 것이...",
+    "en": "About the case..."
   },
   {
     "dataId": 5,
     "key": "ui.talk_menu.end",
-    "ko": "대화 끝내기",
-    "en": "End conversation"
+    "ko": "끝",
+    "en": "Bye"
   },
   {
     "dataId": 6,
@@ -226,5 +226,11 @@
     "key": "ui.toast.saved",
     "ko": "수첩에 기록을 정리했다",
     "en": "Notes saved"
+  },
+  {
+    "dataId": 39,
+    "key": "ui.talk_menu.request",
+    "ko": "부탁할 것이 있는지",
+    "en": "Need any help?"
   }
 ]
