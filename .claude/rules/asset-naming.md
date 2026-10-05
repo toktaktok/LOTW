@@ -49,10 +49,15 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 
 ## Exceptions (do not rename)
 - Font files keep the distributed name (`Galmuri11.ttf`, `DungGeunMo.otf`) and license text. TMP font assets: `{Family} {Kind}.asset`.
-- Tool-generated files: VoxelImporter `PF_*_mat0.mat`, `TEX3D_*`, scene lighting folders.
+- Tool-generated files: VoxelImporter `PF_*_mat0.mat` and palette textures (`TX_E_RabbitHouse` 256x1), `TEX3D_*`, scene lighting folders. Keep the size and import settings the tool writes.
 - URP default assets in `Settings/`.
 
 ## Import settings
-- Character sprites: PPU 25, Point filter, no compression (see pixel render style).
+- Character sprites: PPU 25, Point filter, no compression, no mipmaps (see pixel render style).
 - Voxel models: VoxelImporter `importScale` 0.2 (1 voxel = 5 low-res RT pixels, `CameraDefines.VoxelScale`). The voxel object, its prefab root, and scene instances and groups all keep scale 1. Change size by voxel count in MagicaVoxel, not by Transform scale. Check with `LOTW/Voxel/Validate Voxel Scale`.
 - UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`).
+- Environment sprites (Decors, Props, Tilesets): Point filter, no compression, no mipmaps. PPU is set per asset to fit its model; do not change it without checking placed sizes.
+
+## Texture size
+- Sprites: any size, no power-of-two needed. New sprites: width and height multiples of 4 (80, 160, 240).
+- Repeating textures (Wrap Mode Repeat) or anything with mipmaps: power-of-two (64, 128, 256, 512).
