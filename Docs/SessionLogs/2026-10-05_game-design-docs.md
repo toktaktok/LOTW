@@ -47,3 +47,11 @@
 - 작업: 페이지의 제목 후보 목록은 지우지 않았다. 이 목록은 팀원의 논의 기록이다.
 - 확인 안 함: Notion 페이지 화면.
 - 다음: 사용자가 정한다. 대화 테이블 선택지 문구와 환경 스프라이트 PPU 통일이 남아 있다.
+
+## 2026-10-05 12:42 | main
+- 작업: 이 세션의 이름을 "게임 기획 문서화와 리소스 규칙 정리"로 바꿨다.
+- 작업: worktree 2개를 main으로 fast-forward했다. `t3code/voxel-shader-quality`, `t3code/minigame-framework-design`이다.
+- 작업: `t3code/core-gameplay-loop`에 main을 머지했다. 이 브랜치에는 main에 없는 커밋 1개(1416aac)가 있었다.
+- 결과: 3개 worktree에서 충돌이 0개였다.
+- 확인 안 함: `t3code/codebase-extensibility-review` worktree. 커밋하지 않은 변경이 있고, 경로가 옛 구조(`Assets/`)여서 손대지 않았다.
+- 다음: 사용자가 "그거"가 어떤 작업인지 정한다.
