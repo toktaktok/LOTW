@@ -30,3 +30,17 @@
 - 결과: 컴파일 오류가 없었다. 씬 인스턴스의 월드 위치(0, 0, -4.78)가 그대로이고 오버라이드가 0개다.
 - 확인 안 함: `LOTW/Plaza/5 Build Scene` 전체 재빌드. 재빌드하면 직접 고친 배치가 지워진다.
 - 다음: 없음.
+
+## 2026-10-05 20:29 | feature/fountain-water-front
+- 작업: `SpriteShadow.shadergraph`를 복제해 `SpriteShadowFront.shadergraph`를 만들었다. Depth Test를 `Always`로 바꿨다.
+- 작업: 이 셰이더로 `MAT_SpriteShadowFront`를 만들고 `PF_FountainSet`의 `V_FountainWater`에 넣었다. `MAT_SpriteShadow`는 바꾸지 않았다.
+- 결과: 셰이더 컴파일 오류가 없다. 씬 인스턴스도 새 재질을 쓴다. 씬은 dirty가 아니다.
+- 결과: 분수 쪽 카메라 렌더 2장을 비교했다. 지금 각도에서는 전과 후가 거의 같다. 캐릭터는 물 앞에 그려진다.
+- 확인 안 함: Play 모드 화면과 카메라 회전.
+- 다음: `feature/voxel-scale-4px`를 main에 머지한 뒤 이 브랜치를 머지한다.
+
+## 2026-10-05 21:30 | main
+- 작업: `708a7e8`만 main에 cherry-pick했다. `d17f33c`(복셀 4px 일괄 변경)는 main에 넣지 않았다.
+- 작업: 사용자가 손으로 맞춘 스케일 변경(작업 폴더의 커밋 안 된 파일 23개)은 건드리지 않았다.
+- 결과: main의 `PF_FountainSet`은 재질 한 줄만 바뀌었다.
+- 다음: 없음.
