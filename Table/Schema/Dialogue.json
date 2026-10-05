@@ -1,0 +1,13 @@
+{
+  "rowClass": "DialogueData",
+  "columns": [
+    { "name": "DataId", "type": "int", "required": true, "unique": true, "min": 1, "desc": "행 고유 ID" },
+    { "name": "SpeakerId", "type": "string", "desc": "화자 내부 ID (예: npc_shopkeeper)" },
+    { "name": "SpeakerName", "type": "string", "textKey": true, "desc": "표시 이름. '@키'는 Text 테이블 참조" },
+    { "name": "Text", "type": "string", "textKey": true, "pattern": "@[a-z0-9_.]+", "desc": "대사 키. 이 행 전용은 @dialogue.{DataId}, 공용 대사는 @dialogue.common.{이름}, 공용 메뉴는 @ui.*. 비우고 ChoiceIds를 채우면 분기 행" },
+    { "name": "NextId", "type": "int", "ref": "Dialogue.DataId", "allow": [-1], "desc": "다음 행 DataId. 비우거나 -1이면 종료" },
+    { "name": "ChoiceIds", "type": "int[]", "ref": "Dialogue.DataId", "maxCount": 3, "desc": "선택지 행 DataId 목록 (쉼표 구분, 최대 3개)" },
+    { "name": "Conditions", "type": "string", "commandRefs": { "item": "Item.ItemId" }, "desc": "표시/선택 조건 (예: flag:got_rose;!item:rose>=2)" },
+    { "name": "Actions", "type": "string", "commandRefs": { "giveItem": "Item.ItemId", "takeItem": "Item.ItemId" }, "desc": "표시/선택 시 실행 (예: giveItem:rose=1;setFlag:got_rose)" }
+  ]
+}

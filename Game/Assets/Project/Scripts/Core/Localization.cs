@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.Data.Table;
 
 namespace Project.Scripts.Core
@@ -13,6 +12,8 @@ namespace Project.Scripts.Core
     public static class Localization
     {
         public const char KeyPrefix = '@';
+        private const string TableFolder = "Table";
+        private const string TextTablePrefix = "Text_";
 
         private static Dictionary<string, TextData> _table;
 
@@ -38,15 +39,22 @@ namespace Project.Scripts.Core
 
         public static bool IsKey(string text) => !string.IsNullOrEmpty(text) && text[0] == KeyPrefix;
 
-        /// <summary>DataManager 로드가 끝난 뒤에만 캐싱합니다. 로드 전 호출은 null.</summary>
+        /// <summary>
+        /// Resources/Table/Text_*.json (분류별 Text 테이블)을 모두 읽어 한 번만 캐싱합니다.
+        /// Text 는 Key 로만 찾으므로 DataManager(dataId 캐시)를 거치지 않습니다.
+        /// </summary>
         private static Dictionary<string, TextData> GetTable()
         {
             if(_table != null)
                 return _table;
-            if(!DataManager.HasInstance || !DataManager.Instance.IsLoaded)
-                return null;
 
-            _table = BuildTable(DataManager.Instance.GetRows<TextData>());
+            var rows = new List<TextData>();
+            foreach(TextAsset asset in Resources.LoadAll<TextAsset>(TableFolder))
+            {
+                if(asset.name.StartsWith(TextTablePrefix))
+                    rows.AddRange(JsonArrayHelper.FromJson<TextData>(asset.text));
+            }
+            _table = BuildTable(rows);
             return _table;
         }
 

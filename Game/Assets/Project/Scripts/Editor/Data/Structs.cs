@@ -1,8 +1,43 @@
 using System;
 using UnityEngine;
+using Project.Scripts.Data.Table;
 
 namespace Project.Scripts.Editor.Data
 {
+    /// <summary>
+    /// 대화 시뮬레이션에서 현재 행의 선택지 하나. blockedBy 가 비어 있으면 고를 수 있고,
+    /// 아니면 만족하지 못한 첫 조건(또는 사유)이 들어 있습니다.
+    /// </summary>
+    public readonly struct DialogueSimChoice
+    {
+        public readonly int dataId;
+        public readonly DialogueData line;
+        public readonly string blockedBy;
+
+        public DialogueSimChoice(int dataId, DialogueData line, string blockedBy)
+        {
+            this.dataId = dataId;
+            this.line = line;
+            this.blockedBy = blockedBy;
+        }
+
+        public bool IsAvailable => string.IsNullOrEmpty(blockedBy);
+    }
+
+    /// <summary>Dialogue 그래프 노드 하나의 위치 (Table/Layout/Dialogue.layout.json).</summary>
+    [Serializable]
+    public struct DialogueNodePosition
+    {
+        public int dataId;
+        public Vector2 position;
+    }
+
+    [Serializable]
+    public struct DialogueLayoutFile
+    {
+        public DialogueNodePosition[] nodes;
+    }
+
     /// <summary>
     /// Hierarchy 오브젝트 하나의 표시 스타일. key는 GlobalObjectId 문자열.
     /// color.a == 0이면 색상 없음, icon이 비어 있으면 아이콘 없음.

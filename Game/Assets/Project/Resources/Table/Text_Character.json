@@ -1,0 +1,14 @@
+[
+  {
+    "dataId": 1,
+    "key": "character.shopkeeper.name",
+    "ko": "상점 주인",
+    "en": "Shopkeeper"
+  },
+  {
+    "dataId": 2,
+    "key": "character.player.name",
+    "ko": "플레이어",
+    "en": "Player"
+  }
+]

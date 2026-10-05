@@ -1,0 +1,11 @@
+{
+  "rowClass": "ItemTableData",
+  "columns": [
+    { "name": "DataId", "type": "int", "required": true, "unique": true, "min": 1, "desc": "행 고유 ID" },
+    { "name": "ItemId", "type": "string", "required": true, "unique": true, "desc": "세이브/인벤토리에서 쓰는 문자열 ID" },
+    { "name": "DisplayName", "type": "string", "required": true, "textKey": true, "desc": "표시 이름. '@키'는 Text 테이블 참조" },
+    { "name": "Description", "type": "string", "textKey": true, "desc": "설명. '@키'는 Text 테이블 참조" },
+    { "name": "Icon", "type": "string", "desc": "Resources/Items/ 아래 스프라이트 파일 이름" },
+    { "name": "MaxStack", "type": "int", "required": true, "min": 1, "desc": "한 칸 최대 개수" }
+  ]
+}

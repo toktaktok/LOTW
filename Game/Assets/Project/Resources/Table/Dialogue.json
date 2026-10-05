@@ -2,8 +2,8 @@
   {
     "dataId": 1,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "@npc.shopkeeper",
-    "text": "어서오세요! 무엇을 도와드릴까요?",
+    "speakerName": "@character.shopkeeper.name",
+    "text": "@dialogue.1",
     "nextId": -1,
     "choiceIds": [
       2,
@@ -13,36 +13,36 @@
   {
     "dataId": 2,
     "speakerId": "player",
-    "speakerName": "플레이어",
-    "text": "꽃을 좀 구경해도 될까요?",
+    "speakerName": "@character.player.name",
+    "text": "@dialogue.2",
     "nextId": 4
   },
   {
     "dataId": 3,
     "speakerId": "player",
-    "speakerName": "플레이어",
-    "text": "아니요, 그냥 지나가는 길이에요.",
+    "speakerName": "@character.player.name",
+    "text": "@dialogue.3",
     "nextId": 5
   },
   {
     "dataId": 4,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "@npc.shopkeeper",
-    "text": "물론이죠! 오늘 들어온 장미가 특히 예쁘답니다.",
+    "speakerName": "@character.shopkeeper.name",
+    "text": "@dialogue.4",
     "nextId": 6
   },
   {
     "dataId": 5,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "@npc.shopkeeper",
-    "text": "그렇군요. 또 들러주세요!",
+    "speakerName": "@character.shopkeeper.name",
+    "text": "@dialogue.5",
     "nextId": -1
   },
   {
     "dataId": 6,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "@npc.shopkeeper",
-    "text": "첫 손님이시니 한 송이 드릴게요.",
+    "speakerName": "@character.shopkeeper.name",
+    "text": "@dialogue.6",
     "nextId": -1,
     "actions": "giveItem:rose=1;setFlag:got_rose"
   },
@@ -57,16 +57,15 @@
   {
     "dataId": 11,
     "speakerId": "npc_shopkeeper",
-    "speakerName": "@npc.shopkeeper",
-    "text": "장미는 마음에 드세요? 또 오세요!",
+    "speakerName": "@character.shopkeeper.name",
+    "text": "@dialogue.11",
     "nextId": -1,
     "conditions": "flag:got_rose"
   },
   {
     "dataId": 1100,
     "speakerId": "npc_gumman",
-    "speakerName": "",
-    "text": "오늘도 날씨가 좋네!",
+    "text": "@dialogue.1100",
     "nextId": -1,
     "choiceIds": [
       1101,
@@ -77,50 +76,43 @@
   {
     "dataId": 1101,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "사담 나누기",
+    "text": "@ui.talk_menu.chat",
     "nextId": 1110
   },
   {
     "dataId": 1102,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "증거 구하기",
+    "text": "@ui.talk_menu.evidence",
     "nextId": 1120
   },
   {
     "dataId": 1103,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "대화 끝내기",
+    "text": "@ui.talk_menu.end",
     "nextId": -1
   },
   {
     "dataId": 1110,
     "speakerId": "npc_gumman",
-    "speakerName": "",
-    "text": "먼저 인사라도 건네보라고!",
+    "text": "@dialogue.1110",
     "nextId": -1
   },
   {
     "dataId": 1120,
     "speakerId": "npc_gumman",
-    "speakerName": "",
-    "text": "아직 아는 게 없어.",
+    "text": "@dialogue.common.no_clue",
     "nextId": 1100
   },
   {
     "dataId": 1200,
     "speakerId": "npc_catty",
-    "speakerName": "",
-    "text": "우리 마을에 박물관 있는 거 아세요?\n진짜 짱이거든요.",
+    "text": "@dialogue.1200",
     "nextId": 1201
   },
   {
     "dataId": 1201,
     "speakerId": "npc_catty",
-    "speakerName": "",
-    "text": "나중에 꼭 가보세요.\n꼭이요.",
+    "text": "@dialogue.1201",
     "nextId": -1,
     "choiceIds": [
       1202,
@@ -131,43 +123,37 @@
   {
     "dataId": 1202,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "사담 나누기",
+    "text": "@ui.talk_menu.chat",
     "nextId": 1200
   },
   {
     "dataId": 1203,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "증거 구하기",
+    "text": "@ui.talk_menu.evidence",
     "nextId": 1220
   },
   {
     "dataId": 1204,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "대화 끝내기",
+    "text": "@ui.talk_menu.end",
     "nextId": -1
   },
   {
     "dataId": 1220,
     "speakerId": "npc_catty",
-    "speakerName": "",
-    "text": "아직 아는 게 없어.",
+    "text": "@dialogue.common.no_clue",
     "nextId": 1201
   },
   {
     "dataId": 1300,
     "speakerId": "npc_phonekids",
-    "speakerName": "",
-    "text": "이 블로그 봐. 우리 마을의 이야기를 쓰고 있어.",
+    "text": "@dialogue.1300",
     "nextId": 1301
   },
   {
     "dataId": 1301,
     "speakerId": "npc_phonekids",
-    "speakerName": "",
-    "text": "글쎄, 누가 우리 마을 보물을 정리해서 올리고 있다니까?",
+    "text": "@dialogue.1301",
     "nextId": -1,
     "choiceIds": [
       1302,
@@ -178,29 +164,25 @@
   {
     "dataId": 1302,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "사담 나누기",
+    "text": "@ui.talk_menu.chat",
     "nextId": 1310
   },
   {
     "dataId": 1303,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "증거 구하기",
+    "text": "@ui.talk_menu.evidence",
     "nextId": 1320
   },
   {
     "dataId": 1304,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "대화 끝내기",
+    "text": "@ui.talk_menu.end",
     "nextId": -1
   },
   {
     "dataId": 1310,
     "speakerId": "npc_phonekids",
-    "speakerName": "",
-    "text": "누군지 몰라도 대단한 팬인가봐. 그렇지?",
+    "text": "@dialogue.1310",
     "nextId": -1,
     "choiceIds": [
       1302,
@@ -211,22 +193,19 @@
   {
     "dataId": 1320,
     "speakerId": "npc_phonekids",
-    "speakerName": "",
-    "text": "아직 아는 게 없어.",
+    "text": "@dialogue.common.no_clue",
     "nextId": 1301
   },
   {
     "dataId": 1400,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "찍.",
+    "text": "@dialogue.1400",
     "nextId": 1401
   },
   {
     "dataId": 1401,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "찍찍.",
+    "text": "@dialogue.1401",
     "nextId": -1,
     "choiceIds": [
       1402,
@@ -237,71 +216,61 @@
   {
     "dataId": 1402,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "사담 나누기",
+    "text": "@ui.talk_menu.chat",
     "nextId": 1410
   },
   {
     "dataId": 1403,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "증거 구하기",
+    "text": "@ui.talk_menu.evidence",
     "nextId": 1420
   },
   {
     "dataId": 1404,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "대화 끝내기",
+    "text": "@ui.talk_menu.end",
     "nextId": -1
   },
   {
     "dataId": 1410,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "뭐? 친구??",
+    "text": "@dialogue.1410",
     "nextId": 1411
   },
   {
     "dataId": 1411,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "흥! 난 그런거 필요 없어!",
+    "text": "@dialogue.1411",
     "nextId": 1412
   },
   {
     "dataId": 1412,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "그런 사사로운 친분이 없어도 난 이미 모든 정보를 알고있다고!",
+    "text": "@dialogue.1412",
     "nextId": 1413
   },
   {
     "dataId": 1413,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "뭐, 사탕 가게 주인은 좋은 사람이긴 해.",
+    "text": "@dialogue.1413",
     "nextId": 1401
   },
   {
     "dataId": 1420,
     "speakerId": "npc_mouse",
-    "speakerName": "",
-    "text": "아직 아는 게 없어.",
+    "text": "@dialogue.common.no_clue",
     "nextId": 1401
   },
   {
     "dataId": 1500,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "안녕하세요. 처음 뵙는 분이시네요.",
+    "text": "@dialogue.1500",
     "nextId": 1501
   },
   {
     "dataId": 1501,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "저는 마을 집배원이에요.",
+    "text": "@dialogue.1501",
     "nextId": -1,
     "choiceIds": [
       1502,
@@ -312,50 +281,43 @@
   {
     "dataId": 1502,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "사담 나누기",
+    "text": "@ui.talk_menu.chat",
     "nextId": 1510
   },
   {
     "dataId": 1503,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "증거 구하기",
+    "text": "@ui.talk_menu.evidence",
     "nextId": 1520
   },
   {
     "dataId": 1504,
     "speakerId": "player",
-    "speakerName": "",
-    "text": "대화 끝내기",
+    "text": "@ui.talk_menu.end",
     "nextId": -1
   },
   {
     "dataId": 1510,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "새로 이사왔나요? 주소를 알아야 배달할 수 있답니다.",
+    "text": "@dialogue.1510",
     "nextId": 1511
   },
   {
     "dataId": 1511,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "제가 모르는 얼굴... 아니 집은 없답니다.",
+    "text": "@dialogue.1511",
     "nextId": 1590
   },
   {
     "dataId": 1520,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "아직 아는 게 없어.",
+    "text": "@dialogue.common.no_clue",
     "nextId": 1590
   },
   {
     "dataId": 1590,
     "speakerId": "npc_seal",
-    "speakerName": "",
-    "text": "다른 용무가 있으신가요?",
+    "text": "@dialogue.1590",
     "nextId": -1,
     "choiceIds": [
       1502,
@@ -366,29 +328,25 @@
   {
     "dataId": 1600,
     "speakerId": "npc_mayor",
-    "speakerName": "",
-    "text": "보물은 우리 마을의 목숨같은 존재야.",
+    "text": "@dialogue.1600",
     "nextId": 1601
   },
   {
     "dataId": 1601,
     "speakerId": "npc_mayor",
-    "speakerName": "",
-    "text": "자네의 역할이 아주 중요하다는 말일세.",
+    "text": "@dialogue.1601",
     "nextId": 1602
   },
   {
     "dataId": 1602,
     "speakerId": "npc_mayor",
-    "speakerName": "",
-    "text": "흠흠...",
+    "text": "@dialogue.1602",
     "nextId": 1603
   },
   {
     "dataId": 1603,
     "speakerId": "npc_mayor",
-    "speakerName": "",
-    "text": "아무튼! 잘 부탁한다는 뜻일세.",
+    "text": "@dialogue.1603",
     "nextId": -1
   }
 ]

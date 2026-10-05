@@ -36,6 +36,54 @@ namespace Project.Scripts.Editor.Data
         // SnowMan 원본 계층이 있는 개발 씬
         public const string CharacterScenePath = "Assets/Project/Scenes/Test/Character.unity";
 
+        // --- Dialogue Editor ---
+        // Resources/ 기준 테이블 폴더와 파일 이름 (DataManager, Localization 과 같음)
+        public const string DialogueTableFolder = "Table";
+        public const string DialogueTableName = "Dialogue";
+        public const string TextTablePrefix = "Text_";
+        // 그래프를 여는 DataId 묶음 크기 (1100번대 = 대화 하나)
+        public const int DialogueBlockSize = 100;
+        // 스키마 Dialogue.ChoiceIds 의 maxCount 와 같음
+        public const int DialogueMaxChoices = 3;
+        // 툴이 만드는 행 전용 대사 키 접두사 (dialogue.{DataId})
+        public const string DialogueTextKeyPrefix = "dialogue.";
+        public const string DialogueTextTable = "Text_Dialogue";
+        public const string DialogueNewLineText = "새 대사";
+        // 선택지 칸에서 끌어 만든 행의 화자
+        public const string DialoguePlayerSpeakerId = "player";
+        public const string DialoguePlayerSpeakerName = "@character.player.name";
+        // 프로젝트 폴더(Game/) 기준 Table 폴더. 엑셀 저장 스크립트와 노드 위치 파일이 있음
+        public const string TableRootPath = "../Table";
+        public const string TableEditScript = "table_edit.py";
+        public const string TableConvertScript = "convert_table.py";
+        public const string DialogueLayoutPath = "Layout/Dialogue.layout.json";
+        // Temp/ 아래 저장 요청 파일
+        public const string DialogueEditsTempPath = "Temp/DialogueEdits.json";
+        public const string PythonPathPrefKey = "LOTW.PythonPath";
+        // PATH 에 python 이 없을 때 찾아보는 설치 폴더 (%LOCALAPPDATA% 기준)
+        public const string PythonInstallFolder = "Programs/Python";
+        public const int PythonTimeoutMs = 60000;
+        // 자동 배치 칸 크기
+        public const float DialogueNodeColumnWidth = 320f;
+        public const float DialogueNodeRowHeight = 180f;
+        public const float DialogueNodeWidth = 260f;
+        public const float DialogueNodePadding = 6f;
+        // 시뮬레이션 중인 노드 테두리 두께
+        public const float DialogueNodeBorderWidth = 3f;
+        public const float DialogueSimPanelWidth = 340f;
+        public const string DialogueItemTableName = "Item";
+        public const float DialogueCommandNegateWidth = 40f;
+        public const float DialogueCommandVerbWidth = 80f;
+        public const float DialogueCommandPickWidth = 18f;
+        public const float DialogueCommandOpWidth = 40f;
+        public const float DialogueCommandValueWidth = 36f;
+        public const float DialogueCommandRemoveWidth = 20f;
+        public static readonly Color DialogueRouterColor = new Color(0.55f, 0.45f, 0.20f);
+        public static readonly Color DialogueChoiceColor = new Color(0.20f, 0.40f, 0.55f);
+        public static readonly Color DialogueEndColor = new Color(0.45f, 0.22f, 0.22f);
+        public static readonly Color DialogueCurrentColor = new Color(0.95f, 0.80f, 0.25f);
+        public static readonly Color DialogueBlockedColor = new Color(1f, 0.55f, 0.45f);
+
         // --- Editor Enhancers ---
         // 로컬 설정 파일 (UserSettings는 gitignore 대상)
         public const string EnhancerSettingsPath = "UserSettings/LOTW/EditorEnhancers.asset";

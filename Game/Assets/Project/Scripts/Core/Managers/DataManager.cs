@@ -5,7 +5,6 @@ using Project.Scripts.Data;
 using DialogueData = Project.Scripts.Data.Table.DialogueData;
 using MapData = Project.Scripts.Data.Table.MapData;
 using ItemTableData = Project.Scripts.Data.Table.ItemTableData;
-using TextData = Project.Scripts.Data.Table.TextData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -17,7 +16,8 @@ namespace Project.Scripts.Core.Managers
     /// 새 테이블을 추가하는 절차:
     ///   1. TableRowData 를 상속받는 데이터 클래스 생성 (Data/Table/XxxData.cs)
     ///   2. LoadAllTables() 에 LoadTable&lt;XxxData&gt;("Xxx") 한 줄 추가
-    ///   3. Table/Excel/ 에 Xxx.xlsx 작성 (표 정의 필수) → ConvertTable.bat 실행
+    ///   3. Table/Schema/Xxx.json 에 컬럼 자료형/규칙 작성 (TableSchemaTests 가 필드와 비교)
+    ///   4. Table/Excel/ 에 Xxx.xlsx 작성 (B2 표, 헤더 아래 자료형 행) → ConvertTable.bat 실행
     ///
     /// 테이블 파일 명명 규칙:
     ///   접미사 'Table' 없이 사용. 예) Dialogue.xlsx, Item.xlsx
@@ -89,7 +89,7 @@ namespace Project.Scripts.Core.Managers
             await LoadTable<DialogueData>("Dialogue");
             await LoadTable<MapData>("Map");
             await LoadTable<ItemTableData>("Item");
-            await LoadTable<TextData>("Text");
+            // Text_* 테이블은 Key 로만 찾으므로 Localization 이 직접 읽음
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
             // await LoadTable<QuestData>("Quest");

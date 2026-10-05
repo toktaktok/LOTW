@@ -14,12 +14,17 @@ Excel (.xlsx / XML Spreadsheet 2003 .xml) → JSON 변환 스크립트
   Game/Assets/Project/Resources/Table/ ← Unity DataManager 로드 경로
 
 표(AutoFilter) 규칙:
-  - Excel에서 데이터 범위를 선택 후 [삽입 > 표]로 반드시 표를 정의해야 함
-  - 표의 첫 번째 행 = 컬럼 헤더 (C# 필드명, 첫 글자만 자동 소문자 변환)
+  - Excel에서 데이터 범위를 선택 후 [삽입 > 표]로 반드시 표를 정의해야 함 (B2 시작)
+  - 표 1행 = 컬럼 헤더 (C# 필드명, 첫 글자만 자동 소문자 변환)
     예) DataId → dataId, SpeakerName → speakerName
+  - 표 2행 = 자료형 (int, float, bool, string, int[]). Schema/{테이블}.json 과 같아야 함
   - 표 범위 바깥의 셀은 무시됨 (메모, 설명 등을 자유롭게 작성 가능)
-  - dataId 는 반드시 정수여야 함 — 문자열·공백·비어있는 행은 자동 제외
-  - 이름 끝이 'Ids'인 컬럼은 int 배열로 변환 ("2,3" → [2, 3], 2 → [2])
+  - int[] 컬럼은 쉼표로 구분 ("2,3" → [2, 3])
+  - {스키마}_{분류}.xlsx 는 스키마를 같이 쓰는 분할 테이블 (예: Text_UI.xlsx → Schema/Text.json)
+
+검증:
+  모든 테이블을 읽어 Schema/ 규칙(자료형, 필수, 중복, 범위, 참조, '@키')으로 검사합니다.
+  오류가 하나라도 있으면 목록을 출력하고 JSON 을 하나도 쓰지 않고 중단합니다.
 """
 
 import os
@@ -28,10 +33,13 @@ import re
 import json
 import xml.etree.ElementTree as ET
 
+from table_schema import Table, build_rows, load_schema, validate
+
 # ── 경로 설정 ──────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
 EXCEL_DIR  = os.path.join(SCRIPT_DIR, "Excel")
 JSON_DIR   = os.path.join(SCRIPT_DIR, "Json")
+SCHEMA_DIR = os.path.join(SCRIPT_DIR, "Schema")
 UNITY_RES  = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Resources", "Table")
 
 OUTPUT_DIRS = [JSON_DIR, UNITY_RES]
@@ -105,34 +113,9 @@ def parse_cell(cell) -> object:
     return text
 
 
-# ── 값 후처리 ─────────────────────────────────────────────────
-def coerce_value(key: str, value):
-    """
-    특수 컬럼 후처리:
-      - 이름 끝이 'ids'이면 int 배열로 변환 (C# int[] 필드와 매칭)
-        예) "2,3" → [2, 3], 2 → [2]
-    """
-    if value is None or value == "":
-        return None
-    if key.lower().endswith("ids"):
-        if isinstance(value, int) and not isinstance(value, bool):
-            return [value]
-        if isinstance(value, str):
-            try:
-                return [int(x.strip()) for x in value.split(",") if x.strip()]
-            except ValueError:
-                pass
-    return value
-
-
-# ── 헤더 이름 변환 ─────────────────────────────────────────────
-def to_camel(name: str) -> str:
-    """첫 글자만 소문자로 변환. DataId → dataId, SpeakerName → speakerName."""
-    return name[0].lower() + name[1:] if name else name
-
-
 # ── XML 파싱 메인 ─────────────────────────────────────────────
-def parse_xml(filepath: str) -> list:
+def parse_xml(filepath: str):
+    """(그리드, 표 시작 행, 표 시작 열) 반환."""
     tree = ET.parse(filepath)
     root = tree.getroot()
 
@@ -174,30 +157,35 @@ def parse_xml(filepath: str) -> list:
         cells = get_cells_in_range(row_elem, sc, ec) if row_elem is not None else {}
         grid.append([parse_cell(cells[c]) if c in cells else None for c in range(sc, ec + 1)])
 
-    return grid_to_rows(grid)
+    return grid, sr, sc
 
 
 # ── XLSX 파싱 메인 ────────────────────────────────────────────
-def parse_xlsx(filepath: str) -> list:
+def parse_xlsx(filepath: str):
+    """(그리드, 표 시작 행, 표 시작 열) 반환."""
     try:
         from openpyxl import load_workbook
-        from openpyxl.utils import range_boundaries
     except ImportError:
         raise RuntimeError("openpyxl 이 없습니다. 'pip install openpyxl' 후 다시 실행하세요.")
 
-    wb = load_workbook(filepath, data_only=True)
-    table, sheet = None, None
+    sheet, table = find_xlsx_table(load_workbook(filepath, data_only=True))
+    return read_xlsx_grid(sheet, table)
+
+
+def find_xlsx_table(wb):
+    """첫 번째 표가 있는 (시트, 표). 표가 없으면 ValueError."""
     for ws in wb.worksheets:
         if ws.tables:
-            sheet = ws
-            table = next(iter(ws.tables.values()))
-            break
+            return ws, next(iter(ws.tables.values()))
+    raise ValueError(
+        "워크시트에 '표(Table)'가 정의되어 있지 않습니다.\n"
+        "  Excel에서 데이터 범위를 선택한 뒤 [삽입 > 표]를 클릭하여 표를 만드세요."
+    )
 
-    if table is None:
-        raise ValueError(
-            "워크시트에 '표(Table)'가 정의되어 있지 않습니다.\n"
-            "  Excel에서 데이터 범위를 선택한 뒤 [삽입 > 표]를 클릭하여 표를 만드세요."
-        )
+
+def read_xlsx_grid(sheet, table):
+    """(그리드, 표 시작 행, 표 시작 열) 반환."""
+    from openpyxl.utils import range_boundaries
 
     min_col, min_row, max_col, max_row = range_boundaries(table.ref)
     grid = []
@@ -205,7 +193,7 @@ def parse_xlsx(filepath: str) -> list:
                                min_col=min_col, max_col=max_col, values_only=True):
         grid.append([normalize_xlsx_value(v) for v in row])
 
-    return grid_to_rows(grid)
+    return grid, min_row, min_col
 
 
 def normalize_xlsx_value(value):
@@ -218,37 +206,6 @@ def normalize_xlsx_value(value):
     if isinstance(value, float) and value.is_integer():
         return int(value)
     return value
-
-
-# ── 그리드 → 행 객체 ──────────────────────────────────────────
-def grid_to_rows(grid: list) -> list:
-    """
-    grid[0] = 헤더 행, grid[1:] = 데이터 행 (표 범위 내 값만, 빈 셀은 None).
-    """
-    if not grid:
-        return []
-
-    headers = [to_camel(str(v).strip()) if v is not None else "" for v in grid[0]]
-
-    result = []
-    for values in grid[1:]:
-        row_obj = {}
-        for key, raw in zip(headers, values):
-            if not key:
-                continue
-            value = coerce_value(key, raw)
-            if value is not None:
-                row_obj[key] = value
-
-        # dataId 는 반드시 정수여야 함
-        # — 문자열, 공백, 누락된 행은 읽을 데이터가 아니므로 제외
-        data_id = row_obj.get("dataId")
-        if not isinstance(data_id, int):
-            continue
-
-        result.append(row_obj)
-
-    return result
 
 
 # ── 출력 ──────────────────────────────────────────────────────
@@ -266,6 +223,45 @@ def write_json(table_name: str, data: list):
         print(f"    → {os.path.normpath(path)}")
 
 
+# ── 읽기 + 검증 ───────────────────────────────────────────────
+def read_tables(grids: dict = None):
+    """
+    Excel/ 의 모든 테이블을 읽고 검증해 (tables, errors) 를 반환합니다.
+    grids 에 {테이블 이름: (그리드, 시작 행, 시작 열)} 이 있으면 파일 대신 그 값을 씁니다 (table_edit.py).
+    """
+    parsers = {".xlsx": parse_xlsx, ".xml": parse_xml}
+    grids = grids or {}
+
+    # '~$' 로 시작하는 파일은 Excel 이 열려 있을 때 생기는 잠금 파일
+    table_files = [
+        f for f in os.listdir(EXCEL_DIR)
+        if os.path.splitext(f)[1].lower() in parsers
+        and not f.startswith("~$")
+    ]
+
+    # 참조 검사를 위해 필터와 관계없이 모든 테이블을 읽음
+    tables, errors = {}, []
+    for table_file in table_files:
+        table_name, ext = os.path.splitext(table_file)
+        table = Table(table_name, table_file)
+        table.schema = load_schema(SCHEMA_DIR, table.schema_name)
+        if table.schema is None:
+            errors.append(f"{table_file}: Schema/{table.schema_name}.json 이 없습니다")
+            continue
+        try:
+            source = grids.get(table_name) or parsers[ext.lower()](os.path.join(EXCEL_DIR, table_file))
+            grid, table.origin_row, table.origin_col = source
+        except Exception as e:
+            errors.append(f"{table_file}: {e}")
+            continue
+        build_rows(table, grid, errors)
+        tables[table_name] = table
+
+    if not errors:
+        errors = validate(tables)
+    return tables, errors
+
+
 # ── 메인 ──────────────────────────────────────────────────────
 def convert(filter_name: str = "") -> bool:
     ensure_dirs()
@@ -274,36 +270,23 @@ def convert(filter_name: str = "") -> bool:
         print(f"[오류] {EXCEL_DIR} 디렉토리가 없습니다.")
         return False
 
-    parsers = {".xlsx": parse_xlsx, ".xml": parse_xml}
-
-    # '~$' 로 시작하는 파일은 Excel 이 열려 있을 때 생기는 잠금 파일
-    table_files = [
-        f for f in os.listdir(EXCEL_DIR)
-        if os.path.splitext(f)[1].lower() in parsers
-        and not f.startswith("~$")
-        and (not filter_name or filter_name.lower() in f.lower())
-    ]
-
-    if not table_files:
-        print(f"[경고] 변환할 테이블 파일이 없습니다 (필터: '{filter_name}').")
+    tables, errors = read_tables()
+    if not tables and not errors:
+        print("[경고] 변환할 테이블 파일이 없습니다.")
         return True
 
-    ok = 0
-    for table_file in table_files:
-        table_name, ext = os.path.splitext(table_file)
-        table_path = os.path.join(EXCEL_DIR, table_file)
-        print(f"  [{table_file}] 변환 중...")
+    if errors:
+        print(f"[검증 실패] {len(errors)}개 오류. JSON 을 쓰지 않고 중단합니다.\n")
+        for e in errors:
+            print(f"  ✗ {e}")
+        return False
 
-        try:
-            data = parsers[ext.lower()](table_path)
-            write_json(table_name, data)
-            print(f"    ✓ {len(data)}개 행 완료\n")
-            ok += 1
-        except Exception as e:
-            print(f"    ✗ 오류: {e}\n")
-
-    print(f"결과: {ok}/{len(table_files)} 성공")
-    return ok == len(table_files)
+    targets = [t for t in tables.values() if not filter_name or filter_name.lower() in t.file.lower()]
+    for table in targets:
+        print(f"  [{table.file}] {len(table.rows)}개 행")
+        write_json(table.name, [row for _, row in table.rows])
+    print(f"\n결과: {len(targets)}개 테이블 변환 완료")
+    return True
 
 
 if __name__ == "__main__":

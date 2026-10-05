@@ -1,0 +1,32 @@
+[
+  {
+    "dataId": 1,
+    "key": "ui.talk",
+    "ko": "대화하기",
+    "en": "Talk"
+  },
+  {
+    "dataId": 2,
+    "key": "ui.move",
+    "ko": "이동하기",
+    "en": "Move"
+  },
+  {
+    "dataId": 3,
+    "key": "ui.talk_menu.chat",
+    "ko": "사담 나누기",
+    "en": "Chat"
+  },
+  {
+    "dataId": 4,
+    "key": "ui.talk_menu.evidence",
+    "ko": "증거 구하기",
+    "en": "Find evidence"
+  },
+  {
+    "dataId": 5,
+    "key": "ui.talk_menu.end",
+    "ko": "대화 끝내기",
+    "en": "End conversation"
+  }
+]

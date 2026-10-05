@@ -266,5 +266,43 @@ namespace Tests.EditMode
         }
 
         #endregion
+
+        #region Edit
+
+        [TestCase("flag:got_rose")]
+        [TestCase("!item:rose>=2;flag:met=1;var:jumps<5")]
+        [TestCase("giveItem:rose=1;setFlag:got_rose;sfx:SFX_Door;minigame:jump_rope")]
+        public void ParseFormat_RoundTrips(string text)
+        {
+            Assert.AreEqual(text, DialogueCommands.Format(DialogueCommands.Parse(text)));
+        }
+
+        [Test]
+        public void ParseFormat_RoundTripsAllTableRows()
+        {
+            var asset = Resources.Load<TextAsset>("Table/Dialogue");
+            foreach(DialogueData line in Project.Scripts.Core.JsonArrayHelper.FromJson<DialogueData>(asset.text))
+            {
+                foreach(string text in new[] { line.conditions, line.actions })
+                {
+                    if(!string.IsNullOrEmpty(text))
+                        Assert.AreEqual(text, DialogueCommands.Format(DialogueCommands.Parse(text)), $"dataId {line.dataId}");
+                }
+            }
+        }
+
+        [Test]
+        public void Parse_SplitsParts()
+        {
+            Project.Scripts.Data.DialogueCommand command = DialogueCommands.Parse(" !item : rose >= 2 ")[0];
+
+            Assert.IsTrue(command.negate);
+            Assert.AreEqual("item", command.verb);
+            Assert.AreEqual("rose", command.key);
+            Assert.AreEqual(">=", command.op);
+            Assert.AreEqual("2", command.value);
+        }
+
+        #endregion
     }
 }

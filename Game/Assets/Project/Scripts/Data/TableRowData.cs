@@ -10,7 +10,7 @@ namespace Project.Scripts.Data
     /// 새 테이블을 추가할 때:
     ///   1. 이 클래스를 상속받는 [Serializable] 클래스를 Data/Table/ 에 생성
     ///   2. DataManager.LoadAllTables() 에 LoadTable 호출 등록
-    ///   3. Table/Excel/ 에 .xlsx 파일 추가 후 ConvertTable.bat 실행
+    ///   3. Table/Schema/ 에 스키마, Table/Excel/ 에 .xlsx 파일 추가 후 ConvertTable.bat 실행
     /// </summary>
     [Serializable]
     public abstract class TableRowData

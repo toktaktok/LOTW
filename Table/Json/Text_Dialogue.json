@@ -1,0 +1,153 @@
+[
+  {
+    "dataId": 1,
+    "key": "dialogue.1",
+    "ko": "어서오세요! 무엇을 도와드릴까요?"
+  },
+  {
+    "dataId": 2,
+    "key": "dialogue.2",
+    "ko": "꽃을 좀 구경해도 될까요?"
+  },
+  {
+    "dataId": 3,
+    "key": "dialogue.3",
+    "ko": "아니요, 그냥 지나가는 길이에요."
+  },
+  {
+    "dataId": 4,
+    "key": "dialogue.4",
+    "ko": "물론이죠! 오늘 들어온 장미가 특히 예쁘답니다."
+  },
+  {
+    "dataId": 5,
+    "key": "dialogue.5",
+    "ko": "그렇군요. 또 들러주세요!"
+  },
+  {
+    "dataId": 6,
+    "key": "dialogue.6",
+    "ko": "첫 손님이시니 한 송이 드릴게요."
+  },
+  {
+    "dataId": 7,
+    "key": "dialogue.11",
+    "ko": "장미는 마음에 드세요? 또 오세요!"
+  },
+  {
+    "dataId": 8,
+    "key": "dialogue.1100",
+    "ko": "오늘도 날씨가 좋네!"
+  },
+  {
+    "dataId": 9,
+    "key": "dialogue.1110",
+    "ko": "먼저 인사라도 건네보라고!"
+  },
+  {
+    "dataId": 10,
+    "key": "dialogue.1200",
+    "ko": "우리 마을에 박물관 있는 거 아세요?\n진짜 짱이거든요."
+  },
+  {
+    "dataId": 11,
+    "key": "dialogue.1201",
+    "ko": "나중에 꼭 가보세요.\n꼭이요."
+  },
+  {
+    "dataId": 12,
+    "key": "dialogue.1300",
+    "ko": "이 블로그 봐. 우리 마을의 이야기를 쓰고 있어."
+  },
+  {
+    "dataId": 13,
+    "key": "dialogue.1301",
+    "ko": "글쎄, 누가 우리 마을 보물을 정리해서 올리고 있다니까?"
+  },
+  {
+    "dataId": 14,
+    "key": "dialogue.1310",
+    "ko": "누군지 몰라도 대단한 팬인가봐. 그렇지?"
+  },
+  {
+    "dataId": 15,
+    "key": "dialogue.1400",
+    "ko": "찍."
+  },
+  {
+    "dataId": 16,
+    "key": "dialogue.1401",
+    "ko": "찍찍."
+  },
+  {
+    "dataId": 17,
+    "key": "dialogue.1410",
+    "ko": "뭐? 친구??"
+  },
+  {
+    "dataId": 18,
+    "key": "dialogue.1411",
+    "ko": "흥! 난 그런거 필요 없어!"
+  },
+  {
+    "dataId": 19,
+    "key": "dialogue.1412",
+    "ko": "그런 사사로운 친분이 없어도 난 이미 모든 정보를 알고있다고!"
+  },
+  {
+    "dataId": 20,
+    "key": "dialogue.1413",
+    "ko": "뭐, 사탕 가게 주인은 좋은 사람이긴 해."
+  },
+  {
+    "dataId": 21,
+    "key": "dialogue.1500",
+    "ko": "안녕하세요. 처음 뵙는 분이시네요."
+  },
+  {
+    "dataId": 22,
+    "key": "dialogue.1501",
+    "ko": "저는 마을 집배원이에요."
+  },
+  {
+    "dataId": 23,
+    "key": "dialogue.1510",
+    "ko": "새로 이사왔나요? 주소를 알아야 배달할 수 있답니다."
+  },
+  {
+    "dataId": 24,
+    "key": "dialogue.1511",
+    "ko": "제가 모르는 얼굴... 아니 집은 없답니다."
+  },
+  {
+    "dataId": 25,
+    "key": "dialogue.1590",
+    "ko": "다른 용무가 있으신가요?"
+  },
+  {
+    "dataId": 26,
+    "key": "dialogue.1600",
+    "ko": "보물은 우리 마을의 목숨같은 존재야."
+  },
+  {
+    "dataId": 27,
+    "key": "dialogue.1601",
+    "ko": "자네의 역할이 아주 중요하다는 말일세."
+  },
+  {
+    "dataId": 28,
+    "key": "dialogue.1602",
+    "ko": "흠흠..."
+  },
+  {
+    "dataId": 29,
+    "key": "dialogue.1603",
+    "ko": "아무튼! 잘 부탁한다는 뜻일세."
+  },
+  {
+    "dataId": 30,
+    "key": "dialogue.common.no_clue",
+    "ko": "아직 아는 게 없어.",
+    "en": "I don't know anything yet."
+  }
+]

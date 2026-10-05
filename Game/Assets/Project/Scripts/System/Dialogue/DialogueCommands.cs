@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
@@ -13,11 +15,13 @@ namespace Project.Scripts.System.Dialogue
     ///   flag:key>=2       비교 연산 >=, <=, ==, !=, >, <, = (=는 ==)
     ///   item:rose         아이템을 1개 이상 보유
     ///   item:rose>=3      보유 수량 비교
+    ///   var:jumps>=5      미니게임 변수 비교 (미니게임 정의의 조건에서만 사용)
     ///
     /// 액션 (값 생략 시 1):
     ///   setFlag:key[=값]   addFlag:key[=값]   clearFlag:key
     ///   giveItem:id[=수량] takeItem:id[=수량]
     ///   sfx:클립이름       bgm:클립이름        (AudioLibrary 의 클립 이름)
+    ///   minigame:id        대화를 닫고 미니게임을 연 뒤, 끝나면 다음 행(또는 결과의 followDialogueId)에서 대화를 이어감
     ///
     /// 분기 행: text 가 비어 있고 choiceIds 가 있으면 조건을 만족하는 첫 행으로 바로 넘어갑니다.
     /// </summary>
@@ -26,6 +30,7 @@ namespace Project.Scripts.System.Dialogue
         public const char Separator = ';';
         private const char VerbSeparator = ':';
         private const char ValueSeparator = '=';
+        private const string MinigameVerb = "minigame";
         private static readonly char[] OperatorChars = { '>', '<', '=', '!' };
 
         #region Conditions
@@ -68,6 +73,14 @@ namespace Project.Scripts.System.Dialogue
                     break;
                 case "item":
                     current = context.GetItemCount(key);
+                    break;
+                case "var":
+                    if(context is not IVariableContext variables)
+                    {
+                        Debug.LogWarning($"[DialogueCommands] Condition '{token}' needs a variable context (minigame only).");
+                        return false;
+                    }
+                    current = variables.GetVar(key);
                     break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown condition type '{type}' in '{token}'.");
@@ -132,6 +145,24 @@ namespace Project.Scripts.System.Dialogue
             }
         }
 
+        /// <summary>액션 목록에 'minigame:id' 가 있으면 그 id를 돌려줍니다. 실제 시작은 DialogueUI가 처리합니다.</summary>
+        public static bool TryGetMinigameId(string actions, out string id)
+        {
+            id = null;
+            if(string.IsNullOrWhiteSpace(actions))
+                return false;
+
+            foreach(string raw in actions.Split(Separator))
+            {
+                if(TrySplit(raw.Trim(), VerbSeparator, out string verb, out string body) && verb.ToLowerInvariant() == MinigameVerb)
+                {
+                    id = body;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static void RunAction(string token, IDialogueContext context)
         {
             if(!TrySplit(token, VerbSeparator, out string verb, out string body))
@@ -139,6 +170,10 @@ namespace Project.Scripts.System.Dialogue
                 Debug.LogWarning($"[DialogueCommands] Invalid action '{token}'.");
                 return;
             }
+
+            // 게임 상태를 바꾸지 않는 흐름 액션. TryGetMinigameId로 읽어 DialogueUI가 실행함
+            if(verb.ToLowerInvariant() == MinigameVerb)
+                return;
 
             string key = body;
             int amount = 1;
@@ -179,6 +214,61 @@ namespace Project.Scripts.System.Dialogue
                     Debug.LogWarning($"[DialogueCommands] Unknown action '{verb}' in '{token}'.");
                     break;
             }
+        }
+
+        #endregion
+
+        #region Edit
+
+        /// <summary>
+        /// 에디터 목록 UI 용. 항목을 쓴 그대로(연산자, 대소문자) 나누므로 Format 으로 되돌리면 같은 문자열입니다 (공백만 빠짐).
+        /// 실행 규칙은 바꾸지 않습니다.
+        /// </summary>
+        public static List<DialogueCommand> Parse(string text)
+        {
+            var commands = new List<DialogueCommand>();
+            if(string.IsNullOrWhiteSpace(text))
+                return commands;
+
+            foreach(string raw in text.Split(Separator))
+            {
+                string token = raw.Trim();
+                if(token.Length == 0)
+                    continue;
+
+                var command = new DialogueCommand { negate = token[0] == '!', key = string.Empty, op = string.Empty, value = string.Empty };
+                if(command.negate)
+                    token = token.Substring(1).Trim();
+                int verbIndex = token.IndexOf(VerbSeparator);
+                command.verb = verbIndex < 0 ? token : token.Substring(0, verbIndex).Trim();
+                string body = verbIndex < 0 ? string.Empty : token.Substring(verbIndex + 1);
+
+                int opIndex = body.IndexOfAny(OperatorChars);
+                if(opIndex < 0)
+                {
+                    command.key = body.Trim();
+                }
+                else
+                {
+                    int valueIndex = opIndex;
+                    while(valueIndex < body.Length && Array.IndexOf(OperatorChars, body[valueIndex]) >= 0)
+                        valueIndex++;
+                    command.key = body.Substring(0, opIndex).Trim();
+                    command.op = body.Substring(opIndex, valueIndex - opIndex);
+                    command.value = body.Substring(valueIndex).Trim();
+                }
+                commands.Add(command);
+            }
+            return commands;
+        }
+
+        public static string Format(IEnumerable<DialogueCommand> commands)
+        {
+            return string.Join(Separator, commands.Select(c =>
+            {
+                string body = $"{c.key}{c.op}{c.value}";
+                return $"{(c.negate ? "!" : string.Empty)}{c.verb}{(body.Length > 0 ? VerbSeparator + body : string.Empty)}";
+            }));
         }
 
         #endregion

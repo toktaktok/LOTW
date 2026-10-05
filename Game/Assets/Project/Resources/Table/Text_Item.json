@@ -1,0 +1,14 @@
+[
+  {
+    "dataId": 1,
+    "key": "item.rose.name",
+    "ko": "장미",
+    "en": "Rose"
+  },
+  {
+    "dataId": 2,
+    "key": "item.rose.desc",
+    "ko": "오늘 들어온 붉은 장미.",
+    "en": "A red rose that arrived today."
+  }
+]
