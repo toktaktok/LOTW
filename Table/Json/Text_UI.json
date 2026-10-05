@@ -232,5 +232,17 @@
     "key": "ui.talk_menu.request",
     "ko": "부탁할 것이 있는지",
     "en": "Need any help?"
+  },
+  {
+    "dataId": 40,
+    "key": "ui.title.quit",
+    "ko": "종료",
+    "en": "Quit"
+  },
+  {
+    "dataId": 41,
+    "key": "ui.title.quit.confirm",
+    "ko": "게임을 종료할까요?",
+    "en": "Quit the game?"
   }
 ]

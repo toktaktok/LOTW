@@ -19,6 +19,8 @@ namespace Project.Scripts.Content.Story
     {
         private readonly IDialogueContext _context = new ManagerDialogueContext();
 
+        private int _runId;
+
         public static bool IsPlaying { get; private set; }
 
         public void Play(int startId)
@@ -28,10 +30,17 @@ namespace Project.Scripts.Content.Story
                 Debug.LogWarning($"[SequencePlayer] Sequence already playing, ignored {startId}");
                 return;
             }
-            RunAsync(startId).Forget();
+            RunAsync(startId, ++_runId).Forget();
         }
 
-        private async Awaitable RunAsync(int startId)
+        /// <summary>재생 중인 연출을 버립니다. 진행 중이던 실행은 다음 단계 전에 끝납니다 (타이틀로 돌아올 때).</summary>
+        public void Stop()
+        {
+            _runId++;
+            IsPlaying = false;
+        }
+
+        private async Awaitable RunAsync(int startId, int runId)
         {
             IsPlaying = true;
             try
@@ -41,7 +50,7 @@ namespace Project.Scripts.Content.Story
                     await Awaitable.NextFrameAsync();
 
                 int id = startId;
-                for(int count = 0; id > 0; count++)
+                for(int count = 0; id > 0 && runId == _runId; count++)
                 {
                     if(count >= StoryDefines.MaxSequenceSteps)
                     {
@@ -63,7 +72,8 @@ namespace Project.Scripts.Content.Story
             }
             finally
             {
-                IsPlaying = false;
+                if(runId == _runId)
+                    IsPlaying = false;
             }
         }
 

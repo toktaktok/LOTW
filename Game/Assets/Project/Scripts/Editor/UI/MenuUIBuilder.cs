@@ -34,10 +34,12 @@ namespace Project.Scripts.Editor.UI
         private const int BriefcaseOpenFrame = 7;
         private static readonly Vector2 BriefcaseSize = new Vector2(1000f, 1000f);
         private static readonly Vector2 BriefcasePosition = new Vector2(40f, -120f);
-        // 종이는 가방 뒤에 그려 가방 위로 나온 윗부분만 보인다 (가방 앞면 윗변 y = 가방 중심 + 140)
-        private static readonly Vector2 SheetSize = new Vector2(150f, 300f);
-        private static readonly float[] SheetX = { -120f, 30f, 180f };
-        private const float SheetBottomY = -200f;
+        // 열린 뚜껑도 같은 이미지라 종이는 가방 앞에 그리고, 앞면 윗변(y 약 -46~24, 오른쪽이 높음) 아래를 SheetClip 으로 자른다
+        private static readonly Vector2 SheetSize = new Vector2(110f, 300f);
+        private static readonly float[] SheetX = { -150f, -30f, 90f, 210f };
+        private const float SheetBottomY = -40f;
+        private const float SheetClipBottomY = 24f;
+        private static readonly Vector2 SheetClipSize = new Vector2(1000f, 800f);
         private const float SheetLabelHeight = 60f;
         private static readonly Vector2 LogoSize = new Vector2(512f, 512f);
         private static readonly Vector2 LogoPosition = new Vector2(0f, 300f);
@@ -90,11 +92,6 @@ namespace Project.Scripts.Editor.UI
             logoImage.preserveAspect = true;
             logoImage.raycastTarget = false;
 
-            string[] keys = { "@ui.title.continue", "@ui.title.newgame", "@ui.title.settings" };
-            var sheets = new TitleSheet[keys.Length];
-            for(int i = 0; i < keys.Length; i++)
-                sheets[i] = CreateSheet(root, font, keys[i], i);
-
             RectTransform briefcase = CreateUIObject("Briefcase", root);
             briefcase.anchoredPosition = BriefcasePosition;
             briefcase.sizeDelta = BriefcaseSize;
@@ -102,6 +99,17 @@ namespace Project.Scripts.Editor.UI
             caseImage.texture = AssetDatabase.LoadAssetAtPath<Texture2D>(BriefcaseTexturePath);
             caseImage.uvRect = FrameRect(BriefcaseOpenFrame);
             caseImage.raycastTarget = false;
+
+            // 종이를 가방 앞면 윗변 위쪽만 보이게 자르는 영역
+            RectTransform clip = CreateUIObject("SheetClip", root);
+            clip.sizeDelta = SheetClipSize;
+            clip.anchoredPosition = new Vector2(0f, SheetClipBottomY + SheetClipSize.y * 0.5f);
+            clip.gameObject.AddComponent<RectMask2D>();
+
+            string[] keys = { "@ui.title.continue", "@ui.title.newgame", "@ui.title.settings", "@ui.title.quit" };
+            var sheets = new TitleSheet[keys.Length];
+            for(int i = 0; i < keys.Length; i++)
+                sheets[i] = CreateSheet(clip, font, keys[i], i);
 
             TMP_Text info = CreateText("ContinueInfo", root, font, BodyFontSize, TextAlignmentOptions.Center);
             RectTransform infoRect = (RectTransform)info.transform;
@@ -124,16 +132,17 @@ namespace Project.Scripts.Editor.UI
             Set(so, "continueSheet", sheets[0]);
             Set(so, "newGameSheet", sheets[1]);
             Set(so, "settingsSheet", sheets[2]);
+            Set(so, "quitSheet", sheets[3]);
             Set(so, "continueInfoText", info);
             so.ApplyModifiedPropertiesWithoutUndo();
             return rootGo;
         }
 
-        private static TitleSheet CreateSheet(RectTransform root, TMP_FontAsset font, string key, int index)
+        private static TitleSheet CreateSheet(RectTransform clip, TMP_FontAsset font, string key, int index)
         {
-            RectTransform sheet = CreateUIObject($"Sheet_{index}", root);
+            RectTransform sheet = CreateUIObject($"Sheet_{index}", clip);
             sheet.pivot = new Vector2(0.5f, 0f);
-            sheet.anchoredPosition = BriefcasePosition + new Vector2(SheetX[index], SheetBottomY);
+            sheet.anchoredPosition = BriefcasePosition + new Vector2(SheetX[index], SheetBottomY) - clip.anchoredPosition;
             sheet.sizeDelta = SheetSize;
             Image image = sheet.gameObject.AddComponent<Image>();
             image.color = PaperColor;
@@ -232,6 +241,7 @@ namespace Project.Scripts.Editor.UI
             VerticalLayoutGroup layout = AddVerticalLayout(panel, PanelSpacing, false);
             layout.padding = new RectOffset(PanelPadding, PanelPadding, PanelPadding, PanelPadding);
             layout.childAlignment = TextAnchor.MiddleCenter;
+            layout.childControlWidth = false;
             layout.childForceExpandWidth = false;
             if(headerKey != null)
             {

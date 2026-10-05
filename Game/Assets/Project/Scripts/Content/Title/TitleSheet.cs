@@ -17,13 +17,20 @@ namespace Project.Scripts.Content.Title
         private Vector2 _basePosition;
         private bool _selected;
 
-        public Button Button => _button;
+        // 부모 TitleUI.Awake 가 이 Awake 보다 먼저 불릴 수 있어 처음 접근할 때 가져옴
+        public Button Button => _button != null ? _button : _button = GetComponent<Button>();
 
         private void Awake()
         {
             _rect = (RectTransform)transform;
             _button = GetComponent<Button>();
             _basePosition = _rect.anchoredPosition;
+        }
+
+        // 부모가 먼저 선택을 잡은 뒤 이 종이가 켜지면 OnSelect 를 받지 못하므로 현재 선택에서 맞춤
+        private void OnEnable()
+        {
+            _selected = EventSystem.current != null && EventSystem.current.currentSelectedGameObject == gameObject;
         }
 
         private void OnDisable()

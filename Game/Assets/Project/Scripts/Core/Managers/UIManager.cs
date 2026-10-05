@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using Project.Scripts.System.UI;
@@ -11,6 +12,8 @@ namespace Project.Scripts.Core.Managers
     {
         public UILayer Layer { get; private set; }
         public List<BaseUI> UIComponents { get; private set; } = new List<BaseUI>();
+        /// <summary>다른 페이지에 덮이는 순간의 선택. 다시 최상단이 되면 복원.</summary>
+        public GameObject SelectedObject { get; set; }
 
         public UIPage(UILayer layer)
         {
@@ -219,6 +222,8 @@ namespace Project.Scripts.Core.Managers
 
         private async Awaitable ProcessPushPage<T>(UILayer layer, Action<T> setup) where T : BaseUI
         {
+            // 생성(OnEnable)이나 setup 이 선택을 바꾸기 전에 아래 페이지의 선택을 잡아 둠
+            GameObject belowSelection = CurrentSelection();
             UIPage newPage = new UIPage(layer);
             T ui = GetOrCreateUI(typeof(T), layer) as T;
 
@@ -231,6 +236,7 @@ namespace Project.Scripts.Core.Managers
                     return;
 
                 newPage.Add(ui);
+                CoverTopPage(newPage, belowSelection);
                 ui.transform.SetAsLastSibling();
                 await ui.ShowAsync();
 
@@ -240,6 +246,7 @@ namespace Project.Scripts.Core.Managers
 
         private async Awaitable ProcessPushPageGroup(UILayer layer, Type[] uiTypes)
         {
+            GameObject belowSelection = CurrentSelection();
             UIPage newPage = new UIPage(layer);
             List<Awaitable> tasks = new List<Awaitable>();
 
@@ -247,11 +254,14 @@ namespace Project.Scripts.Core.Managers
             {
                 BaseUI ui = GetOrCreateUI(type, layer);
                 if(ui != null)
-                {
                     newPage.Add(ui);
-                    ui.transform.SetAsLastSibling();
-                    tasks.Add(ui.ShowAsync());
-                }
+            }
+
+            CoverTopPage(newPage, belowSelection);
+            foreach(var ui in newPage.UIComponents)
+            {
+                ui.transform.SetAsLastSibling();
+                tasks.Add(ui.ShowAsync());
             }
 
             foreach(var task in tasks)
@@ -259,7 +269,7 @@ namespace Project.Scripts.Core.Managers
             _pageNavigationStack.Push(newPage);
         }
 
-        private async Awaitable ProcessPopPage()
+        private async Awaitable ProcessPopPage(bool restoreBelow = true)
         {
             if(_pageNavigationStack.Count == 0)
                 return;
@@ -274,14 +284,52 @@ namespace Project.Scripts.Core.Managers
 
             foreach(var task in tasks)
                 await task;
+
+            if(restoreBelow && _pageNavigationStack.Count > 0)
+                UncoverTopPage();
         }
 
         private async Awaitable ProcessClearAll()
         {
             while(_pageNavigationStack.Count > 0)
             {
-                await ProcessPopPage();
+                await ProcessPopPage(false);
             }
+        }
+
+        /// <summary>새 페이지가 열리기 직전, 현재 최상단 페이지의 선택을 기억하고 상호작용을 끈다(키보드 이동이 아래 페이지로 새는 것 방지).</summary>
+        private static GameObject CurrentSelection()
+        {
+            return EventSystem.current != null ? EventSystem.current.currentSelectedGameObject : null;
+        }
+
+        private void CoverTopPage(UIPage newPage, GameObject selected)
+        {
+            if(_pageNavigationStack.Count == 0)
+                return;
+
+            UIPage top = _pageNavigationStack.Peek();
+            top.SelectedObject = selected;
+            foreach(var ui in top.UIComponents)
+            {
+                if(!newPage.UIComponents.Contains(ui))
+                    ui.SetInteractable(false);
+            }
+        }
+
+        /// <summary>위 페이지가 닫힌 뒤 다시 최상단이 된 페이지의 상호작용과 선택을 되돌림.</summary>
+        private void UncoverTopPage()
+        {
+            UIPage top = _pageNavigationStack.Peek();
+            foreach(var ui in top.UIComponents)
+            {
+                if(ui.IsVisible)
+                    ui.SetInteractable(true);
+            }
+
+            GameObject selected = top.SelectedObject;
+            if(selected != null && selected.activeInHierarchy && EventSystem.current != null)
+                EventSystem.current.SetSelectedGameObject(selected);
         }
 
         private BaseUI GetOrCreateUI(Type type, UILayer layer)
