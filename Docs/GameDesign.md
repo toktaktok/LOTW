@@ -162,11 +162,23 @@ Notion 주민 목록(49행)은 https://app.notion.com/p/e38433294d7146d19c51a8c2
 
 아키텍처와 동작하는 시스템은 `Game/CLAUDE.md`를 참고하세요.
 
+**에디터에서 확인한 것**
+- 미니게임 프레임워크와 줄넘기 샘플. 에디터 자동화로 EditMode 테스트 179개와 성공/실패/중단을 확인했습니다.
+
+**코드는 있으나 에디터에서 확인하지 않은 것** (main 24f1864 이후)
+- 퀘스트와 수첩: `Quest`, `QuestObjective`, `Notebook` 테이블, `NotebookUI`, HUD 의뢰 목록. 프리팹은 메뉴 `LOTW/UI/Build Notebook UI`로 만듭니다.
+- 타이틀, 설정, 일시정지 UI. 프리팹과 `Title.unity`는 메뉴 `LOTW/UI/Build Title And Menus`로 만듭니다. 아직 메뉴를 실행하지 않아서 `Title.unity`가 없습니다.
+- 프롤로그 컷신: `Sequence` 테이블과 `SequencePlayer`. 새 게임이 대화 9000-9022를 재생합니다.
+- 의뢰 땀 표시 `QuestMarkIndicator`, 조사 대상 `Inspectable`, 저장 액션 `save`.
+- 지역 게이트 `StoryGate`와 시간대 전환 `StoryConditionToggle`. 둘 다 씬에 배치하지 않았습니다.
+- 대화 편집기(`Docs/DialogueEditor.md`)의 조건/실행 목록 UI.
+
 **기획만 있고 아직 없는 것**
-- 퀘스트 시스템, 수첩 UI(스프라이트 `TX_UI_Notebook`, `Magnify`, `StickyNote`는 있음)
-- 키워드와 알리바이 시스템, 미니게임 전체
-- 타이틀 화면(오르골/스노우글로브 UI 스프라이트는 있으나 기획의 서류가방 안과 다름)
-- 낮/밤, 챕터 진행, 실내 씬(Bar_Inside 모델만 있음), SFX
+- 키워드와 알리바이 시스템, 알리바이 미니게임, 수첩의 사건 블록 연결
+- 커서 당근과 돋보기 표시
+- 챕터 진행, 낮/밤 연출, 실내 씬(Bar_Inside 모델만 있음), SFX 에셋(BGM은 `BGM_Village` 1개)
+
+단계별 계획과 남은 확인 작업은 `Docs/Roadmap.md`에 있습니다.
 
 ### 기획과 구현의 차이
 - 대화 선택지 문구는 기획(사담 / 조사할 것이... / 부탁할 것이 있는지 / 끝)이 기준입니다. 지금 Dialogue 테이블의 문구(사담 나누기 / 증거 구하기 / 대화 끝내기)는 임시이고, 기획 문구에 맞춰 바꿔야 합니다.
