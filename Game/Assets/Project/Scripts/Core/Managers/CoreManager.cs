@@ -18,6 +18,13 @@ namespace Project.Scripts.Core.Managers
 
         #endregion
 
+        #region Fields
+
+        // 앱이 백그라운드로 가서(에디터에서는 포커스를 잃어서) 멈춘 경우만 true. 돌아오면 이 경우만 푼다.
+        private bool _pausedByApplication;
+
+        #endregion
+
         #region Methods
 
         public void PauseGame()
@@ -36,15 +43,25 @@ namespace Project.Scripts.Core.Managers
                 return;
 
             IsPaused = false;
+            _pausedByApplication = false;
             Time.timeScale = 1f;
             OnGameResumed?.Invoke();
         }
 
-        // 백그라운드로 가면 멈추되, 돌아올 때 자동으로 풀지 않는다(플레이어가 연 일시정지 유지).
+        // 백그라운드로 가면 멈추고, 돌아오면 그때 멈춘 것만 푼다(플레이어가 연 일시정지는 유지).
         private void OnApplicationPause(bool pauseStatus)
         {
             if(pauseStatus)
+            {
+                if(IsPaused)
+                    return;
                 PauseGame();
+                _pausedByApplication = true;
+            }
+            else if(_pausedByApplication)
+            {
+                ResumeGame();
+            }
         }
 
         private void OnApplicationQuit()
