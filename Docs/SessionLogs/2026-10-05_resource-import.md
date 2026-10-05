@@ -44,3 +44,8 @@
 - 작업: 사용자가 손으로 맞춘 스케일 변경(작업 폴더의 커밋 안 된 파일 23개)은 건드리지 않았다.
 - 결과: main의 `PF_FountainSet`은 재질 한 줄만 바뀌었다.
 - 다음: 없음.
+
+## 2026-10-05 21:40 | main
+- 작업: 사용자가 손으로 맞춘 스케일 변경을 `1786513`으로 커밋했다. 나머지 편집기 저장은 `faff8bc`로 커밋했다.
+- 작업: `feature/voxel-scale-4px`를 main에 머지했다. `Editor/Data/Defines.cs` 충돌은 PR #10의 빌더 상수 삭제를 유지하고 브랜치의 주석을 받아 풀었다.
+- 결과: `PF_FountainSet`은 손으로 맞춘 스케일과 `MAT_SpriteShadowFront`를 함께 가진다.

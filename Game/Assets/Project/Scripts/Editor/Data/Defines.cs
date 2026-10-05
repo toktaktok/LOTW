@@ -16,7 +16,7 @@ namespace Project.Scripts.Editor.Data
         public const string VoxelPrefabSearchFolder = "Assets/Project";
         // 새로 변환한 머티리얼의 toon 명암 단계 수
         public const float VoxelDssDefaultToonSteps = 3f;
-        // 복셀 프리팹 생성 시 VoxelObject importScale (복셀 1칸 = RT 5픽셀 규칙)
+        // 복셀 프리팹 생성 시 VoxelObject importScale (기본값: 복셀 1칸 = RT 5픽셀. 건물별 값은 Set Voxel Pixels로 바꾼다)
         public const float VoxelImportScale = Project.Scripts.Data.CameraDefines.VoxelScale;
         // 복셀 프리팹을 만드는 폴더
         public const string VoxelPrefabFolder = "Assets/Project/Prefabs/Environments";
