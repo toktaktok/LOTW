@@ -4,7 +4,7 @@ Unity project. Paths below are relative to `Game/`.
 
 ## Project
 
-**LOTW** -- 2.5D side-scrolling game, Unity 6 (6000.3.2f1), URP, Cinemachine 3, New Input System, NavMesh.
+**LOTW** -- 2.5D side-scrolling game, Unity 6 (6000.3.2f1), URP, Cinemachine 3, New Input System, NavMesh, DOTween (free, `Assets/Plugins/Demigiant/`; modules compiled as `DOTween.Modules` asmdef, referenced by `Project.Scripts`).
 
 ## Commands
 
@@ -14,19 +14,21 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Assemblies:** `Project.Scripts` (runtime, `Assets/Project/Scripts/Project.Scripts.asmdef`), `Project.Scripts.Editor` (editor-only), `EditModeTests` (tests, refs `Project.Scripts`).
 
-**Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory, Data.
+**Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory, Data, Minigame.
 
 **Singleton:** `Singleton<T>` (Core/Singleton.cs) -- auto-creates, DontDestroyOnLoad, self-destructs duplicates. All managers extend this.
 
 **Rail Movement:** Player moves on `RailNode` graph (max 2 neighbors, linear). `PlayerController` has delegate `StateMachine` with Idle/Move states. `MoveOnPath()` projects camera-relative input onto rail segment. `RailConnector : IInteractable` connects rail sections via warp/walk to `destinationNode`, optional camera switch.
 
-**Interaction:** `PlayerInteractor` uses `Physics.OverlapSphereNonAlloc` (radius `WorldDefines.InteractionDistance = 2f`) each frame. `HudUI` shows hint. `IInteractable.Interact(gameObject)` is the interface.
+**Interaction:** `PlayerInteractor` uses `Physics.OverlapSphereNonAlloc` (radius `WorldDefines.InteractionDistance = 2f`) each frame. `HudUI` shows hint. `IInteractable.Interact(gameObject)` is the interface; `CanInteract` (default true) hides a target when false.
 
 **Camera:** `CameraManager` sets Cinemachine priority (inactive=10, active=20). `CameraTrigger` (BoxCollider) switches on enter/exit. `BillboardHandler` subscribes to `CinemachineCore.CameraUpdatedEvent`.
 
-**UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs in `Prefabs/UI/`, registered in `UIManager.uiPrefabs` on SubSystemCollection (looked up by type). Panels: HudUI, DialogueUI, InventoryUI.
+**UI:** `UIManager` uses `Awaitable` with `Queue<Func<Awaitable>>` for serialized ops. Push/pop page stack. `BaseUI` base class supports Fade (CanvasGroup) or Animation (Animator) transitions. Prefabs in `Prefabs/UI/`, registered in `UIManager.uiPrefabs` on SubSystemCollection (looked up by type). Panels: HudUI, DialogueUI, InventoryUI, MinigameWindow.
 
-**Dialogue:** Table-driven. `DataManager` loads `Resources/Table/*.json` (generated from `Table/Excel/*.xlsx` by `Table/ConvertTable.bat`; each sheet needs an Excel Table) once at boot and caches rows by `dataId` until quit. `Data.Table.DialogueData` row: speakerName, text, `nextId` (-1 ends), `choiceIds`, `conditions`, `actions`. `System/Dialogue/DialogueCommands` parses conditions (`flag:key>=2;!item:rose`) and actions (`setFlag/addFlag/clearFlag/giveItem/takeItem/sfx/bgm`); a row with empty text + choiceIds is a router that jumps to the first choice whose conditions pass (else `nextId`). `ManagerDialogueContext` binds them to Flag/Inventory/Audio managers. `NPC` holds a start `dialogueId` and a `CharacterProfile` (Data/Characters, sprite/animator/name); place `PF_NPC_Base` per NPC; optional `dialogueCamera` is blended in during dialogue and restored after. `DialogueUI.SetupDialogue(row, ..., onFinished)` follows `nextId`, filters choices by conditions, fills the `ChoicePanel` buttons (max 3, built by `LOTW/Plaza/3 Setup Dialogue Prefab`).
+**Dialogue:** Table-driven. `DataManager` loads `Resources/Table/*.json` (generated from `Table/Excel/*.xlsx` by `Table/ConvertTable.bat`; each sheet needs an Excel Table) once at boot and caches rows by `dataId` until quit. `Data.Table.DialogueData` row: speakerName, text, `nextId` (-1 ends), `choiceIds`, `conditions`, `actions`. `System/Dialogue/DialogueCommands` parses conditions (`flag:key>=2;!item:rose`) and actions (`setFlag/addFlag/clearFlag/giveItem/takeItem/sfx/bgm/minigame`); a row with empty text + choiceIds is a router that jumps to the first choice whose conditions pass (else `nextId`). `ManagerDialogueContext` binds them to Flag/Inventory/Audio managers. `NPC` holds a start `dialogueId` and a `CharacterProfile` (Data/Characters, sprite/animator/name); place `PF_NPC_Base` per NPC; optional `dialogueCamera` is blended in during dialogue and restored after. `DialogueUI.SetupDialogue(row, ..., onFinished)` follows `nextId`, filters choices by conditions, fills the `ChoicePanel` buttons (max 3, built by `LOTW/Plaza/3 Setup Dialogue Prefab`).
+
+**Minigame:** Popup-window minigames; design and how-to in `Docs/MinigameFramework.md` (section 12 = current state). `MinigameDefinition` (SO in `Data/Minigames/`, looked up by id via `MinigameLibrary_Main` on SubSystemCollection) holds rules: start conditions, repeat policy, `outcomes` (checked top-down, `when` uses the dialogue condition DSL plus `var:key` for mechanic variables, `var:time` = elapsed seconds), reward `actions`, window `layout`, optional `screenMaterial`. A mechanic is a prefab (`Prefabs/Minigames/PF_Minigame_{Name}`) whose root has a `MinigameBase` subclass and an orthographic stage camera; it only reads `Session.Input` and writes `Session.Vars` (or calls `Session.End(name)`). `MinigameManager.Play(definition, source, onEnded)` instantiates the stage at `MinigameDefines.StageOrigin`, renders it to a Point-filtered RT, and pushes `MinigameWindow` (Popup, so `HasBlockingPage` blocks the player; DOTween frame expand + rectangular iris via `MinigameLens.shader` `_IrisX/_IrisY`). Results write flags `mg_{id}_plays`, `mg_{id}_cleared`, `mg_{id}_{outcome}`. Entry points: `MinigameTrigger` (world interactable) and dialogue action `minigame:id` (dialogue closes, minigame runs, dialogue resumes at the outcome's `followDialogueId` or the row's `nextId`; the two UIs never coexist). Input uses the `Minigame` action map (Navigate/Submit/Alt/Point/Click, no Esc). Prefabs/sample are built by `LOTW/Minigame/1 Build Window Prefab` and `2 Build Jump Rope Sample`.
 
 **Localization:** `Core/Localization.Resolve(text)` turns `@key` into the current-language string from `Text` table (`TextData`: key, ko, en; falls back to ko, shows `@key` if missing). Non-`@` strings pass through. Used for dialogue text/speaker, prompts, HUD hint.
 
@@ -40,7 +42,7 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **GameInstance:** Global settings (volumes, language) via PlayerPrefs. Current save slot. Fires `OnSettingsChanged`.
 
-**Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
+**Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines, MinigameDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
 
 **Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/CharacterProfile.cs`, `Data/AudioLibrary.cs` -- ScriptableObjects (`LOTW/Character Profile`, `LOTW/Audio Library`), assets in `Assets/Project/Data/`. `Data/Table/` -- table row classes (`TableRowData` subclasses: Dialogue, Map, ItemTable, Text).
 

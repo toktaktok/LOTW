@@ -32,6 +32,8 @@ namespace Project.Scripts.Editor.Plaza
             public string spritePath;
             public string controllerPath;
             public int dialogueId;
+            /// <summary>지정하면 이 프리팹을 그대로 배치한다 (예: 미니게임 트리거). 스프라이트/대화 설정은 쓰지 않음.</summary>
+            public string prefabPath;
         }
 
         /// <summary>스프라이트 소품. position.y = 스프라이트 아래쪽 끝.</summary>
@@ -240,6 +242,8 @@ namespace Project.Scripts.Editor.Plaza
             new NpcEntry { name = "Rat", position = new Vector3(84f, 0f, 1.5f), spritePath = Chars + "126.Saus/Textures/TX_C_Saus_Idle.png", controllerPath = Controllers + "AC_Saus.controller" },
             new NpcEntry { name = "Elephant", position = new Vector3(86f, LaneFY, LaneFZ + 1.5f), spritePath = Chars + "112.Ele/Textures/TX_C_Ele1_Idle.png", controllerPath = Controllers + "AC_Ele1.controller" },
             new NpcEntry { name = "Zig", position = new Vector3(38f, LaneFY, LaneFZ + 1.5f), spritePath = Chars + "002.Zig/Textures/TX_C_Zig_Walk.png" },
+            // 미니게임 트리거 (LOTW/Minigame/2 Build Jump Rope Sample 이 만드는 프리팹)
+            new NpcEntry { name = "JumpRopeKid", position = new Vector3(39f, 0f, 1.2f), prefabPath = "Assets/Project/Prefabs/Minigames/PF_JumpRopeKid.prefab" },
         };
 
         public static readonly SpriteProp[] SpriteProps =
