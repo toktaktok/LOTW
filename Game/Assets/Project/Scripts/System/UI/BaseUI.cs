@@ -129,6 +129,13 @@ namespace Project.Scripts.System.UI
         /// </summary>
         public virtual bool OnCancel() => false;
 
+        /// <summary>위에 다른 페이지가 열렸을 때 키보드/패드 이동이 이 UI 로 새지 않도록 상호작용만 끄고 켠다.</summary>
+        public void SetInteractable(bool interactable)
+        {
+            if(canvasGroup != null)
+                canvasGroup.interactable = interactable;
+        }
+
         public void SetVisibility(bool visible)
         {
             if(canvasGroup == null)

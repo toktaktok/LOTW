@@ -76,9 +76,10 @@
 - [ ] 플레이 시간이 타이틀 화면에서도 늘어남 -> 5단계 타이틀 씬에서 제외
 
 ### 5단계. 메인 화면 / 설정 / 일시정지
-- [x] 코드: `TitleUI` (서류가방 종이 3장 이어하기 / 새로하기 / 설정, `TitleSheet` 가 선택 시 올라옴, 키보드 좌우 이동), `TitleScene` (플레이 시간 정지, BGM, 메뉴 열기)
+- [x] 코드: `TitleUI` (서류가방 종이 4장 이어하기 / 새로하기 / 설정 / 종료, `TitleSheet` 가 선택 시 올라옴, 키보드 좌우 이동), `TitleScene` (플레이 시간 정지, BGM, 메뉴 열기)
 - [x] 이어하기 = 가장 최근 세이브(`SaveSlotSelector.FindLatest`), 없으면 잠김. 종이 아래 장소 / 플레이 시간 표시. 새로하기는 세이브가 있으면 덮어쓰기 확인
 - [x] `SettingsUI` (마스터/BGM/SFX 슬라이더, 언어 전환), `PauseUI` (계속 / 설정 / 타이틀로 + 확인, 열린 동안 일시정지), 범용 `ConfirmUI` (기본 선택 '아니오')
+- [x] 종료 종이: `ConfirmUI` 확인 후 종료(에디터는 플레이 중지). `TitleScene` 이 `SequencePlayer.Stop()` 을 불러 타이틀로 돌아올 때 이전 연출을 버림. 팝업이 닫히면 `TitleUI` 가 키보드 포커스를 되돌림
 - [x] 에디터 메뉴 `LOTW/UI/Build Title And Menus`: 프리팹 4개, uiPrefabs 등록, `Scenes/Title.unity` 생성(추가 모드로 열고 저장 후 닫음), 빌드 인덱스 0. UI 빌더 공용 함수 `UIBuildUtil`
 - [ ] (에디터에서) 위 메뉴 실행, 플레이 모드에서 종이 위치/서류가방 크기 맞추기
 - [ ] (입력 통합 후) Esc 로 `PauseUI` 열기/닫기, UI/Cancel 로 설정/확인 닫기

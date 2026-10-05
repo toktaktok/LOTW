@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
@@ -45,6 +46,8 @@ namespace Project.Scripts.Content.UI
                 bgmSlider.SetValueWithoutNotify(settings.BgmVolume);
             if(sfxSlider != null)
                 sfxSlider.SetValueWithoutNotify(settings.SfxVolume);
+            if(masterSlider != null && EventSystem.current != null)
+                EventSystem.current.SetSelectedGameObject(masterSlider.gameObject);
         }
 
         // 언어 이름 라벨은 LocalizedText(@ui.language.name)라 바꾸는 즉시 새 언어 이름으로 보임

@@ -1,4 +1,5 @@
 using UnityEngine;
+using Project.Scripts.Content.Story;
 using Project.Scripts.Content.UI;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
@@ -15,6 +16,7 @@ namespace Project.Scripts.Content.Title
 
         private void Start()
         {
+            SequencePlayer.Instance.Stop();
             SaveManager.Instance.SetPlayTimeRunning(false);
             if(bgm != null)
                 AudioManager.Instance.PlayBGM(bgm);
