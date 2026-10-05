@@ -56,7 +56,7 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 - Character sprites: PPU 25, Point filter, no compression, no mipmaps (see pixel render style).
 - Voxel models: VoxelImporter `importScale` 0.2 (1 voxel = 5 low-res RT pixels, `CameraDefines.VoxelScale`). The voxel object, its prefab root, and scene instances and groups all keep scale 1. Change size by voxel count in MagicaVoxel, not by Transform scale. Check with `LOTW/Voxel/Validate Voxel Scale`.
 - UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`).
-- Environment sprites (Decors, Props, Tilesets): Point filter, no compression, no mipmaps. PPU is set per asset to fit its model; do not change it without checking placed sizes.
+- Environment sprites (Decors, Props, Tilesets): Point filter, no compression, no mipmaps. PPU 25, same as character sprites. Size the image (not the PPU) to fit its model; resample with nearest neighbor. Exceptions: textures used only through materials keep their own PPU (`TX_E_Poster_Pizza_White` in `MAT_Pizza`, `TX_E_Wash` in `MAT_Wash`). `TX_E_Bicycle` and `TX_E_Sunrise` are unplaced and still at default PPU 100; size them when first placed.
 
 ## Texture size
 - Sprites: any size, no power-of-two needed. New sprites: width and height multiples of 4 (80, 160, 240).
