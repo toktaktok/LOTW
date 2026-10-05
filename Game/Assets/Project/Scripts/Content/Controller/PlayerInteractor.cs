@@ -60,7 +60,7 @@ namespace Project.Scripts.Content.Controller
 
             for(int i = 0; i < hitCount; i++)
             {
-                if(_hitResults[i].TryGetComponent(out IInteractable interactable))
+                if(_hitResults[i].TryGetComponent(out IInteractable interactable) && interactable.CanInteract)
                 {
                     float sqrDist = (_hitResults[i].transform.position - currentCharacter.Position).sqrMagnitude;
                     if(sqrDist < closestSqrDist)

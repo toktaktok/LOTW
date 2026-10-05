@@ -684,6 +684,20 @@ namespace Project.Scripts.Editor.Plaza
 
             foreach(PlazaLayout.NpcEntry entry in PlazaLayout.Npcs)
             {
+                if(!string.IsNullOrEmpty(entry.prefabPath))
+                {
+                    var entryPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(entry.prefabPath);
+                    if(entryPrefab == null)
+                    {
+                        Debug.LogWarning($"[PlazaSceneBuilder] {entry.prefabPath} missing, {entry.name} skipped");
+                        continue;
+                    }
+
+                    var instance = (GameObject)PrefabUtility.InstantiatePrefab(entryPrefab, group);
+                    instance.name = entry.name;
+                    instance.transform.position = entry.position;
+                    continue;
+                }
                 if(entry.dialogueId == 0)
                 {
                     CreateSpriteObject(group, entry.name, entry.spritePath, entry.controllerPath, entry.position, true);

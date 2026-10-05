@@ -16,6 +16,7 @@ namespace Project.Scripts.System.Dialogue
     ///   quest:101         의뢰 상태가 None 아님. quest:101=2 처럼 비교 (1 진행, 2 완료, 3 잠금)
     ///   note:201          수첩 항목 해금됨. note:201=3 은 취소선 (1 안읽음, 2 읽음, 3 취소선)
     ///   met:npc_gumman    첫 만남 이후
+    ///   var:jumps>=5      미니게임 변수 비교 (미니게임 정의의 조건에서만 사용)
     ///
     /// 액션 (값 생략 시 1):
     ///   setFlag:key[=값]   addFlag:key[=값]   clearFlag:key
@@ -27,6 +28,7 @@ namespace Project.Scripts.System.Dialogue
     ///   sequence:id        (대화가 닫힌 뒤 Sequence 테이블 연출 재생)
     ///   save               (현재 슬롯에 저장. 값 없이 쓰는 유일한 동사)
     /// 의뢰/수첩/만남 상태는 플래그(StoryKeys)라서 세이브에 같이 저장됩니다.
+    ///   minigame:id        대화를 닫고 미니게임을 연 뒤, 끝나면 다음 행(또는 결과의 followDialogueId)에서 대화를 이어감
     ///
     /// 분기 행: text 가 비어 있고 choiceIds 가 있으면 조건을 만족하는 첫 행으로 바로 넘어갑니다.
     /// </summary>
@@ -36,6 +38,7 @@ namespace Project.Scripts.System.Dialogue
         private const char VerbSeparator = ':';
         private const char ValueSeparator = '=';
         private const string SaveVerb = "save";
+        private const string MinigameVerb = "minigame";
         private static readonly char[] OperatorChars = { '>', '<', '=', '!' };
 
         #region Conditions
@@ -87,6 +90,14 @@ namespace Project.Scripts.System.Dialogue
                     break;
                 case "met":
                     current = context.GetFlag(StoryKeys.MetPrefix + key);
+                    break;
+                case "var":
+                    if(context is not IVariableContext variables)
+                    {
+                        Debug.LogWarning($"[DialogueCommands] Condition '{token}' needs a variable context (minigame only).");
+                        return false;
+                    }
+                    current = variables.GetVar(key);
                     break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown condition type '{type}' in '{token}'.");
@@ -151,6 +162,24 @@ namespace Project.Scripts.System.Dialogue
             }
         }
 
+        /// <summary>액션 목록에 'minigame:id' 가 있으면 그 id를 돌려줍니다. 실제 시작은 DialogueUI가 처리합니다.</summary>
+        public static bool TryGetMinigameId(string actions, out string id)
+        {
+            id = null;
+            if(string.IsNullOrWhiteSpace(actions))
+                return false;
+
+            foreach(string raw in actions.Split(Separator))
+            {
+                if(TrySplit(raw.Trim(), VerbSeparator, out string verb, out string body) && verb.ToLowerInvariant() == MinigameVerb)
+                {
+                    id = body;
+                    return true;
+                }
+            }
+            return false;
+        }
+
         private static void RunAction(string token, IDialogueContext context)
         {
             if(!TrySplit(token, VerbSeparator, out string verb, out string body) && !string.Equals(verb, SaveVerb, StringComparison.OrdinalIgnoreCase))
@@ -158,6 +187,10 @@ namespace Project.Scripts.System.Dialogue
                 Debug.LogWarning($"[DialogueCommands] Invalid action '{token}'.");
                 return;
             }
+
+            // 게임 상태를 바꾸지 않는 흐름 액션. TryGetMinigameId로 읽어 DialogueUI가 실행함
+            if(verb.ToLowerInvariant() == MinigameVerb)
+                return;
 
             body ??= string.Empty;
             string key = body;

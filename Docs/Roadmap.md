@@ -16,9 +16,9 @@
 
 ## 병행 작업
 
-- 미니게임 프레임워크(8단계의 '창')는 별도 브랜치 `t3code/minigame-framework-design` (워크트리 t3code-89a2f4d0, `Docs/MinigameFramework.md`)에서 진행 중. 그쪽이 `InputSystem_Actions`(Minigame 맵), `SubSystemCollection.prefab`, `DialogueUI`, `DialogueCommands`(`minigame:`/`var:`), `Enums.cs`, `IInteractable.CanInteract` 를 고친다.
-- 머지 충돌 예상: `PlazaLayout.NpcEntry` 끝 필드(이쪽 `characterId`, 저쪽 `prefabPath`) 둘 다 남기면 됨. `Plaza.unity` 는 이쪽이 NPC 6명 `characterId` 오버라이드만 추가.
-- 이 브랜치는 머지 전까지 입력 액션 에셋, SubSystemCollection 프리팹, DialogueUI 를 고치지 않는다. 새 UI 프리팹은 에디터 메뉴 빌더로 만들고 머지 후 실행한다. `DialogueCommands`/`Enums.cs` 는 양쪽 모두 끝에 추가만 해서 충돌이 나도 합치기 쉽다.
+- 미니게임 프레임워크(`t3code/minigame-framework-design`, `Docs/MinigameFramework.md`)를 이 브랜치에 머지함 (2026-10-05). 충돌은 양쪽 추가분을 모두 남겨 해결.
+- 머지 후 조정: `MinigameContext` 에 `PlaySequence`/`SaveGame` 전달, `SequencePlayer` 대화 스텝은 `minigame:` 로 대화가 잠시 닫혀도 끝으로 보지 않음.
+- 메인 체크아웃(main)에는 미니게임 파일 사본과 DOTween 이 커밋되지 않은 채 남아 있음. 이 브랜치를 main 에 합치기 전에 그 사본을 정리해야 충돌이 나지 않음.
 
 ## 단계
 
@@ -108,7 +108,7 @@
 - [ ] (미니게임 머지 후) 커서 당근 / 상호작용 대상 위 돋보기 (`TX_UI_Cursor_Carrot`, `TX_UI_Magnify_Single`) -- SubSystemCollection 에 둘 소프트웨어 커서
 
 ### 8단계. 창 미니게임과 추리
-- [~] 미니게임 창 프레임: 병행 브랜치에서 진행 중
+- [x] 미니게임 창 프레임 (머지됨, 줄넘기 샘플)
 - [ ] 알리바이 미니게임 (설득/압박 선택)
 - [ ] 수첩 사건 블록 연결 추리 (지그 범인 결론은 완성 가능, 보물 사건 전체는 의도적으로 불완전)
 

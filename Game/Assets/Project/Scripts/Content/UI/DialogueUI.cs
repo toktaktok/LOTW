@@ -8,6 +8,7 @@ using UnityEngine.UI;
 using Project.Scripts.Content.Dialogue;
 using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
+using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using Project.Scripts.System.Dialogue;
 using Project.Scripts.System.UI;
@@ -142,6 +143,10 @@ namespace Project.Scripts.Content.UI
 
             _currentLine = line;
             DialogueCommands.RunActions(line.actions, _context);
+            // minigame:id 행은 표시하지 않고 미니게임을 연 뒤 다음 행에서 이어감
+            if(TryStartMinigame(line.actions, line.nextId))
+                return;
+
             SetSpeaker(Localization.Resolve(line.speakerName));
 
             if(promptText != null)
@@ -218,7 +223,43 @@ namespace Project.Scripts.Content.UI
 
             _setupFrame = Time.frameCount;
             DialogueCommands.RunActions(choice.actions, _context);
+            if(TryStartMinigame(choice.actions, choice.nextId))
+                return;
+
             ShowLine(GetLine(choice.nextId));
+        }
+
+        /// <summary>
+        /// actions에 minigame:id 가 있고 시작할 수 있으면 대화를 닫고 미니게임을 엽니다 (둘은 동시에 떠 있지 않음).
+        /// 끝나면 결과의 followDialogueId(없으면 continueId) 행에서 대화를 다시 엽니다.
+        /// 시작할 수 없으면 false를 돌려주어 대화가 그대로 이어집니다.
+        /// </summary>
+        private bool TryStartMinigame(string actions, int continueId)
+        {
+            if(!DialogueCommands.TryGetMinigameId(actions, out string minigameId))
+                return false;
+            if(!MinigameManager.Instance.TryGetDefinition(minigameId, out MinigameDefinition definition) ||
+               !MinigameManager.Instance.CanStart(definition))
+                return false;
+
+            IInteractable source = _pending;
+            GameObject interactor = _interactor;
+            Action onFinished = _onFinished;
+
+            // onFinished(카메라 복귀 등)는 미니게임 뒤 대화가 실제로 끝날 때까지 미룸
+            _onFinished = null;
+            CloseDialogue();
+
+            GameObject sourceObject = source is Component component ? component.gameObject : null;
+            MinigameManager.Instance.Play(definition, sourceObject, result =>
+            {
+                DialogueData next = GetLine(result.followDialogueId >= 0 ? result.followDialogueId : continueId);
+                if(next == null)
+                    onFinished?.Invoke();
+                else
+                    UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup, ui => ui.SetupDialogue(next, source, interactor, onFinished));
+            });
+            return true;
         }
 
         private void ClearChoices()
@@ -297,15 +338,19 @@ namespace Project.Scripts.Content.UI
 
         private void FinishDialogue()
         {
+            Action onFinished = _onFinished;
+            _onFinished = null;
+            CloseDialogue();
+            onFinished?.Invoke();
+        }
+
+        private void CloseDialogue()
+        {
             ClearChoices();
             _isDialogueMode = false;
             _currentLine = null;
             _pending = null;
             UIManager.Instance.PopPage();
-
-            Action onFinished = _onFinished;
-            _onFinished = null;
-            onFinished?.Invoke();
         }
     }
 }

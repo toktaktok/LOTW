@@ -121,11 +121,12 @@ namespace Project.Scripts.Content.Story
             bool opened = false;
             UIManager.Instance.PushPage<DialogueUI>(UILayer.Popup, ui => ui.SetupDialogue(start, null, null, () => finished = true));
 
-            // 씬 전환 등으로 콜백 없이 닫혀도 멈추지 않도록 열림 -> 닫힘도 끝으로 봄
+            // 씬 전환 등으로 콜백 없이 닫혀도 멈추지 않도록 열림 -> 닫힘도 끝으로 봄.
+            // minigame: 행은 대화를 닫고 미니게임 뒤 다시 열므로, 미니게임/UI 처리 중의 닫힘은 끝이 아님
             while(!finished)
             {
                 bool open = UIManager.Instance.IsOpen<DialogueUI>();
-                if(opened && !open)
+                if(opened && !open && !MinigameManager.Instance.IsPlaying && !UIManager.Instance.HasBlockingPage)
                     break;
                 opened |= open;
                 await Awaitable.NextFrameAsync();

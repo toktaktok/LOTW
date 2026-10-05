@@ -69,6 +69,34 @@ namespace Project.Scripts.Data
         public const float DialogueBlendDuration = 0.5f;
     }
 
+    public readonly struct MinigameDefines
+    {
+        /// <summary>스테이지를 놓는 위치. 월드 카메라에 잡히지 않도록 멀리 둠.</summary>
+        public static readonly Vector3 StageOrigin = new Vector3(0f, -1000f, 0f);
+        public static readonly Vector2Int DefaultStageResolution = new Vector2Int(240, 150);
+        public const int DefaultDisplayScale = 4;
+        public const int StageDepthBits = 16;
+
+        /// <summary>메카닉이 항상 읽을 수 있는 경과 시간 변수(초, 내림).</summary>
+        public const string TimeVar = "time";
+        public const string AbortedOutcomeName = "aborted";
+        public const string FlagPrefix = "mg_";
+        public const string PlaysFlagSuffix = "_plays";
+        public const string ClearedFlagSuffix = "_cleared";
+
+        /// <summary>결과가 확정된 뒤 창을 닫기 전까지 화면을 보여 주는 시간(초).</summary>
+        public const float ResultHoldDuration = 0.6f;
+
+        public const float FrameOpenDuration = 0.14f;
+        public const float IrisOpenDuration = 0.32f;
+        public const float IrisCloseDuration = 0.18f;
+        public const float FrameCloseDuration = 0.12f;
+        public const float FrameStartScale = 0.2f;
+
+        public static readonly int IrisXId = Shader.PropertyToID("_IrisX");
+        public static readonly int IrisYId = Shader.PropertyToID("_IrisY");
+    }
+
     /// <summary>플레이 모드 맵 에디터 상수.</summary>
     public readonly struct MapDefines
     {

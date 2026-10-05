@@ -1,0 +1,48 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8613c77f2d0072e45b12fa023242951d, type: 3}
+  m_Name: MinigameDefinition_JumpRope
+  m_EditorClassIdentifier: Project.Scripts::Project.Scripts.Content.Minigame.JumpRopeDefinition
+  id: jumprope
+  title: "\uC904\uB118\uAE30"
+  mechanicPrefab: {fileID: 6052678445764665522, guid: 66ed859eb92958b4eacf2b29328b7823, type: 3}
+  stageResolution: {x: 0, y: 0}
+  screenMaterial: {fileID: 0}
+  layout:
+    placement: 0
+    anchor: {x: 0, y: 0}
+    offset: {x: 0, y: 0}
+    openFrom: 0
+    displayScale: 0
+  startConditions: 
+  deniedDialogueId: -1
+  startActions: 
+  repeatPolicy: 0
+  outcomes:
+  - name: success
+    kind: 0
+    when: var:jumps>=5
+    actions: giveItem:rose
+    followDialogueId: -1
+  - name: fail
+    kind: 1
+    when: var:miss>=3
+    actions: 
+    followDialogueId: -1
+  allowAbort: 1
+  abortActions: 
+  startPeriod: 1.4
+  periodStep: 0.06
+  minPeriod: 0.75
+  jumpDuration: 0.5
+  jumpHeight: 1.3
+  clearHeight: 0.35
