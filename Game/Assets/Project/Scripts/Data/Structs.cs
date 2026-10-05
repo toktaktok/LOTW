@@ -35,11 +35,29 @@ namespace Project.Scripts.Data
     [Serializable]
     public struct SaveData
     {
+        /// <summary>SaveDefines.Version. 0 이면 버전 도입 전 세이브.</summary>
+        public int version;
+        /// <summary>누적 플레이 시간(초). 슬롯 UI 표시용.</summary>
+        public float playTime;
         public string currentScene;
         public string entranceId;
         public ItemSlot[] inventory;
         public string[] flags;
         public string timestamp;
+    }
+
+    /// <summary>
+    /// 수첩 왼쪽 목록의 한 줄. NotebookPageBuilder 가 만들고 NotebookUI 가 그립니다.
+    /// isHeader 행(사건 인덱스 등)은 선택할 수 없습니다.
+    /// </summary>
+    public struct NotebookEntryView
+    {
+        public int id;
+        public string label;
+        public bool isHeader;
+        public bool isUnread;
+        public bool isStruck;
+        public bool isDone;
     }
 
     /// <summary>

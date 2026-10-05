@@ -1,1 +1,14 @@
-[]
+[
+  {
+    "dataId": 1,
+    "key": "world.scene.plaza",
+    "ko": "광장",
+    "en": "Plaza"
+  },
+  {
+    "dataId": 2,
+    "key": "world.scene.character",
+    "ko": "테스트",
+    "en": "Test"
+  }
+]

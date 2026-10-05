@@ -1,3 +1,5 @@
+using Project.Scripts.Content.Story;
+using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.System.Dialogue;
 
@@ -18,5 +20,9 @@ namespace Project.Scripts.Content.Dialogue
 
         public void PlaySfx(string key) => AudioManager.Instance.PlaySFX(key);
         public void PlayBgm(string key) => AudioManager.Instance.PlayBGM(key);
+
+        public void PlaySequence(int sequenceId) => SequencePlayer.Instance.Play(sequenceId);
+
+        public void SaveGame() => SaveManager.Instance.SaveCurrent(GameInstance.Instance.CurrentSaveSlot);
     }
 }

@@ -1,0 +1,8 @@
+{
+  "rowClass": "QuestObjectiveData",
+  "columns": [
+    { "name": "DataId", "type": "int", "required": true, "unique": true, "min": 1, "desc": "행 고유 ID" },
+    { "name": "Text", "type": "string", "required": true, "textKey": true, "desc": "목표 문구. '@키'는 Text 테이블 참조" },
+    { "name": "Conditions", "type": "string", "commandRefs": { "item": "Item.ItemId" }, "desc": "완료 조건 (Dialogue 조건 문법). 비우면 자동 완료되지 않음" }
+  ]
+}

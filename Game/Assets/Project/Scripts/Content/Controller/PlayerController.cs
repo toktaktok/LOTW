@@ -7,6 +7,7 @@ using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
+using Project.Scripts.Content.Story;
 using Project.Scripts.Content.UI;
 using Project.Scripts.Core.Managers;
 
@@ -66,7 +67,7 @@ namespace Project.Scripts.Content.Controller
         }
         private void Update()
         {
-            if(_isFreeMoving || UIManager.Instance.HasBlockingPage)
+            if(_isFreeMoving || UIManager.Instance.HasBlockingPage || SequencePlayer.IsPlaying)
                 return;
             
             _fsm.Update();

@@ -114,9 +114,21 @@ namespace Project.Scripts.System.UI
             await Awaitable.NextFrameAsync();
 
             float animLength = uiAnimator.GetCurrentAnimatorStateInfo(0).length;
-            await Awaitable.WaitForSecondsAsync(animLength);
+            // timeScale 0(일시정지)에서도 진행되도록 unscaled 시간으로 기다린다.
+            float timer = 0f;
+            while(timer < animLength)
+            {
+                timer += Time.unscaledDeltaTime;
+                await Awaitable.NextFrameAsync();
+            }
         }
         
+        /// <summary>
+        /// 취소 입력(Esc, 게임패드 B/Start)이 최상단 페이지인 이 UI 에 왔을 때 호출됩니다 (MenuInput).
+        /// 스스로 닫았으면 true. 기본은 무시(대화처럼 취소로 닫히면 안 되는 UI).
+        /// </summary>
+        public virtual bool OnCancel() => false;
+
         public void SetVisibility(bool visible)
         {
             if(canvasGroup == null)

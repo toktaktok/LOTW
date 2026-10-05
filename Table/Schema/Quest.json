@@ -1,0 +1,12 @@
+{
+  "rowClass": "QuestData",
+  "columns": [
+    { "name": "DataId", "type": "int", "required": true, "unique": true, "min": 1, "desc": "행 고유 ID. 상태는 플래그 quest.{DataId}" },
+    { "name": "Type", "type": "string", "required": true, "pattern": "main|sub", "desc": "main 메인 의뢰, sub 서브 의뢰" },
+    { "name": "Chapter", "type": "int", "required": true, "min": 1, "desc": "챕터 번호" },
+    { "name": "GiverId", "type": "string", "desc": "의뢰한 캐릭터 ID (Dialogue SpeakerId 와 같은 규칙)" },
+    { "name": "Title", "type": "string", "required": true, "textKey": true, "desc": "제목. '@키'는 Text 테이블 참조" },
+    { "name": "Summary", "type": "string", "textKey": true, "desc": "요약. '@키'는 Text 테이블 참조" },
+    { "name": "ObjectiveIds", "type": "int[]", "ref": "QuestObjective.DataId", "desc": "목표 행 DataId 목록 (쉼표 구분)" }
+  ]
+}

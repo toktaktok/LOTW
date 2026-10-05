@@ -21,6 +21,9 @@ namespace Project.Scripts.Content.World
         [Tooltip("profile 스프라이트를 적용할 렌더러")]
         [SerializeField] private SpriteRenderer spriteRenderer;
 
+        [Tooltip("대화/의뢰 테이블이 가리키는 ID (npc_gumman). 대화 횟수 플래그 talk.{id}, 의뢰 giverId 와 같아야 함")]
+        [SerializeField] private string characterId;
+
         [Header("Dialogue")]
         [Tooltip("Dialogue 테이블의 시작 DataID (분기 행 가능)")]
         [SerializeField] private int dialogueId;
@@ -35,6 +38,7 @@ namespace Project.Scripts.Content.World
 
         public string InteractionPrompt => promptText;
         public string DisplayName => profile != null ? Localization.Resolve(profile.DisplayName) : name;
+        public string CharacterId => characterId ?? string.Empty;
 
         protected override void Awake()
         {
@@ -50,6 +54,10 @@ namespace Project.Scripts.Content.World
                 Debug.LogWarning($"[NPC] {DisplayName}: Dialogue 테이블에 dataId {dialogueId} 행이 없습니다.");
                 return;
             }
+
+            // 분기 행이 talk.{id} 로 횟수별 한마디를 고를 수 있도록 대화를 열기 전에 올림
+            if(CharacterId.Length > 0)
+                FlagManager.Instance.Add(StoryKeys.Talk(CharacterId));
 
             CinemachineCamera previousCamera = CameraManager.Instance.CurrentCamera;
             // LowResPixelRenderer가 orthographicSize를 정수 배율로 스냅하므로 줌은 블렌드 중 한 번 툭 바뀜(의도된 동작)

@@ -71,7 +71,8 @@
       1101,
       1102,
       1103
-    ]
+    ],
+    "actions": "meet:npc_gumman;addNote:102;startQuest:101"
   },
   {
     "dataId": 1101,
@@ -93,8 +94,31 @@
   },
   {
     "dataId": 1110,
+    "nextId": -1,
+    "choiceIds": [
+      1111,
+      1112,
+      1113
+    ]
+  },
+  {
+    "dataId": 1111,
     "speakerId": "npc_gumman",
-    "text": "@dialogue.1110",
+    "text": "@dialogue.1111",
+    "nextId": -1,
+    "conditions": "flag:talk.npc_gumman<=1"
+  },
+  {
+    "dataId": 1112,
+    "speakerId": "npc_gumman",
+    "text": "@dialogue.1112",
+    "nextId": -1,
+    "conditions": "flag:talk.npc_gumman==2"
+  },
+  {
+    "dataId": 1113,
+    "speakerId": "npc_gumman",
+    "text": "@dialogue.1113",
     "nextId": -1
   },
   {
@@ -107,7 +131,8 @@
     "dataId": 1200,
     "speakerId": "npc_catty",
     "text": "@dialogue.1200",
-    "nextId": 1201
+    "nextId": 1201,
+    "actions": "meet:npc_catty"
   },
   {
     "dataId": 1201,
@@ -148,7 +173,8 @@
     "dataId": 1300,
     "speakerId": "npc_phonekids",
     "text": "@dialogue.1300",
-    "nextId": 1301
+    "nextId": 1301,
+    "actions": "meet:npc_phonekids"
   },
   {
     "dataId": 1301,
@@ -200,7 +226,8 @@
     "dataId": 1400,
     "speakerId": "npc_mouse",
     "text": "@dialogue.1400",
-    "nextId": 1401
+    "nextId": 1401,
+    "actions": "meet:npc_mouse;addNote:104"
   },
   {
     "dataId": 1401,
@@ -265,7 +292,8 @@
     "dataId": 1500,
     "speakerId": "npc_seal",
     "text": "@dialogue.1500",
-    "nextId": 1501
+    "nextId": 1501,
+    "actions": "meet:npc_seal;addNote:105"
   },
   {
     "dataId": 1501,
@@ -329,7 +357,8 @@
     "dataId": 1600,
     "speakerId": "npc_mayor",
     "text": "@dialogue.1600",
-    "nextId": 1601
+    "nextId": 1601,
+    "actions": "meet:npc_mayor;addNote:101;startQuest:1"
   },
   {
     "dataId": 1601,
@@ -347,6 +376,106 @@
     "dataId": 1603,
     "speakerId": "npc_mayor",
     "text": "@dialogue.1603",
+    "nextId": -1
+  },
+  {
+    "dataId": 9000,
+    "speakerId": "narrator",
+    "text": "@dialogue.9000",
+    "nextId": 9001
+  },
+  {
+    "dataId": 9001,
+    "speakerId": "narrator",
+    "text": "@dialogue.9001",
+    "nextId": 9002
+  },
+  {
+    "dataId": 9002,
+    "speakerId": "narrator",
+    "text": "@dialogue.9002",
+    "nextId": -1
+  },
+  {
+    "dataId": 9010,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "@dialogue.9010",
+    "nextId": 9011
+  },
+  {
+    "dataId": 9011,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "@dialogue.9011",
+    "nextId": 9012
+  },
+  {
+    "dataId": 9012,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "@dialogue.9012",
+    "nextId": 9013
+  },
+  {
+    "dataId": 9013,
+    "speakerId": "npc_mayor",
+    "speakerName": "촌장",
+    "text": "@dialogue.9013",
+    "nextId": -1,
+    "actions": "meet:npc_mayor;addNote:101;startQuest:1"
+  },
+  {
+    "dataId": 9020,
+    "speakerId": "narrator",
+    "text": "@dialogue.9020",
+    "nextId": 9021
+  },
+  {
+    "dataId": 9021,
+    "speakerId": "narrator",
+    "text": "@dialogue.9021",
+    "nextId": 9022
+  },
+  {
+    "dataId": 9022,
+    "speakerId": "narrator",
+    "text": "@dialogue.9022",
+    "nextId": -1
+  },
+  {
+    "dataId": 9100,
+    "speakerId": "narrator",
+    "text": "@dialogue.9100",
+    "nextId": -1,
+    "choiceIds": [
+      9101,
+      9102
+    ]
+  },
+  {
+    "dataId": 9101,
+    "speakerId": "player",
+    "text": "@dialogue.9101",
+    "nextId": 9103,
+    "actions": "save"
+  },
+  {
+    "dataId": 9102,
+    "speakerId": "player",
+    "text": "@dialogue.9102",
+    "nextId": -1
+  },
+  {
+    "dataId": 9103,
+    "speakerId": "narrator",
+    "text": "@dialogue.9103",
+    "nextId": -1
+  },
+  {
+    "dataId": 9200,
+    "speakerId": "narrator",
+    "text": "@dialogue.9200",
     "nextId": -1
   }
 ]

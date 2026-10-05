@@ -1,0 +1,11 @@
+{
+  "rowClass": "SequenceData",
+  "columns": [
+    { "name": "DataId", "type": "int", "required": true, "unique": true, "min": 1, "desc": "스텝 고유 ID" },
+    { "name": "Type", "type": "string", "required": true, "pattern": "(?i)dialogue|wait|fadeout|fadein|camera|scene|actions", "desc": "dialogue, wait, fadeOut, fadeIn, camera, scene, actions (대소문자 무시)" },
+    { "name": "Param", "type": "string", "desc": "dialogue: Dialogue DataId, camera: 카메라 오브젝트 이름, scene: 씬 이름[:입구 ID], actions: 대화 액션 문법" },
+    { "name": "Duration", "type": "float", "min": 0, "desc": "wait 초, fade/camera 시간 (0이면 기본값)" },
+    { "name": "Conditions", "type": "string", "commandRefs": { "item": "Item.ItemId" }, "desc": "만족할 때만 실행, 아니면 건너뜀 (Dialogue 조건 문법)" },
+    { "name": "NextId", "type": "int", "ref": "Sequence.DataId", "allow": [-1], "desc": "다음 스텝 DataId. -1이면 끝" }
+  ]
+}

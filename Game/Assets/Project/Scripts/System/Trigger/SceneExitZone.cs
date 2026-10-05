@@ -11,7 +11,7 @@ namespace Project.Scripts.System.Trigger
 {
     /// <summary>
     /// 씬 전환을 트리거하는 인터랙터블 오브젝트입니다.
-    /// PlayerInteractor가 상호작용하면 지정된 씬으로 전환합니다.
+    /// PlayerInteractor가 상호작용하면 지정된 씬으로 전환합니다. 같은 오브젝트에 IInteractionGate(StoryGate)가 있으면 통과해야 이동합니다.
     /// </summary>
     public class SceneExitZone : MonoBehaviour, IInteractable
     {
@@ -34,6 +34,8 @@ namespace Project.Scripts.System.Trigger
                 Debug.LogWarning($"[SceneExitZone] {name}: targetScene이 비어 있습니다.");
                 return;
             }
+            if(TryGetComponent(out IInteractionGate gate) && !gate.TryPass(interactor))
+                return;
 
             SceneTransitionManager.Instance.TransitionTo(targetScene, targetEntranceId);
         }

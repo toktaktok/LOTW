@@ -40,12 +40,11 @@ namespace Project.Scripts.Core.Managers
             OnGameResumed?.Invoke();
         }
 
+        // 백그라운드로 가면 멈추되, 돌아올 때 자동으로 풀지 않는다(플레이어가 연 일시정지 유지).
         private void OnApplicationPause(bool pauseStatus)
         {
             if(pauseStatus)
                 PauseGame();
-            else
-                ResumeGame();
         }
 
         private void OnApplicationQuit()

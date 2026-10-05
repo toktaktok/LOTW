@@ -1,0 +1,86 @@
+[
+  {
+    "dataId": 1,
+    "type": "scene",
+    "param": "Plaza",
+    "nextId": 2
+  },
+  {
+    "dataId": 2,
+    "type": "actions",
+    "param": "setFlag:chapter=1;setFlag:timeSlot=3",
+    "nextId": 3
+  },
+  {
+    "dataId": 3,
+    "type": "wait",
+    "duration": 0.5,
+    "nextId": 4
+  },
+  {
+    "dataId": 4,
+    "type": "dialogue",
+    "param": "9000",
+    "nextId": 5
+  },
+  {
+    "dataId": 5,
+    "type": "fadeOut",
+    "duration": 1.0,
+    "nextId": 6
+  },
+  {
+    "dataId": 6,
+    "type": "fadeIn",
+    "duration": 1.0,
+    "nextId": 7
+  },
+  {
+    "dataId": 7,
+    "type": "dialogue",
+    "param": "9010",
+    "nextId": 8
+  },
+  {
+    "dataId": 8,
+    "type": "fadeOut",
+    "duration": 1.5,
+    "nextId": 9
+  },
+  {
+    "dataId": 9,
+    "type": "actions",
+    "param": "setFlag:timeSlot=1;setFlag:prologue_done",
+    "nextId": 10
+  },
+  {
+    "dataId": 10,
+    "type": "fadeIn",
+    "duration": 1.5,
+    "nextId": 11
+  },
+  {
+    "dataId": 11,
+    "type": "dialogue",
+    "param": "9020",
+    "nextId": -1
+  },
+  {
+    "dataId": 100,
+    "type": "fadeOut",
+    "duration": 1.5,
+    "nextId": 101
+  },
+  {
+    "dataId": 101,
+    "type": "actions",
+    "param": "setFlag:timeSlot=2",
+    "nextId": 102
+  },
+  {
+    "dataId": 102,
+    "type": "fadeIn",
+    "duration": 1.5,
+    "nextId": -1
+  }
+]

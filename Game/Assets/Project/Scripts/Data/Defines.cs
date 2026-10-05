@@ -5,6 +5,20 @@ namespace Project.Scripts.Data
     public readonly struct UIDefines
     {
         public const float DefaultFadeDuration = 0.3f;
+        /// <summary>HUD 의뢰 목록 줄 수 (메인 고정 + 서브).</summary>
+        public const int HudQuestLines = 3;
+        /// <summary>"수첩에 기록됨" 알림 표시 시간(초, unscaled).</summary>
+        public const float ToastDuration = 2.5f;
+        /// <summary>HUD 키 표시에 쓰는 입력 컨트롤 스킴 (InputSystem_Actions).</summary>
+        public const string KeyboardControlScheme = "Keyboard&Mouse";
+        /// <summary>수첩 표지에 붙이는 포스트잇 최대 수.</summary>
+        public const int MaxStickyNotes = 4;
+    }
+    public readonly struct SaveDefines
+    {
+        /// <summary>SaveData 형식 버전. 필드 의미가 바뀌면 올리고 SaveManager 에서 변환합니다.</summary>
+        public const int Version = 1;
+        public const int MaxSlots = 3;
     }
     public readonly struct DialogueDefines
     {
@@ -32,6 +46,8 @@ namespace Project.Scripts.Data
         public const float MoveAndSwitchTimeout = 10f;
         /// <summary>걷기 이동(RailConnector)에서 목적 노드 도착으로 보는 수평 거리.</summary>
         public const float RailArrivalDistance = 0.1f;
+        /// <summary>NPC 머리 위 의뢰 표시(땀) 프레임 간격(초).</summary>
+        public const float QuestMarkFrameInterval = 0.4f;
     }
 
     public readonly struct CameraDefines
@@ -101,5 +117,25 @@ namespace Project.Scripts.Data
         public const string Character = "Character";
         public const string SetUp = "SetUp";
         public const string Plaza = "Plaza";
+        /// <summary>메인 화면 (빌드 인덱스 0).</summary>
+        public const string Title = "Title";
+    }
+    public readonly struct StoryDefines
+    {
+        /// <summary>새 게임에서 재생하는 프롤로그 시퀀스 (Sequence 테이블 첫 스텝 dataId). 첫 스텝이 씬 이동.</summary>
+        public const int PrologueSequenceId = 1;
+        /// <summary>시퀀스 페이드 스텝의 duration 이 0 일 때 쓰는 시간(초).</summary>
+        public const float SequenceFadeDuration = 1f;
+        /// <summary>한 시퀀스가 실행할 수 있는 최대 스텝 수. nextId 가 순환하면 여기서 끊습니다.</summary>
+        public const int MaxSequenceSteps = 256;
+    }
+    public readonly struct MenuDefines
+    {
+        /// <summary>타이틀 서류가방에서 선택된 종이가 올라오는 높이(px, 1920x1080 기준).</summary>
+        public const float SheetRaise = 24f;
+        /// <summary>종이 올라옴/내려감 보간 속도 (unscaled, 초당).</summary>
+        public const float SheetRaiseSpeed = 12f;
+        /// <summary>설정에서 고를 수 있는 언어. Text 테이블 열 이름과 같음.</summary>
+        public static readonly string[] Languages = { "ko", "en" };
     }
 }

@@ -34,6 +34,10 @@ namespace Project.Scripts.Editor.Plaza
             public int dialogueId;
             /// <summary>지정하면 이 프리팹을 그대로 배치한다 (예: 미니게임 트리거). 스프라이트/대화 설정은 쓰지 않음.</summary>
             public string prefabPath;
+            /// <summary>대화/의뢰 테이블 ID. 비우면 "npc_" + 소문자 name.</summary>
+            public string characterId;
+
+            public string CharacterId => string.IsNullOrEmpty(characterId) ? "npc_" + name.ToLowerInvariant() : characterId;
         }
 
         /// <summary>스프라이트 소품. position.y = 스프라이트 아래쪽 끝.</summary>

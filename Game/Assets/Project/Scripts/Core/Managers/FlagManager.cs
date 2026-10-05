@@ -53,7 +53,11 @@ namespace Project.Scripts.Core.Managers
 
         public string[] ToSaveData() => _store.ToSaveData();
 
+        /// <summary>세이브에서 복원. 변경 이벤트는 내지 않습니다 (불러온 상태로 알림이 뜨지 않도록).</summary>
         public void LoadFromSaveData(string[] data) => _store.LoadFromSaveData(data);
+
+        /// <summary>새 게임용 전체 초기화. 변경 이벤트는 내지 않습니다.</summary>
+        public void ResetAll() => _store.ClearAll();
 
         #endregion
     }

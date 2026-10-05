@@ -65,6 +65,8 @@ namespace Project.Scripts.Editor.Dialogue
 
         public void PlaySfx(string key) => _log.Add($"sfx {key}");
         public void PlayBgm(string key) => _log.Add($"bgm {key}");
+        public void PlaySequence(int sequenceId) => _log.Add($"sequence {sequenceId}");
+        public void SaveGame() => _log.Add("save");
     }
 }
 #endif

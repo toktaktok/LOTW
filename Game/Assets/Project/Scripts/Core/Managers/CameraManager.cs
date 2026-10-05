@@ -93,7 +93,7 @@ namespace Project.Scripts.Core.Managers
             brain.DefaultBlend = new CinemachineBlendDefinition(CinemachineBlendDefinition.Styles.EaseInOut, duration);
     
             yield return null;
-            yield return new WaitForSeconds(duration + 0.1f);
+            yield return new WaitForSecondsRealtime(duration + 0.1f);
             
             if(brain != null)
                 brain.DefaultBlend = _initialBlend;

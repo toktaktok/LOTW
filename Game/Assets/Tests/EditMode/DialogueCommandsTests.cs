@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
+using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using Project.Scripts.System.Dialogue;
 
@@ -15,6 +16,11 @@ namespace Tests.EditMode
             public readonly Dictionary<string, int> Flags = new();
             public readonly Dictionary<string, int> Items = new();
             public readonly List<string> Sounds = new();
+            public readonly List<int> Sequences = new();
+
+            public void PlaySequence(int sequenceId) => Sequences.Add(sequenceId);
+            public int SaveCount;
+            public void SaveGame() => SaveCount++;
 
             public int GetFlag(string key) => Flags.TryGetValue(key, out int v) ? v : 0;
             public void SetFlag(string key, int value) => Flags[key] = value;
@@ -125,7 +131,7 @@ namespace Tests.EditMode
             Assert.IsTrue(DialogueCommands.CheckConditions("flag:a; flag:b;", _context));
         }
 
-        [TestCase("quest:main")]
+        [TestCase("clue:main")]
         [TestCase("flag")]
         [TestCase("flag:count>=x")]
         [TestCase("flag:count=>2")]
@@ -160,6 +166,22 @@ namespace Tests.EditMode
             DialogueCommands.RunActions("giveItem:rose=3;takeItem:rose", _context);
 
             Assert.AreEqual(2, _context.GetItemCount("rose"));
+        }
+
+        [Test]
+        public void RunActions_Sequence_PassesId()
+        {
+            DialogueCommands.RunActions("sequence:100", _context);
+
+            CollectionAssert.AreEqual(new[] { 100 }, _context.Sequences);
+        }
+
+        [Test]
+        public void RunActions_Save_WithoutValue()
+        {
+            DialogueCommands.RunActions("save;Save:", _context);
+
+            Assert.AreEqual(2, _context.SaveCount);
         }
 
         [Test]
@@ -301,6 +323,67 @@ namespace Tests.EditMode
             Assert.AreEqual("rose", command.key);
             Assert.AreEqual(">=", command.op);
             Assert.AreEqual("2", command.value);
+        }
+
+        #endregion
+
+        #region Story
+
+        [Test]
+        public void StartQuest_SetsActive_OnlyWhenUnset()
+        {
+            DialogueCommands.RunActions("startQuest:101", _context);
+            Assert.AreEqual((int)QuestState.Active, _context.GetFlag("quest.101"));
+
+            _context.Flags["quest.101"] = (int)QuestState.Done;
+            DialogueCommands.RunActions("startQuest:101", _context);
+
+            Assert.AreEqual((int)QuestState.Done, _context.GetFlag("quest.101"));
+        }
+
+        [Test]
+        public void CompleteQuest_SetsDone()
+        {
+            DialogueCommands.RunActions("startQuest:1;completeQuest:1", _context);
+
+            Assert.AreEqual((int)QuestState.Done, _context.GetFlag("quest.1"));
+        }
+
+        [Test]
+        public void AddNote_DoesNotResetReadOrStruck()
+        {
+            DialogueCommands.RunActions("addNote:201", _context);
+            Assert.AreEqual((int)NoteState.Unread, _context.GetFlag("note.201"));
+
+            _context.Flags["note.201"] = (int)NoteState.Read;
+            DialogueCommands.RunActions("addNote:201", _context);
+            Assert.AreEqual((int)NoteState.Read, _context.GetFlag("note.201"));
+
+            DialogueCommands.RunActions("strikeNote:201;addNote:201", _context);
+            Assert.AreEqual((int)NoteState.Struck, _context.GetFlag("note.201"));
+        }
+
+        [Test]
+        public void Meet_CountsFirstMeetingOnce()
+        {
+            DialogueCommands.RunActions("meet:npc_gumman", _context);
+            DialogueCommands.RunActions("meet:npc_gumman;meet:npc_mayor", _context);
+
+            Assert.AreEqual(1, _context.GetFlag("met.npc_gumman"));
+            Assert.AreEqual(2, _context.GetFlag(StoryKeys.MetCount));
+        }
+
+        [Test]
+        public void StoryConditions_ReadPrefixedFlags()
+        {
+            Assert.IsFalse(DialogueCommands.CheckConditions("quest:101", _context));
+            Assert.IsFalse(DialogueCommands.CheckConditions("met:npc_gumman", _context));
+
+            DialogueCommands.RunActions("startQuest:101;addNote:201;meet:npc_gumman", _context);
+
+            Assert.IsTrue(DialogueCommands.CheckConditions("quest:101=1;note:201;met:npc_gumman", _context));
+            Assert.IsFalse(DialogueCommands.CheckConditions("quest:101=2", _context));
+            Assert.IsTrue(DialogueCommands.CheckConditions("!note:202", _context));
         }
 
         #endregion

@@ -111,6 +111,49 @@ namespace Project.Scripts.Core.Managers
             layerParents = parents;
         }
 
+        /// <summary>이미 생성된 UI 인스턴스. 한 번도 열리지 않았으면 null.</summary>
+        public T Get<T>() where T : BaseUI
+        {
+            return _uiCache.TryGetValue(typeof(T), out BaseUI ui) ? ui as T : null;
+        }
+
+        /// <summary>UI 열기/닫기 작업이 처리 중인지 여부.</summary>
+        public bool IsProcessing => _isProcessing;
+
+        /// <summary>최상단 페이지의 마지막 UI. 페이지가 없거나 최상단이 HUD 면 null.</summary>
+        public BaseUI GetTopUI()
+        {
+            if(_pageNavigationStack.Count == 0)
+                return null;
+
+            UIPage top = _pageNavigationStack.Peek();
+            if(top.Layer == UILayer.HUD || top.UIComponents.Count == 0)
+                return null;
+            return top.UIComponents[top.UIComponents.Count - 1];
+        }
+
+        public bool IsOpen<T>() where T : BaseUI
+        {
+            T ui = Get<T>();
+            return ui != null && ui.IsVisible;
+        }
+
+        /// <summary>T 가 최상단 페이지에 있을 때만 닫는다. 다른 페이지가 위에 있으면 무시.</summary>
+        public void Close<T>() where T : BaseUI
+        {
+            EnqueueOperation(async () =>
+            {
+                if(_pageNavigationStack.Count == 0)
+                    return;
+
+                T ui = Get<T>();
+                if(ui == null || !_pageNavigationStack.Peek().UIComponents.Contains(ui))
+                    return;
+
+                await ProcessPopPage();
+            });
+        }
+
         public void PushPage<T>(UILayer layer = UILayer.Popup) where T : BaseUI
         {
             EnqueueOperation(async () => { await ProcessPushPage<T>(layer, null); });
@@ -246,7 +289,7 @@ namespace Project.Scripts.Core.Managers
             if(_uiCache.TryGetValue(type, out BaseUI cached))
                 return cached;
 
-            BaseUI prefab = Array.Find(uiPrefabs, p => p != null && p.GetType() == type);
+            BaseUI prefab = uiPrefabs == null ? null : Array.Find(uiPrefabs, p => p != null && p.GetType() == type);
             if(prefab == null)
             {
                 Debug.LogError($"[UIManager] UI prefab not registered: {type.Name}");

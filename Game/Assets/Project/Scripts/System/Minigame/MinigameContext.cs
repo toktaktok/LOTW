@@ -29,5 +29,8 @@ namespace Project.Scripts.System.Minigame
 
         public void PlaySfx(string key) => _inner.PlaySfx(key);
         public void PlayBgm(string key) => _inner.PlayBgm(key);
+
+        public void PlaySequence(int sequenceId) => _inner.PlaySequence(sequenceId);
+        public void SaveGame() => _inner.SaveGame();
     }
 }

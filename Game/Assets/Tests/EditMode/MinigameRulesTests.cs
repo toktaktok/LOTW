@@ -42,6 +42,14 @@ namespace Tests.EditMode
             public void PlayBgm(string key)
             {
             }
+
+            public void PlaySequence(int sequenceId)
+            {
+            }
+
+            public void SaveGame()
+            {
+            }
         }
 
         private FakeContext _game;

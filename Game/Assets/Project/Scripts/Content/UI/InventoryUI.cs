@@ -64,6 +64,12 @@ namespace Project.Scripts.Content.UI
             }
         }
 
+        public override bool OnCancel()
+        {
+            OnClose();
+            return true;
+        }
+
         private void OnClose()
         {
             UIManager.Instance.PopPage();
