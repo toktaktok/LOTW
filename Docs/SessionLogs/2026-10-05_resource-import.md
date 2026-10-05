@@ -49,3 +49,10 @@
 - 작업: 사용자가 손으로 맞춘 스케일 변경을 `1786513`으로 커밋했다. 나머지 편집기 저장은 `faff8bc`로 커밋했다.
 - 작업: `feature/voxel-scale-4px`를 main에 머지했다. `Editor/Data/Defines.cs` 충돌은 PR #10의 빌더 상수 삭제를 유지하고 브랜치의 주석을 받아 풀었다.
 - 결과: `PF_FountainSet`은 손으로 맞춘 스케일과 `MAT_SpriteShadowFront`를 함께 가진다.
+
+## 2026-10-05 23:54 | test/plaza-dialogue-ids
+- 작업: 사용자가 옮긴 레인 F 레일 양 끝 위치(x -49.29, 105.01)를 `Plaza.unity`로 커밋했다.
+- 작업: `DialogueTableTests.PlazaNpcDialogueIds_Exist`를 되살렸다. 이 테스트는 `Plaza.unity`의 `dialogueId`가 대화 테이블에 있는지 확인한다.
+- 작업: 테스트 코드는 T3 체크포인트 `36dc5a2`에서 가져왔다. PR #10 때 `PlazaLayout`을 쓰던 원래 테스트가 지워졌다.
+- 결과: EditMode 테스트 250개가 통과했다. 새 테스트는 씬의 ID 5개(1200, 1300, 1400, 1500, 1600)를 확인했다.
+- 다음: 사용자가 8~11번 항목을 정한다.
