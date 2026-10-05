@@ -240,5 +240,41 @@
     "key": "dialogue.1130",
     "ko": "부탁? 그럼 광장 사람들이랑 얼굴부터 트고 와! 다들 탐정 양반을 궁금해하거든.",
     "en": "A favor? Then go say hi to folks in the plaza first! Everyone's curious about you."
+  },
+  {
+    "dataId": 50,
+    "key": "dialogue.1700",
+    "ko": "테스트 문구",
+    "en": "Test line"
+  },
+  {
+    "dataId": 51,
+    "key": "dialogue.1710",
+    "ko": "테스트 문구",
+    "en": "Test line"
+  },
+  {
+    "dataId": 52,
+    "key": "dialogue.1730",
+    "ko": "테스트 문구",
+    "en": "Test line"
+  },
+  {
+    "dataId": 53,
+    "key": "dialogue.1800",
+    "ko": "테스트 문구",
+    "en": "Test line"
+  },
+  {
+    "dataId": 54,
+    "key": "dialogue.1810",
+    "ko": "테스트 문구",
+    "en": "Test line"
+  },
+  {
+    "dataId": 55,
+    "key": "dialogue.1830",
+    "ko": "테스트 문구",
+    "en": "Test line"
   }
 ]

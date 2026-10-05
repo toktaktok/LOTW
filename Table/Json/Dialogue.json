@@ -399,6 +399,122 @@
     "nextId": -1
   },
   {
+    "dataId": 1700,
+    "speakerId": "npc_ele",
+    "text": "@dialogue.1700",
+    "nextId": -1,
+    "choiceIds": [
+      1701,
+      1702,
+      1703,
+      1704
+    ],
+    "actions": "meet:npc_ele"
+  },
+  {
+    "dataId": 1701,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.chat",
+    "nextId": 1710
+  },
+  {
+    "dataId": 1702,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.evidence",
+    "nextId": 1720,
+    "conditions": "quest:1=1"
+  },
+  {
+    "dataId": 1703,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.request",
+    "nextId": 1730,
+    "conditions": "!quest:103;flag:chapter==1"
+  },
+  {
+    "dataId": 1704,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.end",
+    "nextId": -1
+  },
+  {
+    "dataId": 1710,
+    "speakerId": "npc_ele",
+    "text": "@dialogue.1710",
+    "nextId": 1700
+  },
+  {
+    "dataId": 1720,
+    "speakerId": "npc_ele",
+    "text": "@dialogue.common.no_clue",
+    "nextId": 1700
+  },
+  {
+    "dataId": 1730,
+    "speakerId": "npc_ele",
+    "text": "@dialogue.1730",
+    "nextId": 1700,
+    "actions": "startQuest:103"
+  },
+  {
+    "dataId": 1800,
+    "speakerId": "npc_jumpropekid",
+    "text": "@dialogue.1800",
+    "nextId": -1,
+    "choiceIds": [
+      1801,
+      1802,
+      1803,
+      1804
+    ],
+    "actions": "meet:npc_jumpropekid"
+  },
+  {
+    "dataId": 1801,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.chat",
+    "nextId": 1810
+  },
+  {
+    "dataId": 1802,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.evidence",
+    "nextId": 1820,
+    "conditions": "quest:1=1"
+  },
+  {
+    "dataId": 1803,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.request",
+    "nextId": 1830,
+    "conditions": "!quest:102;flag:chapter==1"
+  },
+  {
+    "dataId": 1804,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.end",
+    "nextId": -1
+  },
+  {
+    "dataId": 1810,
+    "speakerId": "npc_jumpropekid",
+    "text": "@dialogue.1810",
+    "nextId": 1800
+  },
+  {
+    "dataId": 1820,
+    "speakerId": "npc_jumpropekid",
+    "text": "@dialogue.common.no_clue",
+    "nextId": 1800
+  },
+  {
+    "dataId": 1830,
+    "speakerId": "npc_jumpropekid",
+    "text": "@dialogue.1830",
+    "nextId": 1800,
+    "actions": "startQuest:102"
+  },
+  {
     "dataId": 9000,
     "speakerId": "narrator",
     "text": "@dialogue.9000",
