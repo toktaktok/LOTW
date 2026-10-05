@@ -54,7 +54,7 @@ namespace Project.Scripts.Editor.Data
         // 그래프를 여는 DataId 묶음 크기 (1100번대 = 대화 하나)
         public const int DialogueBlockSize = 100;
         // 스키마 Dialogue.ChoiceIds 의 maxCount 와 같음
-        public const int DialogueMaxChoices = 3;
+        public const int DialogueMaxChoices = 4;
         // 툴이 만드는 행 전용 대사 키 접두사 (dialogue.{DataId})
         public const string DialogueTextKeyPrefix = "dialogue.";
         public const string DialogueTextTable = "Text_Dialogue";

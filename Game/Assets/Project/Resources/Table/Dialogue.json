@@ -70,9 +70,10 @@
     "choiceIds": [
       1101,
       1102,
+      1104,
       1103
     ],
-    "actions": "meet:npc_gumman;addNote:102;startQuest:101"
+    "actions": "meet:npc_gumman;addNote:102"
   },
   {
     "dataId": 1101,
@@ -84,13 +85,21 @@
     "dataId": 1102,
     "speakerId": "player",
     "text": "@ui.talk_menu.evidence",
-    "nextId": 1120
+    "nextId": 1120,
+    "conditions": "quest:1=1"
   },
   {
     "dataId": 1103,
     "speakerId": "player",
     "text": "@ui.talk_menu.end",
     "nextId": -1
+  },
+  {
+    "dataId": 1104,
+    "speakerId": "player",
+    "text": "@ui.talk_menu.request",
+    "nextId": 1130,
+    "conditions": "!quest:101;flag:chapter==1"
   },
   {
     "dataId": 1110,
@@ -128,6 +137,13 @@
     "nextId": 1100
   },
   {
+    "dataId": 1130,
+    "speakerId": "npc_gumman",
+    "text": "@dialogue.1130",
+    "nextId": 1100,
+    "actions": "startQuest:101"
+  },
+  {
     "dataId": 1200,
     "speakerId": "npc_catty",
     "text": "@dialogue.1200",
@@ -155,7 +171,8 @@
     "dataId": 1203,
     "speakerId": "player",
     "text": "@ui.talk_menu.evidence",
-    "nextId": 1220
+    "nextId": 1220,
+    "conditions": "quest:1=1"
   },
   {
     "dataId": 1204,
@@ -197,7 +214,8 @@
     "dataId": 1303,
     "speakerId": "player",
     "text": "@ui.talk_menu.evidence",
-    "nextId": 1320
+    "nextId": 1320,
+    "conditions": "quest:1=1"
   },
   {
     "dataId": 1304,
@@ -250,7 +268,8 @@
     "dataId": 1403,
     "speakerId": "player",
     "text": "@ui.talk_menu.evidence",
-    "nextId": 1420
+    "nextId": 1420,
+    "conditions": "quest:1=1"
   },
   {
     "dataId": 1404,
@@ -316,7 +335,8 @@
     "dataId": 1503,
     "speakerId": "player",
     "text": "@ui.talk_menu.evidence",
-    "nextId": 1520
+    "nextId": 1520,
+    "conditions": "quest:1=1"
   },
   {
     "dataId": 1504,

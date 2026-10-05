@@ -234,5 +234,11 @@
     "dataId": 48,
     "key": "dialogue.9200",
     "ko": "아직 이 근처에서 알아볼 게 남은 것 같다. 수첩을 다시 확인해 보자."
+  },
+  {
+    "dataId": 49,
+    "key": "dialogue.1130",
+    "ko": "부탁? 그럼 광장 사람들이랑 얼굴부터 트고 와! 다들 탐정 양반을 궁금해하거든.",
+    "en": "A favor? Then go say hi to folks in the plaza first! Everyone's curious about you."
   }
 ]
