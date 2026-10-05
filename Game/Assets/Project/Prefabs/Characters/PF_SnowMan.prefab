@@ -132,7 +132,7 @@ MonoBehaviour:
   objectID: 0
   animator: {fileID: 404524783905794902}
   spriteRenderer: {fileID: 6992517215151625963}
-  moveSpeed: 5
+  moveSpeed: 8
 --- !u!1 &8921095827505213150
 GameObject:
   m_ObjectHideFlags: 0

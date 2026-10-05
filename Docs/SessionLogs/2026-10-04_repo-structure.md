@@ -44,3 +44,11 @@
 - 결과: 4개 브랜치의 커밋이 모두 main에 있었다. `t3code-28bedbe9`의 미커밋 JSON 6개는 줄바꿈만 달랐다.
 - 결과: 로컬 브랜치와 origin 브랜치는 지우지 않았다.
 - 다음: 없음.
+
+## 2026-10-05 14:00 | main
+- 작업: Unity 에디터가 종료된 뒤 에디터가 만든 변경을 커밋했다.
+- 결과: 새 `.meta` 2개, DOTween UI Toolkit 모듈 켜기, `DOTweenUpgradeManager` 파일 4개 삭제가 들어갔다.
+- 결과: `PF_SnowMan.prefab`의 `moveSpeed`가 5에서 8로 바뀌었다. `Plaza.unity`는 프리팹 인스턴스 1개가 다시 저장되었다.
+- 확인 안 함: `moveSpeed`와 `Plaza.unity` 변경을 누가 했는지. 이 세션의 작업이 아니다.
+- 결과: push하지 않았다.
+- 다음: 없음.
