@@ -170,9 +170,9 @@ namespace Project.Scripts.Editor.Plaza
         public const float RampLX = -36f;
         public const float RampRX = 95f;
 
-        // 분수 (보정 1): PF_FountainSet = 수반 복셀(폭 9.6, 깊이 9.44) + 물 스프라이트 + 분무 파티클
+        // 분수 (보정 1): PF_FountainSet = 수반 복셀(폭 12, 깊이 11.8) + 물 스프라이트 + 분무 파티클
         private const float FountainZ = 9f;
-        private const float FountainBasinDepth = 9.44f;
+        private const float FountainBasinDepth = 11.8f;
 
         #endregion
 

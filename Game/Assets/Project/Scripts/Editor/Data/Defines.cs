@@ -36,7 +36,7 @@ namespace Project.Scripts.Editor.Data
         public const float PlazaCameraDistance = 20f;
         // 빌더가 매번 지우고 다시 만드는 루트 오브젝트 이름
         public const string PlazaGeneratedRootName = "--- Generated ---";
-        // 복셀 프리팹 생성 시 VoxelObject importScale (복셀 1칸 = RT 4픽셀 규칙)
+        // 복셀 프리팹 생성 시 VoxelObject importScale (기본값: 복셀 1칸 = RT 5픽셀. 건물별 값은 Set Voxel Pixels로 바꾼다)
         public const float VoxelImportScale = Project.Scripts.Data.CameraDefines.VoxelScale;
         public const string PlazaPrefabFolder = "Assets/Project/Prefabs/Environments";
         public const string PlazaVolumeProfilePath = "Assets/Project/Settings/Plaza_VolumeProfile.asset";
