@@ -53,3 +53,10 @@
 - 작업: 로컬 브랜치 `feature/voxel-door-front`를 지웠다. 원격에는 이 브랜치가 없었다.
 - 결과: 병합 전에 Plaza.unity가 dirty가 아님을 확인했다. 수동 복셀 스케일은 바꾸지 않았다.
 - 다음: `Test/Character.unity`의 건물 인스턴스 6개 yaw를 Y - R로 보정한다.
+
+## 2026-10-05 23:46 | chore/plaza-manual-tweaks
+- 작업: 사용자가 에디터에서 고친 `Plaza.unity` 배치와 `PF_DrinkMachine_3` 배율(importScale 0.1, `_ImportScale` 0.1)을 커밋했다.
+- 작업: Play 모드가 바꾼 폰트 에셋 2개(`DungGeunMo SDF.asset`, `Galmuri11 Pixel.asset`)를 git restore로 되돌렸다.
+- 결과: 브랜치를 main에 `--no-ff`로 병합하고 로컬 브랜치를 지웠다.
+- 확인 안 함: 변경 내용 검증. 사용자가 손으로 맞춘 값이라 그대로 커밋했다.
+- 다음: 없음.
