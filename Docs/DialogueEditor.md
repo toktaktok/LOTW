@@ -149,6 +149,7 @@ Dialogue 테이블을 노드 그래프로 보고, 편집하고, 분기를 시뮬
 구현 메모:
 - 줄마다 [아님] 종류, 키 입력칸과 옆 목록 버튼, 연산자(조건), 값(값을 받는 액션)입니다. 값을 비운 액션은 1로 실행됩니다.
 - 플래그 목록은 모든 대화의 조건과 액션에서 쓰인 키이고, 새 키는 입력칸에 직접 씁니다. 미니게임은 `MinigameLibrary`의 ID 목록입니다.
+- 스토리 동사(조건 quest/note/met, 액션 startQuest/completeQuest/addNote/strikeNote/meet/sequence/save)도 목록에 있습니다. 의뢰, 수첩, 시퀀스 키는 각 테이블의 DataId에서, met/meet 는 대화에 쓰인 화자 ID에서 고릅니다.
 - 조건 종류 목록에 `var`는 넣지 않았습니다(미니게임 정의 전용). 목록에 없는 종류가 이미 적혀 있으면 그대로 보이고 저장됩니다.
 - 구조체는 `Data/Structs.cs`의 `DialogueCommand`. `Parse`는 쓴 그대로(연산자 `=`, 대소문자) 나눠서 왕복이 같습니다. 공백만 빠집니다.
 - 아이템 검사는 스키마 규칙 `commandRefs`(`Schema/Dialogue.json`의 Conditions `item`, Actions `giveItem`/`takeItem` → `Item.ItemId`)로 넣었습니다.

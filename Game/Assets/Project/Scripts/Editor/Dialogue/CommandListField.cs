@@ -16,8 +16,8 @@ namespace Project.Scripts.Editor.Dialogue
     /// </summary>
     public static class CommandListField
     {
-        private static readonly string[] ConditionTypes = { "flag", "item" };
-        private static readonly string[] ActionVerbs = { "setFlag", "addFlag", "clearFlag", "giveItem", "takeItem", "sfx", "bgm", "minigame" };
+        private static readonly string[] ConditionTypes = { "flag", "item", "quest", "note", "met" };
+        private static readonly string[] ActionVerbs = { "setFlag", "addFlag", "clearFlag", "giveItem", "takeItem", "sfx", "bgm", "startQuest", "completeQuest", "addNote", "strikeNote", "meet", "sequence", "save", "minigame" };
         private static readonly string[] Operators = { "", ">=", "<=", "==", "!=", ">", "<" };
         // 값을 받는 액션 (비우면 1)
         private static readonly string[] ValueVerbs = { "setFlag", "addFlag", "giveItem", "takeItem" };
