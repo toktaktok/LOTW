@@ -114,9 +114,9 @@ TextureImporter:
       rect:
         serializedVersion: 2
         x: 0
-        y: 192
-        width: 300
-        height: 192
+        y: 152
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -135,10 +135,10 @@ TextureImporter:
       name: TX_E_FountainWater_1
       rect:
         serializedVersion: 2
-        x: 300
-        y: 192
-        width: 300
-        height: 192
+        x: 240
+        y: 152
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -157,10 +157,10 @@ TextureImporter:
       name: TX_E_FountainWater_2
       rect:
         serializedVersion: 2
-        x: 600
-        y: 192
-        width: 300
-        height: 192
+        x: 480
+        y: 152
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -179,10 +179,10 @@ TextureImporter:
       name: TX_E_FountainWater_3
       rect:
         serializedVersion: 2
-        x: 900
-        y: 192
-        width: 300
-        height: 192
+        x: 720
+        y: 152
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -203,8 +203,8 @@ TextureImporter:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 300
-        height: 192
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -223,10 +223,10 @@ TextureImporter:
       name: TX_E_FountainWater_5
       rect:
         serializedVersion: 2
-        x: 300
+        x: 240
         y: 0
-        width: 300
-        height: 192
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -245,10 +245,10 @@ TextureImporter:
       name: TX_E_FountainWater_6
       rect:
         serializedVersion: 2
-        x: 600
+        x: 480
         y: 0
-        width: 300
-        height: 192
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -267,10 +267,10 @@ TextureImporter:
       name: TX_E_FountainWater_7
       rect:
         serializedVersion: 2
-        x: 900
+        x: 720
         y: 0
-        width: 300
-        height: 192
+        width: 240
+        height: 152
       alignment: 9
       pivot: {x: 0.5, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}

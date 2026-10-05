@@ -58,7 +58,7 @@ namespace Project.Scripts.Data
         /// <summary>캐릭터 스프라이트 기준 밀도(1유닛당 텍스처 픽셀 수).</summary>
         public const float PixelsPerUnit = 25f;
         /// <summary>복셀 한 칸이 차지하는 저해상도 RT 픽셀 수.</summary>
-        public const int VoxelPixels = 5;
+        public const int VoxelPixels = 4;
         /// <summary>복셀 한 칸의 월드 크기(= VoxelPixels / PixelsPerUnit). VoxelImporter importScale 기준.</summary>
         public const float VoxelScale = VoxelPixels / PixelsPerUnit;
         /// <summary>저해상도 RT 표시 캔버스. UIManager 레이어(0 이상)보다 아래.</summary>
