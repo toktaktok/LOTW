@@ -23,23 +23,30 @@
 - [x] `CoreManager.OnApplicationPause` 가 플레이어가 연 일시정지를 풀던 버그
 - [x] `BaseUI` 애니메이션 대기, `CameraManager` 블렌드 대기를 unscaled 시간으로 (timeScale 0 에서 멈춤 방지)
 - [ ] 입력 단일 소유자: Player 맵에 `Notebook`(Q), `Pause`(Esc) 추가, `UI/Cancel` 로 최상단 페이지 닫기. `PlayerController`/`PlayerInteractor`/`DialogueUI` 각자 만드는 `PlayerControls` 통합
-- [ ] `UIManager`: `Get<T>()`, `Close<T>()`, `IsOpen<T>()` 추가. `PlayerInteractor` 의 `FindFirstObjectByType<HudUI>` 제거
+- [x] `UIManager`: `Get<T>()`, `Close<T>()`, `IsOpen<T>()` 추가. `PlayerInteractor` 의 `FindFirstObjectByType<HudUI>` 제거
+- [x] `Dialogue.xlsx` 가 8행, `Dialogue.json` 이 50행으로 어긋나 있던 것 복구 (JSON 기준 재생성, 변환 왕복 일치 확인). 이전에는 ConvertTable.bat 실행 시 Plaza 대화가 지워졌음
 - [ ] `NPC.Interact`: 페이지 push 실패 시 카메라 복구
 - [ ] `GameInstance`, `FlagManager`, `SceneTransitionManager` 를 SubSystemCollection 에 배치 (프리팹 YAML 편집)
 
 ### 1단계. 스토리 진행 상태 (의뢰 / 챕터 / 시간대)
-- [ ] `Quest` 테이블: id, type(main/sub), giverId, title, summary, chapter, objectiveIds
-- [ ] `QuestObjective` 테이블: id, questId, text, 완료 조건(대화 문법 재사용: `flag:` / `item:` / `note:`)
-- [ ] `QuestManager`: 상태(Locked/Active/Completed), 동시 활성 상한(메인 1 + 서브 3), 주민당 1개, 챕터 종료 시 이전 챕터 잠금. 변경 이벤트, Save/Load
-- [ ] 챕터/시간대는 플래그 `chapter`, `timeSlot` 로 표현 (상수 `StoryKeys`)
-- [ ] 대화 액션 `startQuest:id`, `completeQuest:id`, `setTime:slot`, 조건 `quest:id=active|done`
-- [ ] 대화 명령을 사전 기반 레지스트리로 (새 동사 추가 시 switch 수정 불필요)
+상태는 전부 플래그(`StoryKeys`)로 둔다. 이미 세이브되는 `SaveData.flags` 에 실리고 대화 조건으로 바로 읽힌다.
+- [x] `Quest` 테이블: type(main/sub), chapter, giverId, title, summary, objectiveIds
+- [x] `QuestObjective` 테이블: text, conditions (대화 조건 문법을 매번 평가. 비어 있으면 자동 완료 안 됨)
+- [x] `QuestLog` (정적 조회): 상태, 진행 중 목록(메인 먼저), 목표, 진행도
+- [x] 챕터/시간대 키 `chapter`, `timeSlot` (`StoryKeys`). 시간대 전환 연출은 6단계
+- [x] 대화 액션 `startQuest/completeQuest`, 조건 `quest:id[=1|2|3]`
+- [x] Plaza NPC 대사 연결: 촌장(메인 1 시작), 검맨(서브 101 얼굴 트기 시작), 주민 첫 대화마다 `meet`
+- [ ] 챕터 종료 시 이전 챕터 의뢰 잠금 (기획 미정: 취소 / 잠금)
+- [ ] 동시 활성 상한, 주민당 1개 검증 (테이블 테스트로 할지 런타임으로 할지)
+- [ ] 대화 명령을 사전 기반 레지스트리로 (동사가 더 늘면)
 
 ### 2단계. 탐정 수첩 데이터
-- [ ] `Notebook` 테이블: id, category(document/profile/alibi/question/todo), caseId, subjectId(캐릭터), title, body(@key)
-- [ ] `NotebookManager`: 해금 목록, 새 항목 표시, 알리바이 취소선(무관 판정), Save/Load, 변경 이벤트
-- [ ] 대화 액션 `addNote:id`, `strikeNote:id`, `meet:characterId`, 조건 `note:id`, `met:characterId`
-- [ ] 첫 만남 -> 주민 프로필 해금 (대화 행 액션으로)
+- [x] `Notebook` 테이블: category(document/profile/alibi/question/todo), caseId, subjectId, title, body
+- [x] `NotebookLog` (정적 조회): 해금 목록(사건별, 취소선 하단), 안읽음 수, 읽음 처리
+- [x] 대화 액션 `addNote:id`, `strikeNote:id`, `meet:characterId`, 조건 `note:id`, `met:characterId`
+- [x] 첫 만남 -> 주민 프로필 해금 (대화 행 액션 `meet:npc_x;addNote:id`)
+- [x] 테이블 교차 검증 테스트 (`StoryTableTests`): 목표/의뢰/수첩 ID 참조, 챕터당 메인 1개
+- [ ] 본문 `@key` 다국어화 (지금은 한국어 원문)
 
 ### 3단계. HUD 와 수첩 UI
 - [ ] HUD: 수첩 버튼, 의뢰 목록(최대 3, 메인 고정), "수첩에 기록됨" 토스트, 상호작용 힌트(기존)

@@ -80,7 +80,7 @@ namespace Project.Scripts.Content.Controller
         private void UpdateHint()
         {
             if(_hud == null)
-                _hud = FindFirstObjectByType<HudUI>();
+                _hud = UIManager.Instance.Get<HudUI>();
 
             if(_hud == null)
                 return;

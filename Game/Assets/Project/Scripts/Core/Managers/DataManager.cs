@@ -6,6 +6,9 @@ using DialogueData = Project.Scripts.Data.Table.DialogueData;
 using MapData = Project.Scripts.Data.Table.MapData;
 using ItemTableData = Project.Scripts.Data.Table.ItemTableData;
 using TextData = Project.Scripts.Data.Table.TextData;
+using QuestData = Project.Scripts.Data.Table.QuestData;
+using QuestObjectiveData = Project.Scripts.Data.Table.QuestObjectiveData;
+using NotebookData = Project.Scripts.Data.Table.NotebookData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -91,6 +94,9 @@ namespace Project.Scripts.Core.Managers
             LoadTable<MapData>("Map");
             LoadTable<ItemTableData>("Item");
             LoadTable<TextData>("Text");
+            LoadTable<QuestData>("Quest");
+            LoadTable<QuestObjectiveData>("QuestObjective");
+            LoadTable<NotebookData>("Notebook");
 
             // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
             // LoadTable<QuestData>("Quest");

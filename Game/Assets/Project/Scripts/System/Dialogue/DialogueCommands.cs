@@ -13,11 +13,18 @@ namespace Project.Scripts.System.Dialogue
     ///   flag:key>=2       비교 연산 >=, <=, ==, !=, >, <, = (=는 ==)
     ///   item:rose         아이템을 1개 이상 보유
     ///   item:rose>=3      보유 수량 비교
+    ///   quest:101         의뢰 상태가 None 아님. quest:101=2 처럼 비교 (1 진행, 2 완료, 3 잠금)
+    ///   note:201          수첩 항목 해금됨. note:201=3 은 취소선 (1 안읽음, 2 읽음, 3 취소선)
+    ///   met:npc_gumman    첫 만남 이후
     ///
     /// 액션 (값 생략 시 1):
     ///   setFlag:key[=값]   addFlag:key[=값]   clearFlag:key
     ///   giveItem:id[=수량] takeItem:id[=수량]
     ///   sfx:클립이름       bgm:클립이름        (AudioLibrary 의 클립 이름)
+    ///   startQuest:id      completeQuest:id    (진행 / 완료. 시작은 상태가 None 일 때만)
+    ///   addNote:id         strikeNote:id       (수첩 해금 / 무관 판정 취소선. 해금은 처음 한 번만)
+    ///   meet:characterId   (첫 만남 기록 + metCount 증가. 두 번째부터는 무시)
+    /// 의뢰/수첩/만남 상태는 플래그(StoryKeys)라서 세이브에 같이 저장됩니다.
     ///
     /// 분기 행: text 가 비어 있고 choiceIds 가 있으면 조건을 만족하는 첫 행으로 바로 넘어갑니다.
     /// </summary>
@@ -68,6 +75,15 @@ namespace Project.Scripts.System.Dialogue
                     break;
                 case "item":
                     current = context.GetItemCount(key);
+                    break;
+                case "quest":
+                    current = context.GetFlag(StoryKeys.QuestPrefix + key);
+                    break;
+                case "note":
+                    current = context.GetFlag(StoryKeys.NotePrefix + key);
+                    break;
+                case "met":
+                    current = context.GetFlag(StoryKeys.MetPrefix + key);
                     break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown condition type '{type}' in '{token}'.");
@@ -175,10 +191,36 @@ namespace Project.Scripts.System.Dialogue
                 case "bgm":
                     context.PlayBgm(key);
                     break;
+                case "startquest":
+                    SetIfUnset(context, StoryKeys.QuestPrefix + key, (int)QuestState.Active);
+                    break;
+                case "completequest":
+                    context.SetFlag(StoryKeys.QuestPrefix + key, (int)QuestState.Done);
+                    break;
+                case "addnote":
+                    SetIfUnset(context, StoryKeys.NotePrefix + key, (int)NoteState.Unread);
+                    break;
+                case "strikenote":
+                    context.SetFlag(StoryKeys.NotePrefix + key, (int)NoteState.Struck);
+                    break;
+                case "meet":
+                    if(SetIfUnset(context, StoryKeys.MetPrefix + key, 1))
+                        context.AddFlag(StoryKeys.MetCount, 1);
+                    break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown action '{verb}' in '{token}'.");
                     break;
             }
+        }
+
+        /// <summary>값이 0 일 때만 설정. 이미 진행된 상태를 되돌리지 않기 위함. 설정했으면 true.</summary>
+        private static bool SetIfUnset(IDialogueContext context, string key, int value)
+        {
+            if(context.GetFlag(key) != 0)
+                return false;
+
+            context.SetFlag(key, value);
+            return true;
         }
 
         #endregion
