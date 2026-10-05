@@ -44,6 +44,8 @@ namespace Project.Scripts.Data
         public const float MoveAndSwitchTimeout = 10f;
         /// <summary>걷기 이동(RailConnector)에서 목적 노드 도착으로 보는 수평 거리.</summary>
         public const float RailArrivalDistance = 0.1f;
+        /// <summary>NPC 머리 위 의뢰 표시(땀) 프레임 간격(초).</summary>
+        public const float QuestMarkFrameInterval = 0.4f;
     }
 
     public readonly struct CameraDefines

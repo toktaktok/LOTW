@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.Scripts.Content.Dialogue;
 using Project.Scripts.Core.Managers;
@@ -79,6 +80,26 @@ namespace Project.Scripts.Content.Story
                     done++;
             }
             return (float)done / objectives.Count;
+        }
+
+        /// <summary>giverId 주민이 지금 챕터에 아직 시작하지 않은 의뢰를 갖고 있으면 true (머리 위 땀 표시).</summary>
+        public static bool HasRequestFrom(string giverId)
+        {
+            return HasRequestFrom(giverId, FlagManager.Instance.Get(StoryKeys.Chapter), DataManager.Instance.GetRows<QuestData>(), GetState);
+        }
+
+        /// <summary>상태가 None 이고 챕터가 같은 의뢰. 잠금(Locked)/진행/완료는 제외.</summary>
+        public static bool HasRequestFrom(string giverId, int chapter, IEnumerable<QuestData> quests, Func<int, QuestState> getState)
+        {
+            if(string.IsNullOrEmpty(giverId) || quests == null)
+                return false;
+
+            foreach(QuestData quest in quests)
+            {
+                if(quest.giverId == giverId && quest.chapter == chapter && getState(quest.dataId) == QuestState.None)
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>메인 먼저, 그다음 챕터, dataId 순.</summary>

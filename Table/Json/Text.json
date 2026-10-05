@@ -226,5 +226,17 @@
     "key": "ui.close",
     "ko": "닫기",
     "en": "Close"
+  },
+  {
+    "dataId": 133,
+    "key": "ui.inspect",
+    "ko": "조사하기",
+    "en": "Inspect"
+  },
+  {
+    "dataId": 134,
+    "key": "ui.toast.saved",
+    "ko": "수첩에 기록을 정리했다",
+    "en": "Notes saved"
   }
 ]

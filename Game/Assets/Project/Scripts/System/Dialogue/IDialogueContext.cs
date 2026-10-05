@@ -19,5 +19,8 @@ namespace Project.Scripts.System.Dialogue
 
         /// <summary>대화가 닫힌 뒤 Sequence 테이블 스텝 sequenceId 부터 연출을 재생합니다.</summary>
         void PlaySequence(int sequenceId);
+
+        /// <summary>현재 게임 상태를 현재 슬롯에 저장합니다 (사무소 책상 등 저장 지점).</summary>
+        void SaveGame();
     }
 }

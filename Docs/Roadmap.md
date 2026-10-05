@@ -95,9 +95,13 @@
 - [ ] 저장 지점: 사무소 책상 등 `Inspectable` 에서 `SaveCurrent` (7단계)
 
 ### 7단계. 월드 상호작용 보강
-- [ ] `Inspectable` 오브젝트: 책상 서류/팸플릿 -> 수첩 기록
-- [ ] NPC 대화 횟수별 한마디 (챕터당 5개), 의뢰 보유 시 표정/대사 변경
-- [ ] 의뢰 표시 (말풍선/땀), 커서 당근/돋보기
+- [x] `Inspectable`: 조사하기 -> 내레이션 대화. 수첩 기록은 행의 `addNote:id`, 저장은 새 액션 `save` (현재 슬롯, HUD 알림 `@ui.toast.saved`). 책상 대화 초안 9100-9103
+- [ ] 사무소 씬에 책상 `Inspectable`(dialogueId 9100) 배치 -- 사무소 씬 필요
+- [x] NPC `characterId` (Plaza 6명 지정) + 대화 횟수 플래그 `talk.{id}` (말을 걸 때마다 +1). 검맨 1110-1113 에 횟수별 한마디 예시
+- [ ] 주민별 챕터당 한마디 5개 대사 작성 (분기 행 + `flag:talk.{id}` / `flag:chapter`)
+- [ ] 의뢰 보유 시 표정 변경 -- 표정 스프라이트 필요. 대사 변경은 지금도 `quest:` 조건으로 가능
+- [x] 의뢰 땀 표시 `QuestMarkIndicator`: 지금 챕터에 시작 전 의뢰(giverId)가 있으면 머리 위 땀 2프레임. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base` (미니게임 머지 후 실행)
+- [ ] (미니게임 머지 후) 커서 당근 / 상호작용 대상 위 돋보기 (`TX_UI_Cursor_Carrot`, `TX_UI_Magnify_Single`) -- SubSystemCollection 에 둘 소프트웨어 커서
 
 ### 8단계. 창 미니게임과 추리
 - [~] 미니게임 창 프레임: 병행 브랜치에서 진행 중

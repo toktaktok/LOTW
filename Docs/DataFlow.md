@@ -25,6 +25,7 @@
 | 의뢰 상태 `quest.{id}` | 대화 액션이 쓰고 `QuestLog` 가 읽음 | O (플래그) |
 | 수첩 상태 `note.{id}` | 대화 액션이 해금/취소선, `NotebookUI` 항목 클릭 -> `NotebookLog.MarkRead` 가 읽음 처리 | O (플래그) |
 | 첫 만남 `met.{id}`, `metCount`, `chapter`, `timeSlot` | 대화 액션, 시퀀스 actions 스텝 | O (플래그) |
+| 말 건 횟수 `talk.{characterId}` | `NPC.Interact` (대화 열기 전 +1) | O (플래그) |
 | 불러온 횟수 `loadCount` | `SaveManager.LoadAndApply` | O (플래그) |
 | 시퀀스 재생 중 여부 | `SequencePlayer.IsPlaying` (플레이어 입력 차단) | X |
 

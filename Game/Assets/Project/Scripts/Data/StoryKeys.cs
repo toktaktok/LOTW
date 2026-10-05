@@ -6,12 +6,14 @@ namespace Project.Scripts.Data
     ///   quest.{questId}   = QuestState
     ///   note.{noteId}     = NoteState
     ///   met.{characterId} = 1 (첫 만남 이후)
+    ///   talk.{characterId} = 말을 건 횟수 (NPC.Interact 가 대화를 열기 전에 올림, 첫 대화 = 1)
     /// </summary>
     public static class StoryKeys
     {
         public const string QuestPrefix = "quest.";
         public const string NotePrefix = "note.";
         public const string MetPrefix = "met.";
+        public const string TalkPrefix = "talk.";
 
         /// <summary>현재 챕터 (1부터).</summary>
         public const string Chapter = "chapter";
@@ -25,6 +27,7 @@ namespace Project.Scripts.Data
         public static string Quest(int questId) => QuestPrefix + questId;
         public static string Note(int noteId) => NotePrefix + noteId;
         public static string Met(string characterId) => MetPrefix + characterId;
+        public static string Talk(string characterId) => TalkPrefix + characterId;
 
         public static bool IsQuestKey(string key) => key != null && key.StartsWith(QuestPrefix);
         public static bool IsNoteKey(string key) => key != null && key.StartsWith(NotePrefix);

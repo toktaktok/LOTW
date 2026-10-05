@@ -32,6 +32,10 @@ namespace Project.Scripts.Editor.Plaza
             public string spritePath;
             public string controllerPath;
             public int dialogueId;
+            /// <summary>대화/의뢰 테이블 ID. 비우면 "npc_" + 소문자 name.</summary>
+            public string characterId;
+
+            public string CharacterId => string.IsNullOrEmpty(characterId) ? "npc_" + name.ToLowerInvariant() : characterId;
         }
 
         /// <summary>스프라이트 소품. position.y = 스프라이트 아래쪽 끝.</summary>

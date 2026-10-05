@@ -53,6 +53,7 @@ namespace Project.Scripts.Content.UI
         private void OnEnable()
         {
             FlagManager.OnFlagChanged += OnFlagChanged;
+            SaveManager.OnGameSaved += OnGameSaved;
             if(toastRoot != null)
                 toastRoot.SetActive(false);
             RefreshStory();
@@ -62,6 +63,7 @@ namespace Project.Scripts.Content.UI
         private void OnDisable()
         {
             FlagManager.OnFlagChanged -= OnFlagChanged;
+            SaveManager.OnGameSaved -= OnGameSaved;
             HideInteractionHint();
             _toasts.Clear();
             _toastRoutine = null;
@@ -108,6 +110,11 @@ namespace Project.Scripts.Content.UI
             _toasts.Enqueue(Localization.Resolve(text));
             if(_toastRoutine == null && isActiveAndEnabled)
                 _toastRoutine = StartCoroutine(ToastRoutine());
+        }
+
+        private void OnGameSaved(int slot)
+        {
+            ShowToast("@ui.toast.saved");
         }
 
         private void OnFlagChanged(string key)

@@ -25,6 +25,7 @@ namespace Project.Scripts.System.Dialogue
     ///   addNote:id         strikeNote:id       (수첩 해금 / 무관 판정 취소선. 해금은 처음 한 번만)
     ///   meet:characterId   (첫 만남 기록 + metCount 증가. 두 번째부터는 무시)
     ///   sequence:id        (대화가 닫힌 뒤 Sequence 테이블 연출 재생)
+    ///   save               (현재 슬롯에 저장. 값 없이 쓰는 유일한 동사)
     /// 의뢰/수첩/만남 상태는 플래그(StoryKeys)라서 세이브에 같이 저장됩니다.
     ///
     /// 분기 행: text 가 비어 있고 choiceIds 가 있으면 조건을 만족하는 첫 행으로 바로 넘어갑니다.
@@ -34,6 +35,7 @@ namespace Project.Scripts.System.Dialogue
         public const char Separator = ';';
         private const char VerbSeparator = ':';
         private const char ValueSeparator = '=';
+        private const string SaveVerb = "save";
         private static readonly char[] OperatorChars = { '>', '<', '=', '!' };
 
         #region Conditions
@@ -151,12 +153,13 @@ namespace Project.Scripts.System.Dialogue
 
         private static void RunAction(string token, IDialogueContext context)
         {
-            if(!TrySplit(token, VerbSeparator, out string verb, out string body))
+            if(!TrySplit(token, VerbSeparator, out string verb, out string body) && !string.Equals(verb, SaveVerb, StringComparison.OrdinalIgnoreCase))
             {
                 Debug.LogWarning($"[DialogueCommands] Invalid action '{token}'.");
                 return;
             }
 
+            body ??= string.Empty;
             string key = body;
             int amount = 1;
             if(TrySplit(body, ValueSeparator, out string left, out string right))
@@ -213,6 +216,9 @@ namespace Project.Scripts.System.Dialogue
                         context.PlaySequence(sequenceId);
                     else
                         Debug.LogWarning($"[DialogueCommands] Invalid sequence id in '{token}'.");
+                    break;
+                case SaveVerb:
+                    context.SaveGame();
                     break;
                 default:
                     Debug.LogWarning($"[DialogueCommands] Unknown action '{verb}' in '{token}'.");

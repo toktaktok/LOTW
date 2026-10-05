@@ -699,6 +699,7 @@ namespace Project.Scripts.Editor.Plaza
                 SetProperties(go.GetComponent<NPC>(),
                     ("objectID", entry.objectId),
                     ("dialogueId", entry.dialogueId),
+                    ("characterId", entry.CharacterId),
                     ("dialogueCamera", dialogueCamera));
 
                 var spriteRenderer = go.GetComponentInChildren<SpriteRenderer>(true);

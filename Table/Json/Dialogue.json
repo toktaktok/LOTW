@@ -94,8 +94,31 @@
   },
   {
     "dataId": 1110,
+    "nextId": -1,
+    "choiceIds": [
+      1111,
+      1112,
+      1113
+    ]
+  },
+  {
+    "dataId": 1111,
     "speakerId": "npc_gumman",
     "text": "먼저 인사라도 건네보라고!",
+    "nextId": -1,
+    "conditions": "flag:talk.npc_gumman<=1"
+  },
+  {
+    "dataId": 1112,
+    "speakerId": "npc_gumman",
+    "text": "이 마을 사람들, 겉보기보다 말이 많아. 들어주기만 하면 돼.",
+    "nextId": -1,
+    "conditions": "flag:talk.npc_gumman==2"
+  },
+  {
+    "dataId": 1113,
+    "speakerId": "npc_gumman",
+    "text": "또 왔어? 탐정 일은 발로 하는 거라고.",
     "nextId": -1
   },
   {
@@ -418,6 +441,35 @@
     "dataId": 9022,
     "speakerId": "narrator",
     "text": "...공기가 차갑다.",
+    "nextId": -1
+  },
+  {
+    "dataId": 9100,
+    "speakerId": "narrator",
+    "text": "사무소 책상. 수첩과 서류가 가지런히 놓여 있다.",
+    "nextId": -1,
+    "choiceIds": [
+      9101,
+      9102
+    ]
+  },
+  {
+    "dataId": 9101,
+    "speakerId": "player",
+    "text": "오늘 일을 수첩에 정리한다.",
+    "nextId": 9103,
+    "actions": "save"
+  },
+  {
+    "dataId": 9102,
+    "speakerId": "player",
+    "text": "그만둔다.",
+    "nextId": -1
+  },
+  {
+    "dataId": 9103,
+    "speakerId": "narrator",
+    "text": "수첩을 덮었다. 잠깐 숨을 돌린다.",
     "nextId": -1
   }
 ]

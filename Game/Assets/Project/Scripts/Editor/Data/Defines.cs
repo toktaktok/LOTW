@@ -17,6 +17,16 @@ namespace Project.Scripts.Editor.Data
         // 새로 변환한 머티리얼의 toon 명암 단계 수
         public const float VoxelDssDefaultToonSteps = 3f;
 
+        // --- Quest Mark Builder ---
+        public const string NpcBasePrefabPath = "Assets/Project/Prefabs/Characters/PF_NPC_Base.prefab";
+        // NPC 스프라이트 윗변과 땀 표시 사이 간격(유닛)
+        public const float QuestMarkMargin = 0.3f;
+        public static readonly string[] QuestMarkSpritePaths =
+        {
+            "Assets/Project/Art/UI/TX_UI_Sweat_1.png",
+            "Assets/Project/Art/UI/TX_UI_Sweat_2.png"
+        };
+
         // --- Plaza Builder ---
         public const string PlazaScenePath = "Assets/Project/Scenes/Plaza.unity";
         // 카메라 피치(도). yaw 0 고정
