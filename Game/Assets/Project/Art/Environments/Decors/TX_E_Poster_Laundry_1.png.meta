@@ -143,10 +143,10 @@ TextureImporter:
       name: KakaoTalk_Photo_2022-03-25-22-15-46_0
       rect:
         serializedVersion: 2
-        x: 52
-        y: 81
-        width: 36
-        height: 34
+        x: 50
+        y: 77
+        width: 34
+        height: 33
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -164,10 +164,10 @@ TextureImporter:
       name: KakaoTalk_Photo_2022-03-25-22-15-46_1
       rect:
         serializedVersion: 2
-        x: 52
-        y: 33
-        width: 31
-        height: 39
+        x: 50
+        y: 31
+        width: 29
+        height: 38
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -185,9 +185,9 @@ TextureImporter:
       name: KakaoTalk_Photo_2022-03-25-22-15-46_2
       rect:
         serializedVersion: 2
-        x: 52
+        x: 50
         y: 7
-        width: 28
+        width: 26
         height: 13
       alignment: 0
       pivot: {x: 0.5, y: 0.5}
