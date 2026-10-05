@@ -170,14 +170,9 @@ namespace Project.Scripts.Editor.Plaza
         public const float RampLX = -36f;
         public const float RampRX = 95f;
 
-        // 분수 (보정 1): 수반 복셀(폭 12, 깊이 11.8, 높이 4.8) 위에 물 스프라이트(폭 12, 높이 7.6)를 겹친다. 분무 파티클은 물 꼭대기
+        // 분수 (보정 1): PF_FountainSet = 수반 복셀(폭 12, 깊이 11.8) + 물 스프라이트 + 분무 파티클
         private const float FountainZ = 9f;
         private const float FountainBasinDepth = 11.8f;
-        private const float FountainWaterY = 0.2f;
-        private const float FountainWaterHeight = 7.6f;
-        private const float FountainTopY = FountainWaterY + FountainWaterHeight;
-        // 물 스프라이트는 위쪽 그릇(중심에서 최대 2.6) 앞에 두어 그릇이 물줄기를 가리지 않게 한다
-        private const float FountainWaterZ = FountainZ - 2.8f;
 
         #endregion
 
@@ -210,7 +205,7 @@ namespace Project.Scripts.Editor.Plaza
             // --- 광장 안쪽 (분수 뒤) ---
             new Placement { name = "Square_ShopL", group = SquareGroup, prefabPath = Vox("Central/M_E_CommonBuilding_001.vox"), x = -13f, frontZ = 15f, yaw = 12f },
             new Placement { name = "Square_ShopR", group = SquareGroup, prefabPath = Vox("Central/M_E_CommonBuilding_005.vox"), x = 13f, frontZ = 17f, yaw = -10f },
-            new Placement { name = "Fountain_Basin", group = FountainGroup, prefabPath = Vox("Central/M_E_Fountain.vox"), x = 0f, frontZ = FountainZ - FountainBasinDepth * 0.5f },
+            new Placement { name = "FountainSet", group = FountainGroup, prefabPath = ToolDefines.PlazaPrefabFolder + "/PF_FountainSet.prefab", x = 0f, frontZ = FountainZ - FountainBasinDepth * 0.5f },
             new Placement { name = "Square_BushL", group = SquareGroup, prefabPath = Vox("Etc/M_E_FlowerBush.vox"), x = -9f, frontZ = 3.5f },
             new Placement { name = "Square_BushR", group = SquareGroup, prefabPath = Vox("Etc/M_E_FlowerBush.vox"), x = 9f, frontZ = 3.5f },
 
@@ -258,7 +253,6 @@ namespace Project.Scripts.Editor.Plaza
         public static readonly SpriteProp[] SpriteProps =
         {
             new SpriteProp { name = "Toad", group = FountainGroup, spritePath = Chars + "127.Toad/Textures/TX_C_Toad_Idle.png", controllerPath = Controllers + "AC_Toad.controller", position = new Vector3(19.94f, 0f, 20.71f) },
-            new SpriteProp { name = "FountainWater", group = FountainGroup, spritePath = "Assets/Project/Art/Environments/Props/TX_E_FountainWater.png", controllerPath = Controllers + "AC_FountainWater.controller", position = new Vector3(0f, FountainWaterY, FountainWaterZ) },
             new SpriteProp { name = "TrashCan", group = LaneAGroup, spritePath = "Assets/Project/Art/Environments/Props/TX_E_TrashCan_Default.png", position = new Vector3(63.5f, 0f, 1.5f) },
             new SpriteProp { name = "TrashCan_Decal", group = LaneAGroup, spritePath = "Assets/Project/Art/Environments/Decors/TX_E_NumbDumb.png", position = new Vector3(63.5f, 0.6f, 1.45f) },
         };
@@ -300,7 +294,6 @@ namespace Project.Scripts.Editor.Plaza
 
         public static readonly BoxEntry[] Boxes = BuildBoxes();
 
-        public static readonly ParticleEntry FountainSpray = new ParticleEntry { name = "FX_FountainSpray", group = FountainGroup, position = new Vector3(0f, FountainTopY + 0.1f, FountainWaterZ) };
         public static readonly ParticleEntry ChimneySmoke = new ParticleEntry { name = "FX_ChimneySmoke", group = VfxGroup, position = new Vector3(58f, LaneFY + 30f, 64f) };
 
         private static BoxEntry[] BuildBoxes()

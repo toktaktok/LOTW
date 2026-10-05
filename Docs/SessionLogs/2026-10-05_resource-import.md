@@ -21,3 +21,12 @@
 - 결과: Plaza 씬을 저장했다. 저장 전에 씬은 dirty가 아니었다.
 - 확인 안 함: 물 위치 변경 후 화면. 스크린샷을 찍지 않았다.
 - 다음: 분수를 `PF_FountainSet` 프리팹으로 바꿀지 사용자가 정한다.
+
+## 2026-10-05 19:40 | feature/fountain-set
+- 작업: main(`b6998df`)을 origin에 푸시했다.
+- 작업: Plaza 씬의 `Fountain_Basin`, `FountainWater`, `FX_FountainSpray`를 `PF_FountainSet` 프리팹 하나로 묶었다.
+- 작업: `PlazaLayout.cs`는 분수를 `PF_FountainSet` 배치 하나로 만든다. 물 스프라이트와 분무 항목을 지웠다.
+- 작업: `PlazaSceneBuilder.cs`에서 `CreateSpray`와 Spray 상수 10개를 지웠다. 분무 설정은 프리팹에 저장된다.
+- 결과: 컴파일 오류가 없었다. 씬 인스턴스의 월드 위치(0, 0, -4.78)가 그대로이고 오버라이드가 0개다.
+- 확인 안 함: `LOTW/Plaza/5 Build Scene` 전체 재빌드. 재빌드하면 직접 고친 배치가 지워진다.
+- 다음: 없음.

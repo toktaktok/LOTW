@@ -84,17 +84,6 @@ namespace Project.Scripts.Editor.Plaza
         private const float SnowDrift = 0.2f;
         private const float SnowNoise = 0.3f;
 
-        private const float SprayAngle = 12f;
-        private const float SprayRadius = 0.4f;
-        private const float SpraySpeedMin = 3.5f;
-        private const float SpraySpeedMax = 5f;
-        private const float SprayGravity = 1f;
-        private const float SprayLifetime = 1f;
-        private const float SpraySize = 0.12f;
-        private const float SprayRate = 40f;
-        private static readonly Color SprayColorA = new Color(0.66f, 0.8f, 0.94f);
-        private static readonly Color SprayColorB = Color.white;
-
         private const float SmokeAngle = 10f;
         private const float SmokeRadius = 1f;
         private const float SmokeLifetime = 6f;
@@ -148,7 +137,6 @@ namespace Project.Scripts.Editor.Plaza
             BuildSpriteProps(generated);
             Dictionary<string, RailNode> nodes = BuildRails(generated);
             BuildNpcs(generated, vcamDialogue);
-            CreateSpray(GetGroup(generated, PlazaLayout.FountainSpray.group), PlazaLayout.FountainSpray);
             CreateSmoke(GetGroup(generated, PlazaLayout.ChimneySmoke.group), PlazaLayout.ChimneySmoke);
             WirePlayer(system, snowMan, nodes[PlazaLayout.StartNode]);
 
@@ -811,20 +799,6 @@ namespace Project.Scripts.Editor.Plaza
             noise.frequency = SnowNoise;
 
             SetParticleMaterial(particles);
-        }
-
-        private static void CreateSpray(Transform parent, PlazaLayout.ParticleEntry entry)
-        {
-            ParticleSystem particles = CreateUpwardEmitter(parent, entry, SprayAngle, SprayRadius);
-            ParticleSystem.MainModule main = particles.main;
-            main.startLifetime = SprayLifetime;
-            main.startSpeed = new ParticleSystem.MinMaxCurve(SpraySpeedMin, SpraySpeedMax);
-            main.gravityModifier = SprayGravity;
-            main.startSize = SpraySize;
-            main.startColor = new ParticleSystem.MinMaxGradient(SprayColorA, SprayColorB);
-
-            ParticleSystem.EmissionModule emission = particles.emission;
-            emission.rateOverTime = SprayRate;
         }
 
         private static void CreateSmoke(Transform parent, PlazaLayout.ParticleEntry entry)
