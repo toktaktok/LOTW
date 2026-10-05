@@ -5,6 +5,12 @@ namespace Project.Scripts.Data
     public readonly struct UIDefines
     {
         public const float DefaultFadeDuration = 0.3f;
+        /// <summary>HUD 의뢰 목록 줄 수 (메인 고정 + 서브).</summary>
+        public const int HudQuestLines = 3;
+        /// <summary>"수첩에 기록됨" 알림 표시 시간(초, unscaled).</summary>
+        public const float ToastDuration = 2.5f;
+        /// <summary>수첩 표지에 붙이는 포스트잇 최대 수.</summary>
+        public const int MaxStickyNotes = 4;
     }
     public readonly struct DialogueDefines
     {

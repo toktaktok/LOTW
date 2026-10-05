@@ -41,4 +41,18 @@ namespace Project.Scripts.Data
         public string[] flags;
         public string timestamp;
     }
+
+    /// <summary>
+    /// 수첩 왼쪽 목록의 한 줄. NotebookPageBuilder 가 만들고 NotebookUI 가 그립니다.
+    /// isHeader 행(사건 인덱스 등)은 선택할 수 없습니다.
+    /// </summary>
+    public struct NotebookEntryView
+    {
+        public int id;
+        public string label;
+        public bool isHeader;
+        public bool isUnread;
+        public bool isStruck;
+        public bool isDone;
+    }
 }

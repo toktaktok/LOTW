@@ -41,4 +41,15 @@ namespace Project.Scripts.Data
         Read = 2,
         Struck = 3
     }
+
+    /// <summary>수첩 인덱스 탭. 순서 = NotebookUI.tabButtons 순서.</summary>
+    public enum NotebookTab
+    {
+        Cover,
+        Quests,
+        Residents,
+        Alibis,
+        Questions,
+        Documents
+    }
 }

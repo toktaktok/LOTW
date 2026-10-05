@@ -28,5 +28,83 @@
     "key": "item.rose.desc",
     "ko": "오늘 들어온 붉은 장미.",
     "en": "A red rose that arrived today."
+  },
+  {
+    "dataId": 100,
+    "key": "ui.notebook.tab.cover",
+    "ko": "표지",
+    "en": "Cover"
+  },
+  {
+    "dataId": 101,
+    "key": "ui.notebook.tab.quests",
+    "ko": "의뢰",
+    "en": "Requests"
+  },
+  {
+    "dataId": 102,
+    "key": "ui.notebook.tab.residents",
+    "ko": "주민",
+    "en": "Residents"
+  },
+  {
+    "dataId": 103,
+    "key": "ui.notebook.tab.alibis",
+    "ko": "알리바이",
+    "en": "Alibis"
+  },
+  {
+    "dataId": 104,
+    "key": "ui.notebook.tab.questions",
+    "ko": "의문점",
+    "en": "Questions"
+  },
+  {
+    "dataId": 105,
+    "key": "ui.notebook.tab.documents",
+    "ko": "서류",
+    "en": "Documents"
+  },
+  {
+    "dataId": 106,
+    "key": "ui.notebook.case",
+    "ko": "사건 {0}",
+    "en": "Case {0}"
+  },
+  {
+    "dataId": 107,
+    "key": "ui.notebook.progress",
+    "ko": "진행도 {0}%",
+    "en": "Progress {0}%"
+  },
+  {
+    "dataId": 108,
+    "key": "ui.notebook.empty",
+    "ko": "아직 적힌 것이 없다.",
+    "en": "Nothing written yet."
+  },
+  {
+    "dataId": 109,
+    "key": "ui.notebook.close",
+    "ko": "닫기",
+    "en": "Close"
+  },
+  {
+    "dataId": 110,
+    "key": "ui.toast.note",
+    "ko": "수첩에 기록됨",
+    "en": "Noted in notebook"
+  },
+  {
+    "dataId": 111,
+    "key": "ui.toast.quest",
+    "ko": "새 의뢰: {0}",
+    "en": "New request: {0}"
+  },
+  {
+    "dataId": 112,
+    "key": "ui.toast.questdone",
+    "ko": "의뢰 완료: {0}",
+    "en": "Request done: {0}"
   }
 ]
