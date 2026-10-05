@@ -36,3 +36,11 @@
 - 작업: main을 origin에 push했다.
 - 확인 안 함: 문서에 적은 기능의 동작. Unity 에디터가 닫혀 있었다.
 - 다음: 에디터에서 UI 빌드 메뉴 3개와 EditMode 테스트를 실행한다.
+
+## 2026-10-05 13:30 | main
+- 작업: 워크트리 4개를 지웠다. `t3code-718b690a`, `t3code-57dd0731`, `t3code-89a2f4d0`, `t3code-28bedbe9`다.
+- 작업: 빈 폴더 `t3code-ae916fb8`을 지웠다.
+- 작업: `t3code-89a2f4d0`의 미커밋 로그 `2026-10-05_minigame-framework.md`를 main으로 옮겼다.
+- 결과: 4개 브랜치의 커밋이 모두 main에 있었다. `t3code-28bedbe9`의 미커밋 JSON 6개는 줄바꿈만 달랐다.
+- 결과: 로컬 브랜치와 origin 브랜치는 지우지 않았다.
+- 다음: 없음.
