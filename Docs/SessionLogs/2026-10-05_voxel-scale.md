@@ -30,3 +30,19 @@
 - 결과: Editor 어셈블리가 오류 없이 다시 컴파일되었다.
 - 확인 안 함: `PF_Fountain` importScale 0.3과 `Plaza.unity` 수정. 이 변경은 다른 분수 작업에서 나왔다. 이 커밋에 넣지 않았다.
 - 다음: 건물 .vox를 회전해서 문을 -Z 정면으로 맞춘다. `Plaza.unity` 분수 작업이 커밋된 뒤에 시작한다.
+
+## 2026-10-05 21:57 | feature/voxel-door-front
+- 작업: 건물 .vox 12개를 회전해서 문이 yaw 0에서 -Z(카메라 쪽)를 보게 했다. 180도: Bar_Outside, RabbitHouse, MiddleHouse_1, OldApartment. -90도: CandyShop, CommonBuilding_001/002/004/005/008, CommonHouse_001. +90도: SnowmanOffice. 원본은 `C:/tmp/vox/orig/`에 있다.
+- 작업: .vox의 SIZE, XYZI만 바꿨다. RabbitHouse는 nTRN `_t`의 x, y 부호도 바꿨다(`17 5 67` -> `-17 -5 67`). 피벗이 회전한 옛 경계와 같아야 하기 때문이다.
+- 작업: 프리팹 12개의 메시를 다시 만들고 DSS 점유 텍스처를 다시 구웠다. `PF_SnowOffice`의 직계 자식 12개는 root 기준으로 Y축 +90도 돌렸다.
+- 작업: 수동 배율 프리팹 5개(`PF_CommonBuilding_001`, `PF_Bench_1`, `PF_DrinkMachine_3`, `PF_Fountain`, `PF_StreetLight_1`)의 머티리얼 `_ImportScale`을 importScale에 맞췄다. importScale은 바꾸지 않았다.
+- 작업: `Plaza.unity`의 인스턴스 12개 yaw를 Y - R로 바꿨다. YAML을 직접 고친 뒤 장면을 다시 열었고, dirty가 아니었다.
+- 결과: 12개 프리팹 모두 새 경계가 옛 경계를 R만큼 돌린 값과 같다. 노멀 개수는 면 방향을 따라 옮겨졌다.
+- 결과: `Validate Voxel Scale`은 수동 배율 9건만 보고했다(알려진 항목). EditMode 테스트 249개가 통과했다.
+- 결과: 같은 카메라 4곳에서 전후 화면을 비교했다. 달라진 곳은 `PF_CommonBuilding_001`과 수동 배율 프리팹 4개의 DSS 음영이다. 실루엣은 같다.
+- 확인 안 함: `Test/Character.unity`의 인스턴스 6개(CommonBuilding_001/002/004, CommonHouse_001, Bar_Outside, SnowOffice). 이 장면은 고치지 않았다. 건물이 90~180도 돌아 보인다.
+- 확인 안 함: `PlazaLayout.cs`. main에 이 파일이 없어서 고치지 않았다.
+- 확인 안 함: Play 모드 화면. 에디터 장면에서 임시 카메라로만 확인했다.
+- 다음: `Test/Character.unity`의 인스턴스 yaw를 Y - R로 바꾼다.
+- 작업: Fable 리뷰에서 막히는 결함은 없었다. 규칙 문서에 "프리팹이 있는 모델만 회전했다"를 적었다.
+- 확인 안 함: 프리팹이 없는 모델(OldApartment_2/_3/_Laundry, MiddleHouse_2/_3/_4)은 회전하지 않았다. 이 모델들은 아직 문이 +Z를 본다.
