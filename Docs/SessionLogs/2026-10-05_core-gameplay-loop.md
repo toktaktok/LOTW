@@ -43,9 +43,16 @@
 - 확인 안 함: EditMode 테스트, 게임 실행. Unity 에디터가 닫혀 있었다.
 - 다음: 에디터에서 UI 빌드 메뉴 3개를 실행한다. EditMode 테스트를 실행한다. 새 게임에서 프롤로그와 Q/Esc 입력을 확인한다.
 
-## 2026-10-05 13:55 | t3code/core-gameplay-loop
+## 2026-10-05 13:44 | t3code/core-gameplay-loop
 - 작업: 플레이 중 캐릭터가 움직이지 않는 문제를 조사했다.
 - 결과: Plaza 플레이에서 `Time.timeScale`이 0이었다. `CoreManager.IsPaused`가 true였다. PauseUI는 열려 있지 않았다.
 - 원인: `runInBackground`가 0이다. 에디터가 포커스를 잃으면 `OnApplicationPause(true)`가 게임을 멈춘다. 커밋 866b209 이후 포커스가 돌아와도 풀리지 않았다.
 - 작업: `CoreManager`가 앱 때문에 멈춘 경우를 기록한다. 포커스가 돌아오면 그 경우만 푼다. PauseUI로 연 일시정지는 유지한다.
 - 다음: 에디터에서 Plaza를 플레이하고 이동을 확인한다.
+
+## 2026-10-05 13:50 | t3code/core-gameplay-loop
+- 작업: 실행 중인 에디터에서 6b3056b 수정을 확인했다.
+- 결과: 포커스가 없는 상태로 플레이하면 `_pausedByApplication`이 true였다. `OnApplicationPause(false)`를 호출하면 `timeScale`이 1로 돌아왔다.
+- 결과: `PauseGame`으로 멈춘 뒤 포커스를 잃고 돌아와도 `IsPaused`가 true로 남았다.
+- 확인 안 함: 실제 키 입력으로 걷기. CLI로 에디터 창에 포커스를 줄 수 없었다.
+- 다음: 사용자가 Plaza를 플레이하고 이동을 확인한다.
