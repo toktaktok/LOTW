@@ -2,13 +2,12 @@
 // SubSystemCollection 의 UIManager.uiPrefabs 에 NotebookUI 를 등록한다. 이미 있는 것은 새로 만들지 않고 연결만 다시 한다.
 using System;
 using Project.Scripts.Content.UI;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
-using Project.Scripts.System.UI;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using static Project.Scripts.Editor.UI.UIBuildUtil;
 
 namespace Project.Scripts.Editor.UI
 {
@@ -16,14 +15,11 @@ namespace Project.Scripts.Editor.UI
     {
         private const string NotebookPrefabPath = "Assets/Project/Prefabs/UI/PF_NotebookUI.prefab";
         private const string HudPrefabPath = "Assets/Project/Prefabs/UI/PF_HudUI.prefab";
-        private const string SubSystemPrefabPath = "Assets/Project/Resources/SubSystemCollection.prefab";
         private const string InnerSpritePath = "Assets/Project/Art/UI/TX_UI_Notebook_Inner.png";
         private const string CoverSpritePath = "Assets/Project/Art/UI/TX_UI_Notebook_Cover.png";
         private const string ButtonSpritePath = "Assets/Project/Art/UI/TX_UI_NotebookButton.png";
         private const string YellowStickyPath = "Assets/Project/Art/UI/TX_UI_StickyNote_Yellow.png";
         private const string GreenStickyPath = "Assets/Project/Art/UI/TX_UI_StickyNote_Green.png";
-        private const string FontPath = "Assets/Project/Art/Fonts/Galmuri11/Galmuri11 Pixel.asset";
-        private const int UILayerIndex = 5;
 
         // 수첩 스프라이트(400px)를 3배 정수 배율로. 아래 좌표는 스프라이트 픽셀을 3배 해 중심 기준으로 옮긴 값
         private const float BookSize = 1200f;
@@ -42,7 +38,6 @@ namespace Project.Scripts.Editor.UI
 
         private const float TitleFontSize = 30f;
         private const float BodyFontSize = 22f;
-        private const float TabFontSize = 22f;
 
         // HUD 배치 (1920x1080 기준)
         private const float HudMargin = 32f;
@@ -54,13 +49,8 @@ namespace Project.Scripts.Editor.UI
         private static readonly Vector2 ToastSize = new Vector2(420f, 56f);
         private const float HudFontSize = 22f;
 
-        // 중간 톤 크래프트 브라운 계열 (크림/보라 금지)
-        private static readonly Color TextColor = new Color(0.23f, 0.17f, 0.16f, 1f);
-        private static readonly Color KraftColor = new Color(0.66f, 0.51f, 0.36f, 1f);
-        private static readonly Color KraftPanelColor = new Color(0.66f, 0.51f, 0.36f, 0.88f);
         private static readonly Color TabActiveColor = new Color(0.82f, 0.71f, 0.58f, 1f);
         private static readonly Color BadgeColor = new Color(0.64f, 0.25f, 0.17f, 1f);
-        private static readonly Color DimColor = new Color(0f, 0f, 0f, 0.55f);
         private static readonly Color EntryHighlightColor = new Color(0.55f, 0.40f, 0.27f, 0.25f);
 
         private static readonly string[] TabKeys =
@@ -72,106 +62,85 @@ namespace Project.Scripts.Editor.UI
         [MenuItem("LOTW/UI/Build Notebook UI")]
         public static void Run()
         {
-            var font = AssetDatabase.LoadAssetAtPath<TMP_FontAsset>(FontPath);
-            if(font == null)
-                Debug.LogWarning($"[NotebookUIBuilder] Font not found: {FontPath}");
-
-            NotebookUI notebook = BuildNotebookPrefab(font);
+            TMP_FontAsset font = LoadFont();
+            NotebookUI notebook = BuildPrefabOnce<NotebookUI>(NotebookPrefabPath, () => CreateNotebook(font));
             SetupHud(font);
-            RegisterPrefab(notebook);
+            RegisterUIPrefabs(notebook);
             AssetDatabase.SaveAssets();
         }
 
         #region Notebook
 
-        private static NotebookUI BuildNotebookPrefab(TMP_FontAsset font)
+        private static GameObject CreateNotebook(TMP_FontAsset font)
         {
-            var existing = AssetDatabase.LoadAssetAtPath<NotebookUI>(NotebookPrefabPath);
-            if(existing != null)
-            {
-                Debug.Log($"[NotebookUIBuilder] {NotebookPrefabPath} already exists, skipped. Delete it to rebuild.");
-                return existing;
-            }
+            GameObject rootGo = CreateRoot("PF_NotebookUI");
+            RectTransform root = (RectTransform)rootGo.transform;
 
-            var rootGo = new GameObject("PF_NotebookUI", typeof(RectTransform), typeof(CanvasGroup));
-            try
-            {
-                rootGo.layer = UILayerIndex;
-                RectTransform root = (RectTransform)rootGo.transform;
-                Stretch(root);
+            Image dim = rootGo.AddComponent<Image>();
+            dim.color = DimColor;
 
-                Image dim = rootGo.AddComponent<Image>();
-                dim.color = DimColor;
+            RectTransform listRoot = CreateUIObject("ListRoot", root);
+            Stretch(listRoot);
+            CreateBook("Book", listRoot, InnerSpritePath);
+            RectTransform left = CreateArea("LeftPage", listRoot, LeftPage);
+            RectTransform right = CreateArea("RightPage", listRoot, RightPage);
 
-                RectTransform listRoot = CreateUIObject("ListRoot", root);
-                Stretch(listRoot);
-                CreateBook("Book", listRoot, InnerSpritePath);
-                RectTransform left = CreateArea("LeftPage", listRoot, LeftPage);
-                RectTransform right = CreateArea("RightPage", listRoot, RightPage);
+            TMP_Text pageTitle = CreateText("PageTitle", left, font, TitleFontSize, TextAlignmentOptions.TopLeft);
+            PlaceTop((RectTransform)pageTitle.transform, 0f, PageTitleHeight);
+            RectTransform entries = CreateUIObject("Entries", left);
+            Stretch(entries);
+            entries.offsetMax = new Vector2(0f, -PageTitleHeight);
+            var entryLayout = entries.gameObject.AddComponent<VerticalLayoutGroup>();
+            entryLayout.childControlWidth = true;
+            entryLayout.childControlHeight = false;
+            entryLayout.childForceExpandWidth = true;
+            entryLayout.childForceExpandHeight = false;
+            Button entryTemplate = CreateEntryTemplate(entries, font);
+            TMP_Text emptyText = CreateText("EmptyText", left, font, BodyFontSize, TextAlignmentOptions.Center);
+            Stretch((RectTransform)emptyText.transform);
 
-                TMP_Text pageTitle = CreateText("PageTitle", left, font, TitleFontSize, TextAlignmentOptions.TopLeft);
-                PlaceTop((RectTransform)pageTitle.transform, 0f, PageTitleHeight);
-                RectTransform entries = CreateUIObject("Entries", left);
-                Stretch(entries);
-                entries.offsetMax = new Vector2(0f, -PageTitleHeight);
-                var entryLayout = entries.gameObject.AddComponent<VerticalLayoutGroup>();
-                entryLayout.childControlWidth = true;
-                entryLayout.childControlHeight = false;
-                entryLayout.childForceExpandWidth = true;
-                entryLayout.childForceExpandHeight = false;
-                Button entryTemplate = CreateEntryTemplate(entries, font);
-                TMP_Text emptyText = CreateText("EmptyText", left, font, BodyFontSize, TextAlignmentOptions.Center);
-                Stretch((RectTransform)emptyText.transform);
+            TMP_Text detailTitle = CreateText("DetailTitle", right, font, TitleFontSize, TextAlignmentOptions.TopLeft);
+            PlaceTop((RectTransform)detailTitle.transform, 0f, PageTitleHeight);
+            TMP_Text detailBody = CreateText("DetailBody", right, font, BodyFontSize, TextAlignmentOptions.TopLeft);
+            RectTransform bodyRect = (RectTransform)detailBody.transform;
+            Stretch(bodyRect);
+            bodyRect.offsetMax = new Vector2(0f, -PageTitleHeight);
 
-                TMP_Text detailTitle = CreateText("DetailTitle", right, font, TitleFontSize, TextAlignmentOptions.TopLeft);
-                PlaceTop((RectTransform)detailTitle.transform, 0f, PageTitleHeight);
-                TMP_Text detailBody = CreateText("DetailBody", right, font, BodyFontSize, TextAlignmentOptions.TopLeft);
-                RectTransform bodyRect = (RectTransform)detailBody.transform;
-                Stretch(bodyRect);
-                bodyRect.offsetMax = new Vector2(0f, -PageTitleHeight);
+            RectTransform coverRoot = CreateUIObject("CoverRoot", root);
+            Stretch(coverRoot);
+            CreateBook("Cover", coverRoot, CoverSpritePath);
+            RectTransform stickies = CreateArea("Stickies", coverRoot, CoverArea);
+            var grid = stickies.gameObject.AddComponent<GridLayoutGroup>();
+            grid.cellSize = StickyCell;
+            grid.childAlignment = TextAnchor.MiddleCenter;
+            grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
+            grid.constraintCount = 2;
+            Sprite yellow = LoadSprite(YellowStickyPath);
+            Sprite green = LoadSprite(GreenStickyPath);
+            Image stickyTemplate = CreateStickyTemplate(stickies, yellow, font);
 
-                RectTransform coverRoot = CreateUIObject("CoverRoot", root);
-                Stretch(coverRoot);
-                CreateBook("Cover", coverRoot, CoverSpritePath);
-                RectTransform stickies = CreateArea("Stickies", coverRoot, CoverArea);
-                var grid = stickies.gameObject.AddComponent<GridLayoutGroup>();
-                grid.cellSize = StickyCell;
-                grid.childAlignment = TextAnchor.MiddleCenter;
-                grid.constraint = GridLayoutGroup.Constraint.FixedColumnCount;
-                grid.constraintCount = 2;
-                Sprite yellow = LoadSprite(YellowStickyPath);
-                Sprite green = LoadSprite(GreenStickyPath);
-                Image stickyTemplate = CreateStickyTemplate(stickies, yellow, font);
+            Button[] tabs = CreateTabs(root, font);
+            Button close = CreateTextButton("CloseButton", root, font, "X", CloseButtonSize);
+            ((RectTransform)close.transform).anchoredPosition = CloseButtonPosition;
 
-                Button[] tabs = CreateTabs(root, font);
-                Button close = CreateTextButton("CloseButton", root, font, "X", CloseButtonSize);
-                ((RectTransform)close.transform).anchoredPosition = CloseButtonPosition;
-
-                NotebookUI ui = rootGo.AddComponent<NotebookUI>();
-                var so = new SerializedObject(ui);
-                SetArray(so, "tabButtons", tabs);
-                Set(so, "coverRoot", coverRoot.gameObject);
-                Set(so, "stickyContainer", stickies);
-                Set(so, "stickyTemplate", stickyTemplate);
-                Set(so, "mainStickySprite", yellow);
-                Set(so, "subStickySprite", green);
-                Set(so, "listRoot", listRoot.gameObject);
-                Set(so, "pageTitle", pageTitle);
-                Set(so, "entryContainer", entries);
-                Set(so, "entryTemplate", entryTemplate);
-                Set(so, "emptyText", emptyText);
-                Set(so, "detailTitle", detailTitle);
-                Set(so, "detailBody", detailBody);
-                Set(so, "closeButton", close);
-                so.ApplyModifiedPropertiesWithoutUndo();
-
-                GameObject saved = PrefabUtility.SaveAsPrefabAsset(rootGo, NotebookPrefabPath);
-                return saved.GetComponent<NotebookUI>();
-            }
-            finally
-            {
-                UnityEngine.Object.DestroyImmediate(rootGo);
-            }
+            NotebookUI ui = rootGo.AddComponent<NotebookUI>();
+            var so = new SerializedObject(ui);
+            SetArray(so, "tabButtons", tabs);
+            Set(so, "coverRoot", coverRoot.gameObject);
+            Set(so, "stickyContainer", stickies);
+            Set(so, "stickyTemplate", stickyTemplate);
+            Set(so, "mainStickySprite", yellow);
+            Set(so, "subStickySprite", green);
+            Set(so, "listRoot", listRoot.gameObject);
+            Set(so, "pageTitle", pageTitle);
+            Set(so, "entryContainer", entries);
+            Set(so, "entryTemplate", entryTemplate);
+            Set(so, "emptyText", emptyText);
+            Set(so, "detailTitle", detailTitle);
+            Set(so, "detailBody", detailBody);
+            Set(so, "closeButton", close);
+            so.ApplyModifiedPropertiesWithoutUndo();
+            return rootGo;
         }
 
         private static void CreateBook(string name, RectTransform parent, string spritePath)
@@ -199,14 +168,10 @@ namespace Project.Scripts.Editor.UI
             var tabs = new Button[TabKeys.Length];
             for(int i = 0; i < TabKeys.Length; i++)
             {
-                Button tab = CreateTextButton($"Tab_{(NotebookTab)i}", bar, font, string.Empty, TabSize);
+                Button tab = CreateTextButton($"Tab_{(NotebookTab)i}", bar, font, TabKeys[i], TabSize);
                 ColorBlock colors = tab.colors;
                 colors.disabledColor = TabActiveColor;
                 tab.colors = colors;
-                tab.GetComponentInChildren<TMP_Text>().gameObject.AddComponent<LocalizedText>();
-                var label = new SerializedObject(tab.GetComponentInChildren<LocalizedText>());
-                label.FindProperty("key").stringValue = TabKeys[i];
-                label.ApplyModifiedPropertiesWithoutUndo();
                 tabs[i] = tab;
             }
             return tabs;
@@ -359,43 +324,6 @@ namespace Project.Scripts.Editor.UI
 
         #endregion
 
-        #region Registration
-
-        private static void RegisterPrefab(NotebookUI prefab)
-        {
-            if(prefab == null)
-                return;
-
-            GameObject root = PrefabUtility.LoadPrefabContents(SubSystemPrefabPath);
-            try
-            {
-                var manager = root.GetComponentInChildren<UIManager>(true);
-                if(manager == null)
-                {
-                    Debug.LogError("[NotebookUIBuilder] UIManager not found in SubSystemCollection");
-                    return;
-                }
-
-                var so = new SerializedObject(manager);
-                SerializedProperty list = so.FindProperty("uiPrefabs");
-                for(int i = 0; i < list.arraySize; i++)
-                {
-                    if(list.GetArrayElementAtIndex(i).objectReferenceValue == prefab)
-                        return;
-                }
-                list.arraySize++;
-                list.GetArrayElementAtIndex(list.arraySize - 1).objectReferenceValue = prefab;
-                so.ApplyModifiedPropertiesWithoutUndo();
-                PrefabUtility.SaveAsPrefabAsset(root, SubSystemPrefabPath);
-            }
-            finally
-            {
-                PrefabUtility.UnloadPrefabContents(root);
-            }
-        }
-
-        #endregion
-
         #region Helpers
 
         private static RectTransform FindOrCreate(RectTransform root, string name, Func<RectTransform, RectTransform> create)
@@ -404,105 +332,12 @@ namespace Project.Scripts.Editor.UI
             return found != null ? (RectTransform)found : create(root);
         }
 
-        private static Sprite LoadSprite(string path)
-        {
-            var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(path);
-            if(sprite == null)
-                Debug.LogWarning($"[NotebookUIBuilder] Sprite not found: {path}");
-            return sprite;
-        }
-
-        private static RectTransform CreateUIObject(string name, Transform parent)
-        {
-            var go = new GameObject(name, typeof(RectTransform));
-            go.layer = UILayerIndex;
-            var rect = (RectTransform)go.transform;
-            rect.SetParent(parent, false);
-            return rect;
-        }
-
         private static RectTransform CreateArea(string name, RectTransform parent, Rect area)
         {
             RectTransform rect = CreateUIObject(name, parent);
             rect.anchoredPosition = area.center;
             rect.sizeDelta = area.size;
             return rect;
-        }
-
-        private static TMP_Text CreateText(string name, RectTransform parent, TMP_FontAsset font, float size, TextAlignmentOptions alignment)
-        {
-            RectTransform rect = CreateUIObject(name, parent);
-            var text = rect.gameObject.AddComponent<TextMeshProUGUI>();
-            if(font != null)
-                text.font = font;
-            text.fontSize = size;
-            text.alignment = alignment;
-            text.color = TextColor;
-            text.text = string.Empty;
-            return text;
-        }
-
-        private static Button CreateTextButton(string name, RectTransform parent, TMP_FontAsset font, string label, Vector2 size)
-        {
-            RectTransform rect = CreateUIObject(name, parent);
-            rect.sizeDelta = size;
-            Image image = rect.gameObject.AddComponent<Image>();
-            image.color = KraftColor;
-            var button = rect.gameObject.AddComponent<Button>();
-            button.targetGraphic = image;
-            TMP_Text text = CreateText("Label", rect, font, TabFontSize, TextAlignmentOptions.Center);
-            Stretch((RectTransform)text.transform);
-            text.text = label;
-            text.raycastTarget = false;
-            return button;
-        }
-
-        private static void Stretch(RectTransform rect)
-        {
-            rect.anchorMin = Vector2.zero;
-            rect.anchorMax = Vector2.one;
-            rect.offsetMin = Vector2.zero;
-            rect.offsetMax = Vector2.zero;
-        }
-
-        private static void PlaceTop(RectTransform rect, float top, float height)
-        {
-            rect.anchorMin = Vector2.up;
-            rect.anchorMax = Vector2.one;
-            rect.pivot = new Vector2(0.5f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -top);
-            rect.sizeDelta = new Vector2(0f, height);
-        }
-
-        private static void Anchor(RectTransform rect, Vector2 corner)
-        {
-            rect.anchorMin = corner;
-            rect.anchorMax = corner;
-            rect.pivot = corner;
-        }
-
-        private static void Set(SerializedObject so, string field, UnityEngine.Object value)
-        {
-            SerializedProperty prop = so.FindProperty(field);
-            if(prop == null)
-            {
-                Debug.LogError($"[NotebookUIBuilder] Field not found: {so.targetObject.GetType().Name}.{field}");
-                return;
-            }
-            prop.objectReferenceValue = value;
-        }
-
-        private static void SetArray<T>(SerializedObject so, string field, T[] values) where T : UnityEngine.Object
-        {
-            SerializedProperty prop = so.FindProperty(field);
-            if(prop == null)
-            {
-                Debug.LogError($"[NotebookUIBuilder] Field not found: {so.targetObject.GetType().Name}.{field}");
-                return;
-            }
-            prop.arraySize = values.Length;
-            for(int i = 0; i < values.Length; i++)
-                prop.GetArrayElementAtIndex(i).objectReferenceValue = values[i];
         }
 
         #endregion

@@ -106,5 +106,125 @@
     "key": "ui.toast.questdone",
     "ko": "의뢰 완료: {0}",
     "en": "Request done: {0}"
+  },
+  {
+    "dataId": 113,
+    "key": "ui.title.continue",
+    "ko": "이어하기",
+    "en": "Continue"
+  },
+  {
+    "dataId": 114,
+    "key": "ui.title.newgame",
+    "ko": "새로하기",
+    "en": "New Game"
+  },
+  {
+    "dataId": 115,
+    "key": "ui.title.settings",
+    "ko": "설정",
+    "en": "Settings"
+  },
+  {
+    "dataId": 116,
+    "key": "ui.title.newgame.confirm",
+    "ko": "새로 시작하면 지금까지의 기록 위에 덮어씁니다. 시작할까요?",
+    "en": "Starting over will overwrite your record. Start?"
+  },
+  {
+    "dataId": 117,
+    "key": "ui.pause.header",
+    "ko": "잠시 멈춤",
+    "en": "Paused"
+  },
+  {
+    "dataId": 118,
+    "key": "ui.pause.resume",
+    "ko": "계속하기",
+    "en": "Resume"
+  },
+  {
+    "dataId": 119,
+    "key": "ui.pause.settings",
+    "ko": "설정",
+    "en": "Settings"
+  },
+  {
+    "dataId": 120,
+    "key": "ui.pause.title",
+    "ko": "타이틀로",
+    "en": "To Title"
+  },
+  {
+    "dataId": 121,
+    "key": "ui.pause.title.confirm",
+    "ko": "마지막 저장 이후의 진행은 사라집니다. 타이틀로 갈까요?",
+    "en": "Progress since your last save will be lost. Go to title?"
+  },
+  {
+    "dataId": 122,
+    "key": "ui.settings.header",
+    "ko": "설정",
+    "en": "Settings"
+  },
+  {
+    "dataId": 123,
+    "key": "ui.settings.master",
+    "ko": "전체 음량",
+    "en": "Master"
+  },
+  {
+    "dataId": 124,
+    "key": "ui.settings.bgm",
+    "ko": "배경음",
+    "en": "Music"
+  },
+  {
+    "dataId": 125,
+    "key": "ui.settings.sfx",
+    "ko": "효과음",
+    "en": "Sound"
+  },
+  {
+    "dataId": 126,
+    "key": "ui.settings.language",
+    "ko": "언어",
+    "en": "Language"
+  },
+  {
+    "dataId": 127,
+    "key": "ui.language.name",
+    "ko": "한국어",
+    "en": "English"
+  },
+  {
+    "dataId": 128,
+    "key": "ui.confirm.yes",
+    "ko": "예",
+    "en": "Yes"
+  },
+  {
+    "dataId": 129,
+    "key": "ui.confirm.no",
+    "ko": "아니오",
+    "en": "No"
+  },
+  {
+    "dataId": 130,
+    "key": "scene.Plaza",
+    "ko": "광장",
+    "en": "Plaza"
+  },
+  {
+    "dataId": 131,
+    "key": "scene.Character",
+    "ko": "테스트",
+    "en": "Test"
+  },
+  {
+    "dataId": 132,
+    "key": "ui.close",
+    "ko": "닫기",
+    "en": "Close"
   }
 ]

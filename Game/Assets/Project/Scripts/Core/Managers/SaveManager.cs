@@ -23,12 +23,13 @@ namespace Project.Scripts.Core.Managers
 
         private SaveSystem<SaveData> _saveSystem;
         private float _playTime;
+        private bool _playTimeRunning = true;
 
         #endregion
 
         #region Properties
 
-        /// <summary>현재 세션 누적 플레이 시간(초). 일시정지(timeScale 0) 중에는 늘지 않습니다.</summary>
+        /// <summary>현재 세션 누적 플레이 시간(초). 일시정지(timeScale 0) 중과 타이틀 화면에서는 늘지 않습니다.</summary>
         public float PlayTime => _playTime;
 
         #endregion
@@ -43,12 +44,16 @@ namespace Project.Scripts.Core.Managers
 
         private void Update()
         {
-            _playTime += Time.deltaTime;
+            if(_playTimeRunning)
+                _playTime += Time.deltaTime;
         }
 
         #endregion
 
         #region Public API
+
+        /// <summary>타이틀 화면이 끄고, 새 게임/불러오기가 다시 켭니다.</summary>
+        public void SetPlayTimeRunning(bool running) => _playTimeRunning = running;
 
         public bool Save(int slot, SaveData data)
         {
@@ -102,6 +107,7 @@ namespace Project.Scripts.Core.Managers
 
             SaveData data = loaded.Value;
             _playTime = data.playTime;
+            _playTimeRunning = true;
             InventoryManager.Instance.LoadFromSaveData(data.inventory);
             FlagManager.Instance.LoadFromSaveData(data.flags);
             FlagManager.Instance.Add(StoryKeys.LoadCount);
@@ -118,6 +124,7 @@ namespace Project.Scripts.Core.Managers
         public void NewGame(int slot)
         {
             _playTime = 0f;
+            _playTimeRunning = true;
             FlagManager.Instance.ResetAll();
             InventoryManager.Instance.LoadFromSaveData(null);
             GameInstance.Instance.SelectSaveSlot(slot);

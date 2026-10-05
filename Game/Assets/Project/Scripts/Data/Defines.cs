@@ -85,5 +85,18 @@ namespace Project.Scripts.Data
         public const string Character = "Character";
         public const string SetUp = "SetUp";
         public const string Plaza = "Plaza";
+        /// <summary>메인 화면 (빌드 인덱스 0).</summary>
+        public const string Title = "Title";
+        /// <summary>새 게임 첫 씬. 프롤로그 씬이 생기면 교체.</summary>
+        public const string NewGameStart = Plaza;
+    }
+    public readonly struct MenuDefines
+    {
+        /// <summary>타이틀 서류가방에서 선택된 종이가 올라오는 높이(px, 1920x1080 기준).</summary>
+        public const float SheetRaise = 24f;
+        /// <summary>종이 올라옴/내려감 보간 속도 (unscaled, 초당).</summary>
+        public const float SheetRaiseSpeed = 12f;
+        /// <summary>설정에서 고를 수 있는 언어. Text 테이블 열 이름과 같음.</summary>
+        public static readonly string[] Languages = { "ko", "en" };
     }
 }
