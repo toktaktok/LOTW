@@ -16,9 +16,9 @@
 
 ## 병행 작업
 
-- 미니게임 프레임워크(`t3code/minigame-framework-design`, `Docs/MinigameFramework.md`)를 이 브랜치에 머지함 (2026-10-05). 충돌은 양쪽 추가분을 모두 남겨 해결.
+- 미니게임 프레임워크(`t3code/minigame-framework-design`, `Docs/MinigameFramework.md`)를 `t3code/core-gameplay-loop` 에 머지함 (2026-10-05). 충돌은 양쪽 추가분을 모두 남겨 해결.
+- `t3code/core-gameplay-loop` 를 main 에 머지함 (2026-10-05, 24f1864). 아래 "(에디터에서)" 항목은 이제 실행할 수 있음.
 - 머지 후 조정: `MinigameContext` 에 `PlaySequence`/`SaveGame` 전달, `SequencePlayer` 대화 스텝은 `minigame:` 로 대화가 잠시 닫혀도 끝으로 보지 않음.
-- 메인 체크아웃(main)에는 미니게임 파일 사본과 DOTween 이 커밋되지 않은 채 남아 있음. 이 브랜치를 main 에 합치기 전에 그 사본을 정리해야 충돌이 나지 않음.
 
 ## 단계
 
@@ -34,7 +34,7 @@
 - [x] `UIManager`: `Get<T>()`, `Close<T>()`, `IsOpen<T>()` 추가. `PlayerInteractor` 의 `FindFirstObjectByType<HudUI>` 제거
 - [x] `Dialogue.xlsx` 가 8행, `Dialogue.json` 이 50행으로 어긋나 있던 것 복구 (JSON 기준 재생성, 변환 왕복 일치 확인). 이전에는 ConvertTable.bat 실행 시 Plaza 대화가 지워졌음
 - [ ] `NPC.Interact`: 페이지 push 실패 시 카메라 복구
-- [ ] (미니게임 브랜치 머지 후) `GameInstance`, `FlagManager`, `SceneTransitionManager` 를 SubSystemCollection 에 배치
+- [ ] (에디터에서) `GameInstance`, `FlagManager`, `SceneTransitionManager` 를 SubSystemCollection 에 배치
 
 ### 1단계. 스토리 진행 상태 (의뢰 / 챕터 / 시간대)
 상태는 전부 플래그(`StoryKeys`)로 둔다. 이미 세이브되는 `SaveData.flags` 에 실리고 대화 조건으로 바로 읽힌다.
@@ -60,7 +60,7 @@
 - [x] HUD 코드: 수첩 버튼(안읽음 배지), 의뢰 목록(최대 3, 메인 굵게 첫 줄), 알림 큐("수첩에 기록됨", 새 의뢰, 의뢰 완료), 상호작용 힌트(기존). 플래그 변경을 모아 LateUpdate 에서 갱신
 - [x] `NotebookUI` 코드: 탭(표지/의뢰/주민/알리바이/의문점/서류), 왼쪽 목록 + 오른쪽 상세, 표지 포스트잇(진행 중 의뢰의 다음 목표), 의뢰 상세(요약, 진행 %, 완료 목표 취소선), 사건별 머리줄과 취소선 하단, 클릭 시 읽음 처리
 - [x] `NotebookPageBuilder` (순수 화면 내용 생성) + 테스트, `LocalizedText` (고정 라벨 '@키'), Text 키 `ui.notebook.*`, `ui.toast.*`
-- [ ] (미니게임 브랜치 머지 후) 메뉴 `LOTW/UI/Build Notebook UI` 실행: `PF_NotebookUI` 생성, `PF_HudUI` 에 수첩 버튼/의뢰 목록/알림 추가, `uiPrefabs` 등록. 이후 Editor 에서 배치/가독성 확인
+- [ ] (에디터에서) 메뉴 `LOTW/UI/Build Notebook UI` 실행: `PF_NotebookUI` 생성, `PF_HudUI` 에 수첩 버튼/의뢰 목록/알림 추가, `uiPrefabs` 등록. 이후 Editor 에서 배치/가독성 확인
 - [ ] 의뢰 상세의 증거 목록, 맨 뒤 페이지(완료 의뢰/보상) -- 보상/증거 데이터가 생기면
 - [ ] 목록 스크롤 (항목이 한 페이지를 넘으면)
 - [ ] 대화 중 열기: 지금은 `HasBlockingPage` 면 버튼 무시. 기획대로 대화 중에도 즉시 표시하려면 입력 통합(0단계) 후
@@ -80,7 +80,7 @@
 - [x] 이어하기 = 가장 최근 세이브(`SaveSlotSelector.FindLatest`), 없으면 잠김. 종이 아래 장소 / 플레이 시간 표시. 새로하기는 세이브가 있으면 덮어쓰기 확인
 - [x] `SettingsUI` (마스터/BGM/SFX 슬라이더, 언어 전환), `PauseUI` (계속 / 설정 / 타이틀로 + 확인, 열린 동안 일시정지), 범용 `ConfirmUI` (기본 선택 '아니오')
 - [x] 에디터 메뉴 `LOTW/UI/Build Title And Menus`: 프리팹 4개, uiPrefabs 등록, `Scenes/Title.unity` 생성(추가 모드로 열고 저장 후 닫음), 빌드 인덱스 0. UI 빌더 공용 함수 `UIBuildUtil`
-- [ ] (미니게임 브랜치 머지 후) 위 메뉴 실행, 플레이 모드에서 종이 위치/서류가방 크기 맞추기
+- [ ] (에디터에서) 위 메뉴 실행, 플레이 모드에서 종이 위치/서류가방 크기 맞추기
 - [ ] (입력 통합 후) Esc 로 `PauseUI` 열기/닫기, UI/Cancel 로 설정/확인 닫기
 - [ ] 슬롯 선택 UI: 지금은 슬롯 하나를 이어 쓰는 방식(새 게임 = 마지막 슬롯). 여러 슬롯이 필요하면 `PeekSave` 로 목록 화면
 - [ ] 서류가방 열림 애니메이션(시트 8프레임, `RawImage.uvRect` 로 프레임 전환), 마지막 저장 장소에 따른 배경 연출(카페/기차)
@@ -104,10 +104,10 @@
 - [x] NPC `characterId` (Plaza 6명 지정) + 대화 횟수 플래그 `talk.{id}` (말을 걸 때마다 +1). 검맨 1110-1113 에 횟수별 한마디 예시
 - [ ] 주민별 챕터당 한마디 5개 대사 작성 (분기 행 + `flag:talk.{id}` / `flag:chapter`)
 - [ ] 의뢰 보유 시 표정 변경 -- 표정 스프라이트 필요. 대사 변경은 지금도 `quest:` 조건으로 가능
-- [x] 의뢰 땀 표시 `QuestMarkIndicator`: 지금 챕터에 시작 전 의뢰(giverId)가 있으면 머리 위 땀 2프레임. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base` (미니게임 머지 후 실행)
+- [x] 의뢰 땀 표시 `QuestMarkIndicator`: 지금 챕터에 시작 전 의뢰(giverId)가 있으면 머리 위 땀 2프레임. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base` (에디터에서 실행)
 - [x] 지역 게이트 `StoryGate` (`IInteractionGate`): 같은 오브젝트의 `RailConnector`/`SceneExitZone` 이동 전에 조건 검사, 막히면 내레이션 9200
 - [ ] 다음 지역(중간 거주지)이 생기면 광장 출구에 게이트 조건(핵심 주민 수첩 항목) 지정
-- [ ] (미니게임 머지 후) 커서 당근 / 상호작용 대상 위 돋보기 (`TX_UI_Cursor_Carrot`, `TX_UI_Magnify_Single`) -- SubSystemCollection 에 둘 소프트웨어 커서
+- [ ] 커서 당근 / 상호작용 대상 위 돋보기 (`TX_UI_Cursor_Carrot`, `TX_UI_Magnify_Single`) -- SubSystemCollection 에 둘 소프트웨어 커서
 
 ### 8단계. 창 미니게임과 추리
 - [x] 미니게임 창 프레임 (머지됨, 줄넘기 샘플)
