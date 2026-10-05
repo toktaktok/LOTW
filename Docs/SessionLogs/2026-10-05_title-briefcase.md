@@ -45,3 +45,13 @@
 - 확인 안 함: 세이브가 없을 때 새로하기에서 왼쪽 이동. 세이브 파일을 옮겨야 해서 하지 않았다.
 - 참고: 이 커밋에 넣지 않은 변경이 있다. 폰트 에셋 3개, `PF_NPC_Base`, `PF_DialogueUI`, `Plaza.unity`, `ProjectSettings.asset`(`runInBackground: 1`)이다.
 - 다음: 사용자가 프롤로그를 끝까지 플레이한다.
+
+## 2026-10-05 19:00 | fix/title-menu
+- 작업: Plaza 주민 5명의 스프라이트를 원래 이미지로 복구했다. 대상은 Catty, PhoneKids, Seal, Mouse, Mayor다.
+- 원인: `PF_NPC_Base`의 기본 `profile`이 `CharacterProfile_Gumman`이었다. 모든 NPC 인스턴스가 이 값을 물려받았다.
+- 원인: `NPC.OnValidate`와 `ApplyProfile`이 씬의 스프라이트를 Gumman 스프라이트로 덮어썼다. 표시 이름도 Gumman이 되었다.
+- 작업: `PF_NPC_Base`의 `profile`을 비웠다. Plaza의 `NPC_Gumman`에만 Gumman 프로필을 지정했다.
+- 작업: `Plaza.unity`의 스프라이트 참조 5개를 커밋 상태로 되돌렸다.
+- 참고: `PF_NPC_Base`에 있던 `QuestMark` 자식과 새 필드 직렬화를 같이 커밋했다. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base`가 만든 변경이다.
+- 결과: 편집 모드와 플레이 모드에서 NPC 6명이 각자의 스프라이트를 보였다.
+- 다음: 없음.

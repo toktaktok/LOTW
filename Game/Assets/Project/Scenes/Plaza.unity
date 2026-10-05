@@ -1543,6 +1543,10 @@ PrefabInstance:
       value: 1100
       objectReference: {fileID: 0}
     - target: {fileID: 1000000000000000004, guid: 8d4f2b6a1e9c4a7b9f3e5d7c2a1b0e94, type: 3}
+      propertyPath: profile
+      value: 
+      objectReference: {fileID: 11400000, guid: 1c4b37a302c3f9cca53e62d57d54e92a, type: 2}
+    - target: {fileID: 1000000000000000004, guid: 8d4f2b6a1e9c4a7b9f3e5d7c2a1b0e94, type: 3}
       propertyPath: characterId
       value: npc_gumman
       objectReference: {fileID: 0}
