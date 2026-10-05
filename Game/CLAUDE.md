@@ -20,7 +20,7 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Rail Movement:** Player moves on `RailNode` graph (max 2 neighbors, linear). `PlayerController` has delegate `StateMachine` with Idle/Move states. `MoveOnPath()` projects camera-relative input onto rail segment. `RailConnector : IInteractable` connects rail sections via warp/walk to `destinationNode`, optional camera switch.
 
-**Interaction:** `PlayerInteractor` uses `Physics.OverlapSphereNonAlloc` (radius `WorldDefines.InteractionDistance = 2f`) each frame. `HudUI` shows hint. `IInteractable.Interact(gameObject)` is the interface. `Content/World/Inspectable` opens a narration dialogue row (desk papers, posters); its rows record notes (`addNote:`) or save (`save`).
+**Interaction:** `PlayerInteractor` uses `Physics.OverlapSphereNonAlloc` (radius `WorldDefines.InteractionDistance = 2f`) each frame. `HudUI` shows hint. `IInteractable.Interact(gameObject)` is the interface. `Content/World/Inspectable` opens a narration dialogue row (desk papers, posters); its rows record notes (`addNote:`) or save (`save`). A `StoryGate` (`System/World/IInteractionGate`) on a `RailConnector`/`SceneExitZone` blocks the move until its conditions pass and shows a locked dialogue. `StoryConditionToggle` turns target objects on/off from flag conditions (time slot, story progress).
 
 **Camera:** `CameraManager` sets Cinemachine priority (inactive=10, active=20). `CameraTrigger` (BoxCollider) switches on enter/exit. `BillboardHandler` subscribes to `CinemachineCore.CameraUpdatedEvent`.
 

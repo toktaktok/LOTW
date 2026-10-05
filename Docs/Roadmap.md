@@ -17,6 +17,7 @@
 ## 병행 작업
 
 - 미니게임 프레임워크(8단계의 '창')는 별도 브랜치 `t3code/minigame-framework-design` (워크트리 t3code-89a2f4d0, `Docs/MinigameFramework.md`)에서 진행 중. 그쪽이 `InputSystem_Actions`(Minigame 맵), `SubSystemCollection.prefab`, `DialogueUI`, `DialogueCommands`(`minigame:`/`var:`), `Enums.cs`, `IInteractable.CanInteract` 를 고친다.
+- 머지 충돌 예상: `PlazaLayout.NpcEntry` 끝 필드(이쪽 `characterId`, 저쪽 `prefabPath`) 둘 다 남기면 됨. `Plaza.unity` 는 이쪽이 NPC 6명 `characterId` 오버라이드만 추가.
 - 이 브랜치는 머지 전까지 입력 액션 에셋, SubSystemCollection 프리팹, DialogueUI 를 고치지 않는다. 새 UI 프리팹은 에디터 메뉴 빌더로 만들고 머지 후 실행한다. `DialogueCommands`/`Enums.cs` 는 양쪽 모두 끝에 추가만 해서 충돌이 나도 합치기 쉽다.
 
 ## 단계
@@ -90,7 +91,8 @@
 - [x] 프롤로그 초안(시퀀스 1-11, 대화 9000-9022): 밤 버스 도착 -> 언덕 -> 촌장 브리핑(메인 의뢰 1, 촌장 프로필) -> 7시 사무소 오픈. 지금은 모두 Plaza 에서 진행
 - [x] 시간대 `TimeSlot`(플래그 timeSlot), 저녁 전환 시퀀스 100-102 (아직 아무도 부르지 않음)
 - [ ] 사무소(2F) / 버스 정류장 / 언덕 씬이 생기면 프롤로그 scene 스텝과 카메라 스텝 교체
-- [ ] 시간대별 조명/배경음 반응 (timeSlot 을 읽는 씬 컴포넌트)
+- [x] 시간대/진행에 따라 오브젝트 켜고 끄기: `StoryConditionToggle` (조건 문법, 예 `flag:timeSlot==3`)
+- [ ] 시간대별 배경음 전환, 조명 색 (해 방향은 고정 유지) -- 저녁/밤 씬 아트가 생기면
 - [ ] 자막 카드 스텝 (검은 화면 위 날짜 문구) -- 지금은 이름 없는 내레이션 대화로 대신함
 - [ ] 저장 지점: 사무소 책상 등 `Inspectable` 에서 `SaveCurrent` (7단계)
 
@@ -101,6 +103,8 @@
 - [ ] 주민별 챕터당 한마디 5개 대사 작성 (분기 행 + `flag:talk.{id}` / `flag:chapter`)
 - [ ] 의뢰 보유 시 표정 변경 -- 표정 스프라이트 필요. 대사 변경은 지금도 `quest:` 조건으로 가능
 - [x] 의뢰 땀 표시 `QuestMarkIndicator`: 지금 챕터에 시작 전 의뢰(giverId)가 있으면 머리 위 땀 2프레임. 메뉴 `LOTW/UI/Add Quest Mark To NPC Base` (미니게임 머지 후 실행)
+- [x] 지역 게이트 `StoryGate` (`IInteractionGate`): 같은 오브젝트의 `RailConnector`/`SceneExitZone` 이동 전에 조건 검사, 막히면 내레이션 9200
+- [ ] 다음 지역(중간 거주지)이 생기면 광장 출구에 게이트 조건(핵심 주민 수첩 항목) 지정
 - [ ] (미니게임 머지 후) 커서 당근 / 상호작용 대상 위 돋보기 (`TX_UI_Cursor_Carrot`, `TX_UI_Magnify_Single`) -- SubSystemCollection 에 둘 소프트웨어 커서
 
 ### 8단계. 창 미니게임과 추리

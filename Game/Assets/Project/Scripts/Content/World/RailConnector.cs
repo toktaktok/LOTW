@@ -34,6 +34,8 @@ namespace Project.Scripts.Content.World
             PlayerController pc = interactor.GetComponent<PlayerController>();
             if(pc == null || destinationNode == null)
                 return;
+            if(TryGetComponent(out IInteractionGate gate) && !gate.TryPass(interactor))
+                return;
 
             if(isWarp)
             {

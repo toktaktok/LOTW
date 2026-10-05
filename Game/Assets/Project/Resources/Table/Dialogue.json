@@ -471,5 +471,11 @@
     "speakerId": "narrator",
     "text": "수첩을 덮었다. 잠깐 숨을 돌린다.",
     "nextId": -1
+  },
+  {
+    "dataId": 9200,
+    "speakerId": "narrator",
+    "text": "아직 이 근처에서 알아볼 게 남은 것 같다. 수첩을 다시 확인해 보자.",
+    "nextId": -1
   }
 ]
