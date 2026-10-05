@@ -368,7 +368,6 @@ Tests/EditMode/MinigameRulesTests.cs
 | 진입 | `MinigameTrigger` (월드 상호작용), 대화 액션 `minigame:id` (대화를 닫고 실행, 끝나면 `followDialogueId` 또는 원래 다음 행에서 재개. onFinished(카메라 복귀)는 대화가 실제로 끝날 때 호출) |
 | 상호작용 | `IInteractable.CanInteract` (기본 true). false면 `PlayerInteractor` 대상에서 빠짐 |
 | 샘플 | 줄넘기: `JumpRopeMinigame` + `JumpRopeDefinition`, `PF_Minigame_JumpRope`, `MinigameDefinition_JumpRope` (5번 넘으면 성공 + `giveItem:rose`, 3번 걸리면 실패), 플라자 (39, 0, 1.2)의 `PF_JumpRopeKid` |
-| 에디터 | `LOTW/Minigame/1 Build Window Prefab`, `LOTW/Minigame/2 Build Jump Rope Sample` |
 
 ### 12.2 새 미니게임 만드는 순서
 

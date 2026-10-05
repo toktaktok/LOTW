@@ -3,7 +3,6 @@
 using System.Collections.Generic;
 using System.IO;
 using Project.Scripts.Editor.Data;
-using Project.Scripts.Editor.Plaza;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -13,13 +12,15 @@ namespace Project.Scripts.Editor.Baking
 {
     public static class VoxelPrefabCreator
     {
+        private const string ModelPrefix = "M_E_";
+
         [MenuItem("Assets/LOTW/Create Voxel Prefab")]
         private static void CreateFromSelection()
         {
             var created = new List<string>();
             foreach(var voxPath in GetSelectedVoxPaths())
             {
-                string prefabPath = PlazaVoxelPrefabs.PrefabPathFor(voxPath);
+                string prefabPath = PrefabPathFor(voxPath);
                 if(AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath) != null)
                     continue;
                 if(CreatePrefab(voxPath, prefabPath) != null)
@@ -114,6 +115,15 @@ namespace Project.Scripts.Editor.Baking
             if(obj == null || AssetDatabase.Contains(obj))
                 return;
             AssetDatabase.AddObjectToAsset(obj, prefabAssetPath);
+        }
+
+        /// <summary>.vox 경로에 대응하는 프리팹 경로 (M_E_Bench_1.vox -> PF_Bench_1.prefab).</summary>
+        private static string PrefabPathFor(string voxPath)
+        {
+            string name = Path.GetFileNameWithoutExtension(voxPath);
+            if(name.StartsWith(ModelPrefix))
+                name = name.Substring(ModelPrefix.Length);
+            return ToolDefines.VoxelPrefabFolder + "/PF_" + name + ".prefab";
         }
 
         private static List<string> GetSelectedVoxPaths()
