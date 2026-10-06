@@ -1,0 +1,132 @@
+[
+  {
+    "dataId": 1,
+    "key": "notebook.1.title",
+    "ko": "마을 소개"
+  },
+  {
+    "dataId": 2,
+    "key": "notebook.1.body",
+    "ko": "보라 마을. 겨울이 긴 언덕 마을. 꼭대기에 박물관이 있다."
+  },
+  {
+    "dataId": 3,
+    "key": "notebook.2.title",
+    "ko": "마을 지도"
+  },
+  {
+    "dataId": 4,
+    "key": "notebook.2.body",
+    "ko": "광장, 중간 거주지, 꼭대기 지역, 녹지, 쓰레기장."
+  },
+  {
+    "dataId": 5,
+    "key": "notebook.3.title",
+    "ko": "신분증"
+  },
+  {
+    "dataId": 6,
+    "key": "notebook.3.body",
+    "ko": "직업: 사설탐정."
+  },
+  {
+    "dataId": 7,
+    "key": "notebook.101.title",
+    "ko": "촌장님"
+  },
+  {
+    "dataId": 8,
+    "key": "notebook.101.body",
+    "ko": "목도리 도마뱀. 보물 도난 사건을 비밀리에 맡겼다."
+  },
+  {
+    "dataId": 9,
+    "key": "notebook.102.title",
+    "ko": "검맨"
+  },
+  {
+    "dataId": 10,
+    "key": "notebook.102.body",
+    "ko": "껌으로 된 땅 주인. 친절하다. 주민들과 먼저 얼굴을 트라고 했다."
+  },
+  {
+    "dataId": 11,
+    "key": "notebook.103.title",
+    "ko": "지그"
+  },
+  {
+    "dataId": 12,
+    "key": "notebook.103.body",
+    "ko": "바에서 청소 일을 한다. 광장 끝 허름한 집에 혼자 산다."
+  },
+  {
+    "dataId": 13,
+    "key": "notebook.104.title",
+    "ko": "어린쥐"
+  },
+  {
+    "dataId": 14,
+    "key": "notebook.104.body",
+    "ko": "친구는 필요 없다지만 모든 정보를 안다고 한다. 사탕 가게 주인을 좋게 본다."
+  },
+  {
+    "dataId": 15,
+    "key": "notebook.105.title",
+    "ko": "집배원"
+  },
+  {
+    "dataId": 16,
+    "key": "notebook.105.body",
+    "ko": "마을의 모든 집 주소를 안다."
+  },
+  {
+    "dataId": 17,
+    "key": "notebook.201.title",
+    "ko": "거미의 알리바이"
+  },
+  {
+    "dataId": 18,
+    "key": "notebook.201.body",
+    "ko": "바에서 하루종일 일한 뒤 바로 집으로 퇴근했다."
+  },
+  {
+    "dataId": 19,
+    "key": "notebook.202.title",
+    "ko": "코끼리의 알리바이"
+  },
+  {
+    "dataId": 20,
+    "key": "notebook.202.body",
+    "ko": "낮에는 꽃집에 있다가 밤에 나와서 마을을 산책했다."
+  },
+  {
+    "dataId": 21,
+    "key": "notebook.301.title",
+    "ko": "보물은 무엇인가?"
+  },
+  {
+    "dataId": 22,
+    "key": "notebook.301.body",
+    "ko": "촌장님의 전설에 따르면 하늘에서 떨어졌다고 한다."
+  },
+  {
+    "dataId": 23,
+    "key": "notebook.302.title",
+    "ko": "케이블카는 언제 고장 났나?"
+  },
+  {
+    "dataId": 24,
+    "key": "notebook.302.body",
+    "ko": "보물이 사라진 밤, 케이블카도 멈췄다."
+  },
+  {
+    "dataId": 25,
+    "key": "notebook.401.title",
+    "ko": "바에 가 보기"
+  },
+  {
+    "dataId": 26,
+    "key": "notebook.401.body",
+    "ko": "저녁이면 바가 붐빈다고 한다."
+  }
+]

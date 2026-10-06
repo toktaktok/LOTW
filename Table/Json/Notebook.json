@@ -3,98 +3,98 @@
     "dataId": 1,
     "category": "document",
     "caseId": 0,
-    "title": "마을 소개",
-    "body": "보라 마을. 겨울이 긴 언덕 마을. 꼭대기에 박물관이 있다."
+    "title": "@notebook.1.title",
+    "body": "@notebook.1.body"
   },
   {
     "dataId": 2,
     "category": "document",
     "caseId": 0,
-    "title": "마을 지도",
-    "body": "광장, 중간 거주지, 꼭대기 지역, 녹지, 쓰레기장."
+    "title": "@notebook.2.title",
+    "body": "@notebook.2.body"
   },
   {
     "dataId": 3,
     "category": "document",
     "caseId": 0,
-    "title": "신분증",
-    "body": "직업: 사설탐정."
+    "title": "@notebook.3.title",
+    "body": "@notebook.3.body"
   },
   {
     "dataId": 101,
     "category": "profile",
     "caseId": 0,
     "subjectId": "npc_mayor",
-    "title": "촌장님",
-    "body": "목도리 도마뱀. 보물 도난 사건을 비밀리에 맡겼다."
+    "title": "@notebook.101.title",
+    "body": "@notebook.101.body"
   },
   {
     "dataId": 102,
     "category": "profile",
     "caseId": 0,
     "subjectId": "npc_gumman",
-    "title": "검맨",
-    "body": "껌으로 된 땅 주인. 친절하다. 주민들과 먼저 얼굴을 트라고 했다."
+    "title": "@notebook.102.title",
+    "body": "@notebook.102.body"
   },
   {
     "dataId": 103,
     "category": "profile",
     "caseId": 0,
     "subjectId": "npc_zig",
-    "title": "지그",
-    "body": "바에서 청소 일을 한다. 광장 끝 허름한 집에 혼자 산다."
+    "title": "@notebook.103.title",
+    "body": "@notebook.103.body"
   },
   {
     "dataId": 104,
     "category": "profile",
     "caseId": 0,
     "subjectId": "npc_mouse",
-    "title": "어린쥐",
-    "body": "친구는 필요 없다지만 모든 정보를 안다고 한다. 사탕 가게 주인을 좋게 본다."
+    "title": "@notebook.104.title",
+    "body": "@notebook.104.body"
   },
   {
     "dataId": 105,
     "category": "profile",
     "caseId": 0,
     "subjectId": "npc_seal",
-    "title": "집배원",
-    "body": "마을의 모든 집 주소를 안다."
+    "title": "@notebook.105.title",
+    "body": "@notebook.105.body"
   },
   {
     "dataId": 201,
     "category": "alibi",
     "caseId": 1,
     "subjectId": "npc_barpider",
-    "title": "거미의 알리바이",
-    "body": "바에서 하루종일 일한 뒤 바로 집으로 퇴근했다."
+    "title": "@notebook.201.title",
+    "body": "@notebook.201.body"
   },
   {
     "dataId": 202,
     "category": "alibi",
     "caseId": 1,
     "subjectId": "npc_ele",
-    "title": "코끼리의 알리바이",
-    "body": "낮에는 꽃집에 있다가 밤에 나와서 마을을 산책했다."
+    "title": "@notebook.202.title",
+    "body": "@notebook.202.body"
   },
   {
     "dataId": 301,
     "category": "question",
     "caseId": 0,
-    "title": "보물은 무엇인가?",
-    "body": "촌장님의 전설에 따르면 하늘에서 떨어졌다고 한다."
+    "title": "@notebook.301.title",
+    "body": "@notebook.301.body"
   },
   {
     "dataId": 302,
     "category": "question",
     "caseId": 0,
-    "title": "케이블카는 언제 고장 났나?",
-    "body": "보물이 사라진 밤, 케이블카도 멈췄다."
+    "title": "@notebook.302.title",
+    "body": "@notebook.302.body"
   },
   {
     "dataId": 401,
     "category": "todo",
     "caseId": 0,
-    "title": "바에 가 보기",
-    "body": "저녁이면 바가 붐빈다고 한다."
+    "title": "@notebook.401.title",
+    "body": "@notebook.401.body"
   }
 ]

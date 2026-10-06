@@ -19,10 +19,10 @@ namespace Project.Scripts.Core.Managers
     ///
     /// ──────────────────────────────────────────────────────────
     /// 새 테이블을 추가하는 절차:
-    ///   1. TableRowData 를 상속받는 데이터 클래스 생성 (Data/Table/XxxData.cs)
-    ///   2. LoadAllTables() 에 LoadTable&lt;XxxData&gt;("Xxx") 한 줄 추가
-    ///   3. Table/Schema/Xxx.json 에 컬럼 자료형/규칙 작성 (TableSchemaTests 가 필드와 비교)
-    ///   4. Table/Excel/ 에 Xxx.xlsx 작성 (B2 표, 헤더 아래 자료형 행) → ConvertTable.bat 실행
+    ///   1. Table/Schema/Xxx.json 에 rowClass 와 컬럼 자료형/규칙 작성
+    ///   2. Table/Excel/ 에 Xxx.xlsx 작성 (B2 표, 헤더 아래 자료형 행) → ConvertTable.bat 실행
+    ///      → JSON 과 필드 클래스(Data/Table/Generated/XxxData.cs)가 생성됨
+    ///   3. LoadAllTables() 에 LoadTable&lt;XxxData&gt;("Xxx") 한 줄 추가
     ///
     /// 테이블 파일 명명 규칙:
     ///   접미사 'Table' 없이 사용. 예) Dialogue.xlsx, Item.xlsx

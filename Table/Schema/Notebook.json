@@ -5,7 +5,7 @@
     { "name": "Category", "type": "string", "required": true, "pattern": "document|profile|alibi|question|todo", "desc": "document 서류, profile 주민, alibi 알리바이, question 의문점, todo 할 일" },
     { "name": "CaseId", "type": "int", "min": 0, "desc": "알리바이가 속한 사건. 0이면 없음" },
     { "name": "SubjectId", "type": "string", "desc": "profile, alibi 의 캐릭터 ID (예: npc_gumman)" },
-    { "name": "Title", "type": "string", "required": true, "textKey": true, "desc": "제목. '@키'는 Text 테이블 참조" },
-    { "name": "Body", "type": "string", "textKey": true, "desc": "본문. '@키'는 Text 테이블 참조" }
+    { "name": "Title", "type": "string", "required": true, "textKey": true, "desc": "제목. Text 키 (@키)" },
+    { "name": "Body", "type": "string", "textKey": true, "desc": "본문. Text 키 (@키)" }
   ]
 }

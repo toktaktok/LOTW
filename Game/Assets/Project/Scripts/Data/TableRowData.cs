@@ -8,9 +8,10 @@ namespace Project.Scripts.Data
     /// DataManager가 테이블별로 데이터를 저장·관리할 때 이 타입으로 일괄 접근합니다.
     ///
     /// 새 테이블을 추가할 때:
-    ///   1. 이 클래스를 상속받는 [Serializable] 클래스를 Data/Table/ 에 생성
+    ///   1. Table/Schema/ 에 스키마(rowClass, columns), Table/Excel/ 에 .xlsx 파일 추가 후 ConvertTable.bat 실행
+    ///      → 이 클래스를 상속받는 필드 클래스가 Data/Table/Generated/ 에 생성됨
     ///   2. DataManager.LoadAllTables() 에 LoadTable 호출 등록
-    ///   3. Table/Schema/ 에 스키마, Table/Excel/ 에 .xlsx 파일 추가 후 ConvertTable.bat 실행
+    ///   3. 상수나 메서드가 필요하면 Data/Table/ 에 같은 이름의 partial 클래스 추가
     /// </summary>
     [Serializable]
     public abstract class TableRowData

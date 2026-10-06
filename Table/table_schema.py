@@ -20,7 +20,8 @@ Schema/{테이블}.json 으로 표 그리드를 행 객체로 변환하고 검�
   pattern      문자열 정규식 (전체 일치)
   prefixByPart 값이 "{분류 소문자}." 로 시작해야 함 (Text_UI → "ui.")
   ref          "스키마.컬럼" 그룹 안에 같은 값이 있어야 함 (allow 에 있는 값은 예외)
-  textKey      '@키' 값이면 Text 그룹의 Key 에 있어야 함
+  textKey      값은 '@키' 여야 하고 키가 Text 그룹의 Key 에 있어야 함 (원문 금지)
+  default      C# 필드 초기값 (빈 셀일 때 쓰임). 생성 코드에만 반영
   commandRefs  {"동사": "스키마.컬럼"}. ';' 로 나눈 "동사:키..." 명령의 키가 그 컬럼에 있어야 함
                (Dialogue Conditions/Actions 의 item:, giveItem: 같은 아이템 ID)
 """
@@ -209,7 +210,9 @@ def validate(tables: dict) -> list:
                         command_key = match.group(2).strip()
                         if command_key not in ref_keys:
                             errors.append(f"{where}: '{token.strip()}' 의 '{command_key}' 가 {ref} 에 없습니다")
-                if col.get("textKey") and isinstance(value, str) and value.startswith("@"):
-                    if value[1:] not in text_keys:
+                if col.get("textKey"):
+                    if not value.startswith("@"):
+                        errors.append(f"{where}: '{value}' 는 Text 키('@키')여야 합니다. 문구는 Text_* 표에 넣으세요")
+                    elif value[1:] not in text_keys:
                         errors.append(f"{where}: Text 키 '{value[1:]}' 가 없습니다")
     return errors

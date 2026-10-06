@@ -1,1 +1,77 @@
-[]
+[
+  {
+    "dataId": 1,
+    "key": "quest.1.title",
+    "ko": "사라진 마을의 보물"
+  },
+  {
+    "dataId": 2,
+    "key": "quest.1.summary",
+    "ko": "촌장님의 비밀 의뢰. 박물관의 보물이 사라졌다. 범인은 마을 주민 중 한 명이다."
+  },
+  {
+    "dataId": 3,
+    "key": "quest.101.title",
+    "ko": "얼굴 트기"
+  },
+  {
+    "dataId": 4,
+    "key": "quest.101.summary",
+    "ko": "검맨이 마을 주민들과 먼저 얼굴을 트라고 권했다."
+  },
+  {
+    "dataId": 5,
+    "key": "quest.102.title",
+    "ko": "줄넘기 상대"
+  },
+  {
+    "dataId": 6,
+    "key": "quest.102.summary",
+    "ko": "하늘이가 줄넘기를 같이 하자고 한다."
+  },
+  {
+    "dataId": 7,
+    "key": "quest.103.title",
+    "ko": "꽃집 손님 후기"
+  },
+  {
+    "dataId": 8,
+    "key": "quest.103.summary",
+    "ko": "꽃집 코끼리가 손님 후기를 모아 달라고 했다."
+  },
+  {
+    "dataId": 9,
+    "key": "quest.objective.1001",
+    "ko": "주민들의 알리바이를 모은다"
+  },
+  {
+    "dataId": 10,
+    "key": "quest.objective.1002",
+    "ko": "저녁에 바에 가 본다"
+  },
+  {
+    "dataId": 11,
+    "key": "quest.objective.1003",
+    "ko": "지그를 다시 만난다"
+  },
+  {
+    "dataId": 12,
+    "key": "quest.objective.1011",
+    "ko": "검맨과 인사한다"
+  },
+  {
+    "dataId": 13,
+    "key": "quest.objective.1012",
+    "ko": "광장 주민 세 명과 인사한다"
+  },
+  {
+    "dataId": 14,
+    "key": "quest.objective.1021",
+    "ko": "하늘이와 줄넘기를 한다"
+  },
+  {
+    "dataId": 15,
+    "key": "quest.objective.1031",
+    "ko": "손님 후기를 세 개 모은다"
+  }
+]
