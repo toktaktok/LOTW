@@ -84,9 +84,6 @@ namespace Project.Scripts.Content.Minigame.GateDrop
         private bool _hasPointer;
         private float _rattleTime;
 
-        // 캔이 출구에 들어가 결과가 정해진 뒤에는 닫기를 무시해 보상을 잃지 않게 함
-        public override bool CanAbort => _phase != GateDropPhase.Landing && _phase != GateDropPhase.Done;
-
         #region Unity Lifecycle
 
         private void Update()

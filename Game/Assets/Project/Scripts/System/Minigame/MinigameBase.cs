@@ -14,8 +14,6 @@ namespace Project.Scripts.System.Minigame
         [SerializeField] private Camera stageCamera;
 
         public Camera StageCamera => stageCamera;
-        /// <summary>false면 닫기(중단)를 무시합니다. 결과가 이미 정해져 연출 중일 때 보상을 잃지 않게 씁니다.</summary>
-        public virtual bool CanAbort => true;
         protected MinigameSession Session { get; private set; }
 
         public void Bind(MinigameSession session)

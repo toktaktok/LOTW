@@ -1,10 +1,8 @@
 using System;
 using DG.Tweening;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.Minigame;
 using Project.Scripts.System.World;
@@ -15,7 +13,8 @@ using Project.Scripts.Framework.UI;
 namespace Project.Scripts.Content.UI
 {
     /// <summary>
-    /// 미니게임 창. 반투명 창틀 안에 스테이지 RT를 렌즈 머티리얼로 투사합니다.
+    /// 미니게임 창. 네 변 여백이 같은 반투명 창틀 안에 스테이지 RT를 렌즈 머티리얼로 투사합니다.
+    /// 제목 줄과 닫기 버튼은 없습니다. 미니게임은 결과 조건으로만 끝납니다.
     /// 열림: 창틀이 커진 뒤 화면이 사각 조리개처럼 열림. 닫힘은 그 반대.
     /// 창 크기는 스테이지 해상도 x 정수 배율, 위치는 정의의 layout을 따릅니다.
     /// </summary>
@@ -26,9 +25,6 @@ namespace Project.Scripts.Content.UI
         [SerializeField] private RectTransform window;
         [Tooltip("스테이지 RT를 표시하는 화면. window 안에서 여백만큼 안쪽으로 stretch")]
         [SerializeField] private RawImage screen;
-        [SerializeField] private TMP_Text titleText;
-        [SerializeField] private TMP_Text statusText;
-        [SerializeField] private Button closeButton;
 
         [Header("Lens")]
         [Tooltip("정의에 screenMaterial이 없을 때 쓰는 기본 렌즈 머티리얼")]
@@ -42,16 +38,9 @@ namespace Project.Scripts.Content.UI
         // SourceBounds 배치: 월드 화면이 갱신될 때마다 발생원 영역을 따라감
         private bool _followSource;
         private Action _onOpened;
-        private Action _onCloseRequested;
         private Action _onClosed;
 
         public RectTransform ScreenRect => screen.rectTransform;
-
-        protected override void Awake()
-        {
-            base.Awake();
-            closeButton.onClick.AddListener(OnClose);
-        }
 
         private void OnEnable() => LowResPixelRenderer.OnViewUpdated += OnWorldViewUpdated;
         private void OnDisable() => LowResPixelRenderer.OnViewUpdated -= OnWorldViewUpdated;
@@ -70,19 +59,17 @@ namespace Project.Scripts.Content.UI
             _targetPosition = position;
             _openPosition = position;
             window.anchoredPosition = position;
-            if(SetScreenSize(size))
-                FitHeader();
+            SetScreenSize(size);
         }
 
         /// <summary>
-        /// onOpened: 열림 애니메이션이 끝난 뒤. onCloseRequested: 닫기 버튼. onClosed: 창이 완전히 닫힌 뒤.
+        /// onOpened: 열림 애니메이션이 끝난 뒤. onClosed: 창이 완전히 닫힌 뒤.
         /// </summary>
-        public void Setup(MinigameSession session, RenderTexture stageTexture, Action onOpened, Action onCloseRequested, Action onClosed)
+        public void Setup(MinigameSession session, RenderTexture stageTexture, Action onOpened, Action onClosed)
         {
             ReleaseSession();
             _session = session;
             _onOpened = onOpened;
-            _onCloseRequested = onCloseRequested;
             _onClosed = onClosed;
 
             MinigameDefinition definition = session.Definition;
@@ -90,11 +77,6 @@ namespace Project.Scripts.Content.UI
             _screenMaterial = new Material(definition.ScreenMaterial != null ? definition.ScreenMaterial : defaultScreenMaterial);
             screen.texture = stageTexture;
             screen.material = _screenMaterial;
-
-            titleText.text = Localization.Resolve(definition.Title);
-            statusText.text = session.Status;
-            session.OnStatusChanged += OnStatusChanged;
-            closeButton.gameObject.SetActive(definition.AllowAbort);
         }
 
         public override async Awaitable ShowAsync()
@@ -107,7 +89,6 @@ namespace Project.Scripts.Content.UI
             canvasGroup.interactable = false;
             canvasGroup.blocksRaycasts = true;
             ApplyLayout();
-            FitHeader();
 
             await PlayAsync(BuildOpenSequence());
             SetVisibility(true);
@@ -130,23 +111,12 @@ namespace Project.Scripts.Content.UI
             onClosed?.Invoke();
         }
 
-        private void OnClose() => _onCloseRequested?.Invoke();
-
-        private void OnStatusChanged(string status)
-        {
-            statusText.text = status;
-            FitHeader();
-        }
-
         private void ReleaseSession()
         {
             _sequence?.Kill();
-            if(_session != null)
-                _session.OnStatusChanged -= OnStatusChanged;
             _session = null;
             _followSource = false;
             _onOpened = null;
-            _onCloseRequested = null;
             _onClosed = null;
 
             if(screen != null)
@@ -206,24 +176,10 @@ namespace Project.Scripts.Content.UI
             return (new Vector2(viewport.x, viewport.y) - new Vector2(0.5f, 0.5f)) * canvasSize;
         }
 
-        // 제목(왼쪽 정렬)과 상태(오른쪽 정렬)는 창 폭에 stretch. 둘이 겹치면 제목을 숨김.
-        // 픽셀 글꼴이 흐려지지 않도록 글자 크기는 줄이지 않음.
-        private void FitHeader()
+        // 화면은 window에 stretch로 붙어 있어 sizeDelta가 여백의 음수
+        private void SetScreenSize(Vector2 screenSize)
         {
-            float titleEnd = titleText.rectTransform.offsetMin.x + titleText.preferredWidth;
-            float statusStart = window.rect.width + statusText.rectTransform.offsetMax.x - statusText.preferredWidth;
-            titleText.enabled = string.IsNullOrEmpty(statusText.text) || titleEnd + MinigameDefines.HeaderGap <= statusStart;
-        }
-
-        // 화면은 window에 stretch로 붙어 있어 sizeDelta가 여백의 음수. 크기가 바뀌었으면 true
-        private bool SetScreenSize(Vector2 screenSize)
-        {
-            Vector2 sizeDelta = screenSize - screen.rectTransform.sizeDelta;
-            if(window.sizeDelta == sizeDelta)
-                return false;
-
-            window.sizeDelta = sizeDelta;
-            return true;
+            window.sizeDelta = screenSize - screen.rectTransform.sizeDelta;
         }
 
         // 발생원 영역(화면 픽셀)을 캔버스 단위로 바꿈. 창 위치는 화면(RawImage) 중심이 그 영역 중심에 오도록 창틀 오프셋을 뺌.
