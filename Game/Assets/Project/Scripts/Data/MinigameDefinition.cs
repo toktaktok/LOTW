@@ -14,7 +14,7 @@ namespace Project.Scripts.Data
         [Header("Identity")]
         [Tooltip("고유 ID. 대화 액션 minigame:id 와 기록 플래그 mg_{id}_* 에 쓰임")]
         [SerializeField] private string id;
-        [Tooltip("창 제목. '@키'로 Text 테이블 참조 가능")]
+        [Tooltip("창 제목. Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
         [SerializeField] private string title;
 
         [Header("Stage")]

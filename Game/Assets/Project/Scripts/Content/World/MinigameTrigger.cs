@@ -19,8 +19,8 @@ namespace Project.Scripts.Content.World
         [SerializeField] private MinigameDefinition definition;
 
         [Header("Interaction")]
-        [Tooltip("'@키'로 Text 테이블 참조 가능")]
-        [SerializeField] private string promptText = "살펴보기";
+        [Tooltip("Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
+        [SerializeField] private string promptText = "@ui.inspect";
 
         public string InteractionPrompt => promptText;
 

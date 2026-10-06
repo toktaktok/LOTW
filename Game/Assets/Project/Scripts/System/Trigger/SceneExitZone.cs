@@ -23,7 +23,7 @@ namespace Project.Scripts.System.Trigger
         [SerializeField] private string targetEntranceId;
 
         [Header("Interaction")]
-        [SerializeField] private string promptText = "이동하기";
+        [SerializeField] private string promptText = "@ui.move";
 
         public string InteractionPrompt => promptText;
 

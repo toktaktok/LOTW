@@ -17,7 +17,7 @@ namespace Project.Scripts.Content.World
     {
         [Tooltip("Dialogue 테이블의 시작 DataID (분기 행 가능)")]
         [SerializeField] private int dialogueId;
-        [Tooltip("'@키'로 Text 테이블 참조 가능")]
+        [Tooltip("Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
         [SerializeField] private string promptText = "@ui.inspect";
 
         public string InteractionPrompt => promptText;

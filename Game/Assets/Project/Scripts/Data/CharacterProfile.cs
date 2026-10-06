@@ -9,7 +9,7 @@ namespace Project.Scripts.Data
     [CreateAssetMenu(fileName = "CharacterProfile_New", menuName = "LOTW/Character Profile")]
     public class CharacterProfile : ScriptableObject
     {
-        [Tooltip("표시 이름. '@키'로 Text 테이블 참조 가능")]
+        [Tooltip("표시 이름. Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
         [SerializeField] private string displayName;
         [SerializeField] private Sprite sprite;
         [Tooltip("비워두면 정지 스프라이트만 사용")]
