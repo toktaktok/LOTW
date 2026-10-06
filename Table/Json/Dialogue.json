@@ -535,28 +535,28 @@
   {
     "dataId": 9010,
     "speakerId": "npc_mayor",
-    "speakerName": "촌장",
+    "speakerName": "@character.mayor.name",
     "text": "@dialogue.9010",
     "nextId": 9011
   },
   {
     "dataId": 9011,
     "speakerId": "npc_mayor",
-    "speakerName": "촌장",
+    "speakerName": "@character.mayor.name",
     "text": "@dialogue.9011",
     "nextId": 9012
   },
   {
     "dataId": 9012,
     "speakerId": "npc_mayor",
-    "speakerName": "촌장",
+    "speakerName": "@character.mayor.name",
     "text": "@dialogue.9012",
     "nextId": 9013
   },
   {
     "dataId": 9013,
     "speakerId": "npc_mayor",
-    "speakerName": "촌장",
+    "speakerName": "@character.mayor.name",
     "text": "@dialogue.9013",
     "nextId": -1,
     "actions": "meet:npc_mayor;addNote:101;startQuest:1"

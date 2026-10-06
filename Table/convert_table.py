@@ -25,15 +25,21 @@ Excel (.xlsx / XML Spreadsheet 2003 .xml) → JSON 변환 스크립트
 검증:
   모든 테이블을 읽어 Schema/ 규칙(자료형, 필수, 중복, 범위, 참조, '@키')으로 검사합니다.
   오류가 하나라도 있으면 목록을 출력하고 JSON 을 하나도 쓰지 않고 중단합니다.
+
+C# RowData 생성:
+  검증을 통과하면 스키마의 rowClass, columns 로 Scripts/Data/Table/Generated/{rowClass}.cs 를 씁니다.
+  컬럼 = 필드 (camelCase, desc = 주석, default = 초기값). DataId 는 TableRowData.dataId.
+  생성 클래스는 partial 이라 상수, 메서드는 Data/Table/{rowClass}.cs 에 둡니다.
 """
 
 import os
 import sys
 import re
 import json
+import html
 import xml.etree.ElementTree as ET
 
-from table_schema import Table, build_rows, load_schema, validate
+from table_schema import Table, build_rows, load_schema, to_camel, validate
 
 # ── 경로 설정 ──────────────────────────────────────────────────
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -43,6 +49,7 @@ SCHEMA_DIR = os.path.join(SCRIPT_DIR, "Schema")
 UNITY_RES  = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Resources", "Table")
 
 OUTPUT_DIRS = [JSON_DIR, UNITY_RES]
+ROWDATA_DIR = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Scripts", "Data", "Table", "Generated")
 
 # Excel XML Spreadsheet 2003 네임스페이스
 NS  = "urn:schemas-microsoft-com:office:spreadsheet"
@@ -223,6 +230,48 @@ def write_json(table_name: str, data: list):
         print(f"    → {os.path.normpath(path)}")
 
 
+# ── C# RowData 생성 ───────────────────────────────────────────
+def row_class_source(schema_name: str, schema: dict) -> str:
+    """스키마 컬럼으로 partial RowData 클래스 소스를 만듭니다. 스키마 type 은 C# 자료형 이름과 같습니다."""
+    lines = [
+        f"// 자동 생성 파일. Table/Schema/{schema_name}.json 을 고치고 ConvertTable.bat 을 실행하세요.",
+        "using System;",
+        "",
+        "namespace Project.Scripts.Data.Table",
+        "{",
+        "    [Serializable]",
+        f"    public partial class {schema['rowClass']} : TableRowData",
+        "    {",
+    ]
+    for col in schema["columns"]:
+        if col["name"] == "DataId":
+            continue  # TableRowData.dataId
+        if col.get("desc"):
+            lines.append(f"        /// <summary>{html.escape(' '.join(col['desc'].split()), quote=False)}</summary>")
+        default = ""
+        if "default" in col:
+            default = f" = {json.dumps(col['default'], ensure_ascii=False)}{'f' if col['type'] == 'float' else ''}"
+        lines.append(f"        public {col['type']} {to_camel(col['name'])}{default};")
+    lines += ["    }", "}", ""]
+    return "\n".join(lines)
+
+
+def write_row_classes(tables: dict):
+    """rowClass 가 있는 스키마마다 생성 파일을 씁니다. 내용이 같으면 건드리지 않습니다 (Unity 재컴파일 방지)."""
+    os.makedirs(ROWDATA_DIR, exist_ok=True)
+    schemas = {t.schema_name: t.schema for t in tables.values() if t.schema.get("rowClass")}
+    for schema_name, schema in sorted(schemas.items()):
+        path = os.path.join(ROWDATA_DIR, f"{schema['rowClass']}.cs")
+        source = row_class_source(schema_name, schema)
+        if os.path.isfile(path):
+            with open(path, encoding="utf-8") as f:
+                if f.read() == source:
+                    continue
+        with open(path, "w", encoding="utf-8", newline="\n") as f:
+            f.write(source)
+        print(f"    → {os.path.normpath(path)}")
+
+
 # ── 읽기 + 검증 ───────────────────────────────────────────────
 def read_tables(grids: dict = None):
     """
@@ -281,6 +330,7 @@ def convert(filter_name: str = "") -> bool:
             print(f"  ✗ {e}")
         return False
 
+    write_row_classes(tables)
     targets = [t for t in tables.values() if not filter_name or filter_name.lower() in t.file.lower()]
     for table in targets:
         print(f"  [{table.file}] {len(table.rows)}개 행")

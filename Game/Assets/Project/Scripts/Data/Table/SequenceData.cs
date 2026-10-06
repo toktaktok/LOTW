@@ -12,16 +12,10 @@ namespace Project.Scripts.Data.Table
     ///   scene     param = 씬 이름[:입구 ID]. 전환이 끝날 때까지 대기
     ///   actions   param = 대화 액션 문법 (setFlag:timeSlot=1;startQuest:1;bgm:...)
     /// conditions 가 있으면 만족할 때만 실행하고, 아니면 건너뛰고 nextId 로 갑니다.
+    /// 필드는 Generated/SequenceData.cs.
     /// </summary>
-    [Serializable]
-    public class SequenceData : TableRowData
+    public partial class SequenceData
     {
-        public string type;
-        public string param;
-        public float duration;
-        public string conditions;
-        public int nextId;
-
         public bool TryGetStepType(out SequenceStepType stepType)
         {
             return TryParseType(type, out stepType);

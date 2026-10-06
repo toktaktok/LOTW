@@ -4,8 +4,8 @@
     "type": "main",
     "chapter": 1,
     "giverId": "npc_mayor",
-    "title": "사라진 마을의 보물",
-    "summary": "촌장님의 비밀 의뢰. 박물관의 보물이 사라졌다. 범인은 마을 주민 중 한 명이다.",
+    "title": "@quest.1.title",
+    "summary": "@quest.1.summary",
     "objectiveIds": [
       1001,
       1002,
@@ -17,8 +17,8 @@
     "type": "sub",
     "chapter": 1,
     "giverId": "npc_gumman",
-    "title": "얼굴 트기",
-    "summary": "검맨이 마을 주민들과 먼저 얼굴을 트라고 권했다.",
+    "title": "@quest.101.title",
+    "summary": "@quest.101.summary",
     "objectiveIds": [
       1011,
       1012
@@ -29,8 +29,8 @@
     "type": "sub",
     "chapter": 1,
     "giverId": "npc_jumpropekid",
-    "title": "줄넘기 상대",
-    "summary": "하늘이가 줄넘기를 같이 하자고 한다.",
+    "title": "@quest.102.title",
+    "summary": "@quest.102.summary",
     "objectiveIds": [
       1021
     ]
@@ -40,8 +40,8 @@
     "type": "sub",
     "chapter": 1,
     "giverId": "npc_ele",
-    "title": "꽃집 손님 후기",
-    "summary": "꽃집 코끼리가 손님 후기를 모아 달라고 했다.",
+    "title": "@quest.103.title",
+    "summary": "@quest.103.summary",
     "objectiveIds": [
       1031
     ]

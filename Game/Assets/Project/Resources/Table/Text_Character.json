@@ -10,5 +10,10 @@
     "key": "character.player.name",
     "ko": "플레이어",
     "en": "Player"
+  },
+  {
+    "dataId": 3,
+    "key": "character.mayor.name",
+    "ko": "촌장"
   }
 ]

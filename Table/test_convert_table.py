@@ -41,10 +41,10 @@ def run(dialogue_grid):
 
 class ValidateTests(unittest.TestCase):
     def test_valid_rows_convert(self):
-        tables, errors = run([HEADER, TYPES, [1, "@hello", 2, None], [2, "hi", -1, "1,2"], [None] * 4])
+        tables, errors = run([HEADER, TYPES, [1, "@hello", 2, None], [2, "@hello", -1, "1,2"], [None] * 4])
         self.assertEqual(errors, [])
         self.assertEqual([r for _, r in tables["Dialogue"].rows],
-                         [{"dataId": 1, "text": "@hello", "nextId": 2}, {"dataId": 2, "text": "hi", "nextId": -1, "choiceIds": [1, 2]}])
+                         [{"dataId": 1, "text": "@hello", "nextId": 2}, {"dataId": 2, "text": "@hello", "nextId": -1, "choiceIds": [1, 2]}])
 
     def test_each_rule_reports_error(self):
         cases = {
@@ -56,7 +56,8 @@ class ValidateTests(unittest.TestCase):
             "최소값": [HEADER, TYPES, [0, "a", -1, None]],
             "Dialogue.DataId 에 없습니다": [HEADER, TYPES, [1, "a", 9, None]],
             "최대 2개": [HEADER, TYPES, [1, "a", -1, "1,1,1"]],
-            "Text 키": [HEADER, TYPES, [1, "@missing", -1, None]],
+            "Text 키 'missing' 가 없습니다": [HEADER, TYPES, [1, "@missing", -1, None]],
+            "Text 키('@키')여야": [HEADER, TYPES, [1, "literal", -1, None]],
         }
         for expected, grid in cases.items():
             _, errors = run(grid)
@@ -65,7 +66,7 @@ class ValidateTests(unittest.TestCase):
     def test_error_points_at_cell(self):
         _, errors = run([HEADER, TYPES, [1, "a", "x", None]])
         self.assertIn("Dialogue.xlsx D4", errors[0])
-        _, errors = run([HEADER, TYPES, [1, "a", 9, None]])
+        _, errors = run([HEADER, TYPES, [1, "@hello", 9, None]])
         self.assertIn("Dialogue.xlsx D4(NextId)", errors[0])
 
 
@@ -137,6 +138,35 @@ class SplitTableTests(unittest.TestCase):
         for expected, (ui_rows, item_rows) in cases.items():
             errors = self.run_split(ui_rows, item_rows)
             self.assertTrue(any(expected in e for e in errors), f"{expected}: {errors}")
+
+
+class RowClassTests(unittest.TestCase):
+    """스키마 → C# RowData 생성."""
+
+    def test_source_has_fields_defaults_and_escaped_desc(self):
+        schema = {"rowClass": "DialogueData", "columns": [
+            {"name": "DataId", "type": "int"},
+            {"name": "NextId", "type": "int", "default": -1, "desc": "a<b"},
+            {"name": "Speed", "type": "float", "default": 1.5},
+            {"name": "ChoiceIds", "type": "int[]"},
+        ]}
+        source = convert_table.row_class_source("Dialogue", schema)
+        self.assertIn("public partial class DialogueData : TableRowData", source)
+        self.assertNotIn("dataId", source)
+        self.assertIn("/// <summary>a&lt;b</summary>\n        public int nextId = -1;", source)
+        self.assertIn("public float speed = 1.5f;", source)
+        self.assertIn("public int[] choiceIds;", source)
+
+    def test_generated_files_match_schemas(self):
+        """스키마를 고치고 변환을 안 돌리면 실패합니다."""
+        for file in os.listdir(convert_table.SCHEMA_DIR):
+            name = os.path.splitext(file)[0]
+            with open(os.path.join(convert_table.SCHEMA_DIR, file), encoding="utf-8") as f:
+                schema = json.load(f)
+            if "rowClass" not in schema:
+                continue
+            with open(os.path.join(convert_table.ROWDATA_DIR, f"{schema['rowClass']}.cs"), encoding="utf-8") as f:
+                self.assertEqual(f.read(), convert_table.row_class_source(name, schema), file)
 
 
 class ConvertTests(unittest.TestCase):
