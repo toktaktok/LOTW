@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MinigameDefinition_JumpRope
   m_EditorClassIdentifier: Project.Scripts::Project.Scripts.Content.Minigame.JumpRopeDefinition
   id: jumprope
-  title: "\uC904\uB118\uAE30"
+  title: '@world.jump_rope.title'
   mechanicPrefab: {fileID: 6052678445764665522, guid: 66ed859eb92958b4eacf2b29328b7823, type: 3}
   stageResolution: {x: 0, y: 0}
   screenMaterial: {fileID: 0}

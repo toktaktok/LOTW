@@ -238,5 +238,15 @@
     "key": "ui.title.quit.confirm",
     "ko": "게임을 종료할까요?",
     "en": "Quit the game?"
+  },
+  {
+    "dataId": 42,
+    "key": "ui.go_up",
+    "ko": "올라가기"
+  },
+  {
+    "dataId": 43,
+    "key": "ui.go_down",
+    "ko": "내려가기"
   }
 ]

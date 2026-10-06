@@ -22,5 +22,15 @@
     "key": "world.vending_roulette.prompt",
     "ko": "버튼 누르기",
     "en": "Press a button"
+  },
+  {
+    "dataId": 5,
+    "key": "world.jump_rope.title",
+    "ko": "줄넘기"
+  },
+  {
+    "dataId": 6,
+    "key": "world.jump_rope.prompt",
+    "ko": "줄넘기 하기"
   }
 ]

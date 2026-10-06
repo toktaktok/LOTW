@@ -35,8 +35,8 @@ namespace Project.Scripts.Content.World
         [SerializeField] private CinemachineCamera dialogueCamera;
 
         [Header("Interaction")]
-        [Tooltip("'@키'로 Text 테이블 참조 가능")]
-        [SerializeField] private string promptText = "대화하기";
+        [Tooltip("Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
+        [SerializeField] private string promptText = "@ui.talk";
 
         public string InteractionPrompt => promptText;
         public string DisplayName => profile != null ? Localization.Resolve(profile.DisplayName) : name;

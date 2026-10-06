@@ -3,13 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Project.Scripts.Data;
 using Project.Scripts.Framework;
-using DialogueData = Project.Scripts.Data.Table.DialogueData;
 using MapData = Project.Scripts.Data.Table.MapData;
-using ItemTableData = Project.Scripts.Data.Table.ItemTableData;
-using QuestData = Project.Scripts.Data.Table.QuestData;
-using QuestObjectiveData = Project.Scripts.Data.Table.QuestObjectiveData;
-using NotebookData = Project.Scripts.Data.Table.NotebookData;
-using SequenceData = Project.Scripts.Data.Table.SequenceData;
 
 namespace Project.Scripts.Core.Managers
 {
@@ -21,8 +15,7 @@ namespace Project.Scripts.Core.Managers
     /// 새 테이블을 추가하는 절차:
     ///   1. Table/Schema/Xxx.json 에 rowClass 와 컬럼 자료형/규칙 작성
     ///   2. Table/Excel/ 에 Xxx.xlsx 작성 (B2 표, 헤더 아래 자료형 행) → ConvertTable.bat 실행
-    ///      → JSON 과 필드 클래스(Data/Table/Generated/XxxData.cs)가 생성됨
-    ///   3. LoadAllTables() 에 LoadTable&lt;XxxData&gt;("Xxx") 한 줄 추가
+    ///      → JSON, 필드 클래스(Data/Table/Generated/XxxData.cs), 로드 목록(Generated/DataManager.Tables.cs)이 생성됨
     ///
     /// 테이블 파일 명명 규칙:
     ///   접미사 'Table' 없이 사용. 예) Dialogue.xlsx, Item.xlsx
@@ -32,7 +25,7 @@ namespace Project.Scripts.Core.Managers
     ///   DialogueData row  = DataManager.Instance.GetRow&lt;DialogueData&gt;(101);
     ///   var          rows = DataManager.Instance.GetRows&lt;DialogueData&gt;();
     /// </summary>
-    public class DataManager : Singleton<DataManager>
+    public partial class DataManager : Singleton<DataManager>
     {
         #region State
 
@@ -87,23 +80,15 @@ namespace Project.Scripts.Core.Managers
         #region Table Registration
 
         /// <summary>
-        /// 로드할 테이블을 여기에 등록합니다.
         /// 파일명 규칙: Resources/Table/{name}.json (접미사 'Table' 없음)
+        /// 스키마 테이블 목록은 변환기가 생성합니다 (Generated/DataManager.Tables.cs).
         /// </summary>
         private void LoadAllTables()
         {
-            LoadTable<DialogueData>("Dialogue");
+            LoadSchemaTables();
+            // Map 은 맵 에디터가 쓰는 JSON 이라 스키마가 없음
             LoadTable<MapData>("Map");
-            LoadTable<ItemTableData>("Item");
-            LoadTable<QuestData>("Quest");
-            LoadTable<QuestObjectiveData>("QuestObjective");
-            LoadTable<NotebookData>("Notebook");
-            LoadTable<SequenceData>("Sequence");
             // Text_* 테이블은 Key 로만 찾으므로 Localization 이 직접 읽음
-
-            // ── 새 테이블 추가 시 아래에 등록 ──────────────────────
-            // LoadTable<QuestData>("Quest");
-            // ────────────────────────────────────────────────────────
 
             IsLoaded = true;
         }

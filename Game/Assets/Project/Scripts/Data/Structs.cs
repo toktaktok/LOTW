@@ -104,7 +104,7 @@ namespace Project.Scripts.Data
         public string outcome;
         [Tooltip("출구, 게이트, 버튼 색. 캔이 들어가면 이 색으로 차오름")]
         public Color color;
-        [Tooltip("고른 버튼과 결과를 창 상태 줄에 보여 줄 이름. '@키'로 Text 테이블 참조 가능")]
+        [Tooltip("고른 버튼과 결과를 창 상태 줄에 보여 줄 이름. Text 키 (@키). 원문은 TextKeyReferenceTests 가 막음")]
         public string label;
         [Tooltip("꽝 출구. 착지할 때 축하 연출 대신 김빠진 연출")]
         public bool dud;

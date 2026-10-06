@@ -39,6 +39,7 @@ Text is referenced only by key (`@key`), never by DataId.
 - Pick the part by owner: if deleting an item/NPC/quest would delete the text, it belongs to that part. Text owned by nothing is UI.
 - Key: `{part lowercase}.{subject}[.{field}]`, lowercase letters, digits, `_`. The validator enforces the prefix per file and uniqueness across all Text files.
 - Every `textKey` column holds a key, never literal text (enforced). Row-owned text: `@{part}.{DataId}[.{field}]`.
+- Strings outside tables use keys too: code literals, `LocalizedText.key`, and Inspector fields `promptText`, `displayName`, `title`, `label`. `TextKeyReferenceTests` (EditMode) fails on a missing key or on Korean literal text in those fields.
 - Dialogue row-only line: `@dialogue.{DataId}`. Line reused by several rows: `@dialogue.common.{name}`. Menu choices shared by many NPCs (chat/end): `@ui.talk_menu.*`. Speaker names: `@character.{id}.name`.
 - Before adding a text, check whether the same text already exists; reuse the key instead of copying.
 - New part only when a new system needs it; until then, put it in the closest part.
@@ -63,12 +64,13 @@ Text is referenced only by key (`@key`), never by DataId.
 | `ref` | `"Schema.Column"`; value must exist in that table (or any of its split files). `allow` lists exempt values (`[-1]`) |
 | `textKey` | value must be `@key` (literal text is an error), and the key must exist in some `Text_*` file |
 | `default` | C# field initializer in the generated class (value when the cell is empty) |
-| `commandRefs` | `{"verb": "Schema.Column"}`; in `;`-separated `verb:key...` commands, the key must exist there (Dialogue `item:`, `giveItem:`, `takeItem:` -> `Item.ItemId`) |
+| `commandRefs` | `{"verb": "Schema.Column"}`; in `;`-separated `verb:key...` commands, the key must exist there. Conditions: `item` -> `Item.ItemId`, `quest` -> `Quest.DataId`, `note` -> `Notebook.DataId`. Actions: `giveItem`/`takeItem` -> Item, `startQuest`/`completeQuest` -> Quest, `addNote`/`strikeNote` -> Notebook, `sequence` -> `Sequence.DataId` |
+| `refWhen` | `{"column", "value", "ref"}`; checks `ref` only when the same row's `column` equals `value` (case-insensitive). Sequence `Param` -> `Dialogue.DataId` when `Type` is `dialogue` |
 
-Column order and types must match the Excel header and type rows (converter check). The C# fields are generated from the schema on every successful convert (`Generated/{rowClass}.cs`); `TableSchemaTests` checks them too. Change the schema and Excel, then run `ConvertTable.bat`.
+Column order and types must match the Excel header and type rows (converter check). The C# fields are generated from the schema on every successful convert (`Generated/{rowClass}.cs`); `TableSchemaTests` checks them too. The converter also writes the `DataManager` load list (`Scripts/Core/Managers/Generated/DataManager.Tables.cs`: every table with a `rowClass` that is not split; `Map` is hand-registered). Change the schema and Excel, then run `ConvertTable.bat`.
 
 ## Converter
-`ConvertTable.bat [Name]` reads every table (for cross-table refs), validates, and writes nothing if any error. Errors name the cell (`Dialogue.xlsx F12(NextId): ...`). Needs Python 3 + `pip install openpyxl`. `table_edit.py edits.json` (used by the Unity Dialogue Editor) upserts/deletes rows in xlsx tables, validates everything, and saves + converts only if valid. Tests: `python -m unittest test_convert_table test_table_edit` in `Table/`.
+`ConvertTable.bat [Name]` reads every table (for cross-table refs), validates, and writes nothing if any error. Errors name the cell (`Dialogue.xlsx F12(NextId): ...`). Needs Python 3 + `pip install openpyxl`. `table_edit.py edits.json` (used by the Unity Dialogue Editor) upserts/deletes rows in xlsx tables, validates everything, and saves + converts only if valid. Tests: `python -m unittest test_convert_table test_table_edit` in `Table/`. `RepoUpToDateTests` fails when the committed JSON or generated code does not match the Excel files (Excel edited, converter not run).
 
 ## Design docs (`Docs/`)
 Each system design doc that uses a table has a `## Table: {Name}` section copied from the schema, not invented:

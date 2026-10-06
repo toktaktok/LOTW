@@ -41,12 +41,13 @@ class TableEditTests(unittest.TestCase):
             wb.active.add_table(XlTable(displayName=name, ref=f"B2:{chr(65 + len(grid[0]))}{len(grid) + 1}"))
             wb.save(os.path.join(excel, f"{name}.xlsx"))
 
-        self.saved = convert_table.EXCEL_DIR, convert_table.SCHEMA_DIR, convert_table.OUTPUT_DIRS
+        self.saved = convert_table.EXCEL_DIR, convert_table.SCHEMA_DIR, convert_table.OUTPUT_DIRS, convert_table.REGISTRY_PATH
         convert_table.EXCEL_DIR, convert_table.SCHEMA_DIR, convert_table.OUTPUT_DIRS = excel, schema, [out]
+        convert_table.REGISTRY_PATH = os.path.join(out, "DataManager.Tables.cs")
         self.excel, self.out = excel, out
 
     def tearDown(self):
-        convert_table.EXCEL_DIR, convert_table.SCHEMA_DIR, convert_table.OUTPUT_DIRS = self.saved
+        convert_table.EXCEL_DIR, convert_table.SCHEMA_DIR, convert_table.OUTPUT_DIRS, convert_table.REGISTRY_PATH = self.saved
         self.tmp.cleanup()
 
     def read(self, name):

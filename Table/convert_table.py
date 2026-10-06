@@ -30,6 +30,8 @@ C# RowData 생성:
   검증을 통과하면 스키마의 rowClass, columns 로 Scripts/Data/Table/Generated/{rowClass}.cs 를 씁니다.
   컬럼 = 필드 (camelCase, desc = 주석, default = 초기값). DataId 는 TableRowData.dataId.
   생성 클래스는 partial 이라 상수, 메서드는 Data/Table/{rowClass}.cs 에 둡니다.
+  DataManager 가 읽을 테이블 목록도 Scripts/Core/Managers/Generated/DataManager.Tables.cs 로 씁니다
+  (분할 테이블 Text_* 는 Localization 이 읽으므로 제외).
 """
 
 import os
@@ -50,6 +52,7 @@ UNITY_RES  = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Resour
 
 OUTPUT_DIRS = [JSON_DIR, UNITY_RES]
 ROWDATA_DIR = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Scripts", "Data", "Table", "Generated")
+REGISTRY_PATH = os.path.join(SCRIPT_DIR, "..", "Game", "Assets", "Project", "Scripts", "Core", "Managers", "Generated", "DataManager.Tables.cs")
 
 # Excel XML Spreadsheet 2003 네임스페이스
 NS  = "urn:schemas-microsoft-com:office:spreadsheet"
@@ -256,20 +259,42 @@ def row_class_source(schema_name: str, schema: dict) -> str:
     return "\n".join(lines)
 
 
+def registry_source(tables: dict) -> str:
+    """DataManager 가 dataId 로 캐싱할 테이블: rowClass 가 있고 분할되지 않은 테이블 (Text_* 제외)."""
+    rows = sorted((t.name, t.schema["rowClass"]) for t in tables.values()
+                  if t.schema.get("rowClass") and t.name == t.schema_name)
+    lines = [
+        "// 자동 생성 파일. Table/Excel 과 Table/Schema 로 ConvertTable.bat 이 만듭니다.",
+        "namespace Project.Scripts.Core.Managers",
+        "{",
+        "    public partial class DataManager",
+        "    {",
+        "        private void LoadSchemaTables()",
+        "        {",
+    ]
+    lines += [f'            LoadTable<Project.Scripts.Data.Table.{row_class}>("{name}");' for name, row_class in rows]
+    lines += ["        }", "    }", "}", ""]
+    return "\n".join(lines)
+
+
+def write_generated(path: str, source: str):
+    """내용이 같으면 건드리지 않습니다 (Unity 재컴파일 방지)."""
+    if os.path.isfile(path):
+        with open(path, encoding="utf-8") as f:
+            if f.read() == source:
+                return
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(source)
+    print(f"    → {os.path.normpath(path)}")
+
+
 def write_row_classes(tables: dict):
-    """rowClass 가 있는 스키마마다 생성 파일을 씁니다. 내용이 같으면 건드리지 않습니다 (Unity 재컴파일 방지)."""
-    os.makedirs(ROWDATA_DIR, exist_ok=True)
+    """rowClass 가 있는 스키마마다 RowData 파일을, 그리고 DataManager 테이블 목록을 씁니다."""
     schemas = {t.schema_name: t.schema for t in tables.values() if t.schema.get("rowClass")}
     for schema_name, schema in sorted(schemas.items()):
-        path = os.path.join(ROWDATA_DIR, f"{schema['rowClass']}.cs")
-        source = row_class_source(schema_name, schema)
-        if os.path.isfile(path):
-            with open(path, encoding="utf-8") as f:
-                if f.read() == source:
-                    continue
-        with open(path, "w", encoding="utf-8", newline="\n") as f:
-            f.write(source)
-        print(f"    → {os.path.normpath(path)}")
+        write_generated(os.path.join(ROWDATA_DIR, f"{schema['rowClass']}.cs"), row_class_source(schema_name, schema))
+    write_generated(REGISTRY_PATH, registry_source(tables))
 
 
 # ── 읽기 + 검증 ───────────────────────────────────────────────

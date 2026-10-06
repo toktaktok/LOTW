@@ -19,7 +19,7 @@ namespace Project.Scripts.Content.World
         [SerializeField] private float blendDuration = 0f;
 
         [Header("Interaction")]
-        [SerializeField] private string promptText = "이동하기";
+        [SerializeField] private string promptText = "@ui.move";
         [SerializeField] private float interactionDistance = WorldDefines.InteractionDistance;
 
         public float InteractionDistance => interactionDistance;

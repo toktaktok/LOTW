@@ -765,7 +765,7 @@ MonoBehaviour:
   destinationNode: {fileID: 904846376}
   targetCamera: {fileID: 0}
   blendDuration: 0
-  promptText: "\uB0B4\uB824\uAC00\uAE30"
+  promptText: '@ui.go_down'
   interactionDistance: 2
 --- !u!135 &126386857
 SphereCollider:
@@ -2275,7 +2275,7 @@ MonoBehaviour:
   destinationNode: {fileID: 490796839}
   targetCamera: {fileID: 0}
   blendDuration: 0
-  promptText: "\uB0B4\uB824\uAC00\uAE30"
+  promptText: '@ui.go_down'
   interactionDistance: 2
 --- !u!135 &457993606
 SphereCollider:
@@ -5029,7 +5029,7 @@ MonoBehaviour:
   destinationNode: {fileID: 271165199}
   targetCamera: {fileID: 0}
   blendDuration: 0
-  promptText: "\uC62C\uB77C\uAC00\uAE30"
+  promptText: '@ui.go_up'
   interactionDistance: 2
 --- !u!135 &1174448182
 SphereCollider:
@@ -11638,7 +11638,7 @@ MonoBehaviour:
   destinationNode: {fileID: 2045718914}
   targetCamera: {fileID: 0}
   blendDuration: 0
-  promptText: "\uC62C\uB77C\uAC00\uAE30"
+  promptText: '@ui.go_up'
   interactionDistance: 2
 --- !u!135 &1695607360
 SphereCollider:

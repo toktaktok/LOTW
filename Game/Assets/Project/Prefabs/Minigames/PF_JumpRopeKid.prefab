@@ -69,7 +69,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Project.Scripts::Project.Scripts.Content.World.MinigameTrigger
   objectID: 0
   definition: {fileID: 11400000, guid: b4bb2f973ad3ce340a9792fdffbf68d4, type: 2}
-  promptText: "\uC904\uB118\uAE30 \uD558\uAE30"
+  promptText: '@world.jump_rope.prompt'
 --- !u!1 &7626594336313499213
 GameObject:
   m_ObjectHideFlags: 0

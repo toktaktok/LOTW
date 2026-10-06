@@ -23,7 +23,9 @@ Schema/{테이블}.json 으로 표 그리드를 행 객체로 변환하고 검�
   textKey      값은 '@키' 여야 하고 키가 Text 그룹의 Key 에 있어야 함 (원문 금지)
   default      C# 필드 초기값 (빈 셀일 때 쓰임). 생성 코드에만 반영
   commandRefs  {"동사": "스키마.컬럼"}. ';' 로 나눈 "동사:키..." 명령의 키가 그 컬럼에 있어야 함
-               (Dialogue Conditions/Actions 의 item:, giveItem: 같은 아이템 ID)
+               (item:, giveItem: 의 아이템 ID, quest:, startQuest: 의 Quest DataId 등)
+  refWhen      {"column", "value", "ref"}. 같은 행의 column 이 value 일 때만 ref 검사
+               (Sequence Type 이 dialogue 이면 Param 이 Dialogue DataId)
 """
 
 import json
@@ -172,12 +174,16 @@ def validate(tables: dict) -> list:
             letter = col_letter(table.origin_col + table.col_pos.get(col["name"], 0))
             seen = group_seen.setdefault((table.schema_name, key), {}) if col.get("unique") == "group" else {}
             prefix = f"{table.part.lower()}." if col.get("prefixByPart") and table.part else None
-            command_refs = {verb.lower(): (ref, values_of(ref)) for verb, ref in col.get("commandRefs", {}).items()}
+            # 명령 안의 키는 문자열이라 int 컬럼(DataId)도 문자열로 비교
+            command_refs = {verb.lower(): (ref, {str(v) for v in values_of(ref)}) for verb, ref in col.get("commandRefs", {}).items()}
+            ref_when = col.get("refWhen")
+            ref_when_values = {str(v) for v in values_of(ref_when["ref"])} if ref_when else None
             for row_num, row in table.rows:
                 where = f"{table.file} {letter}{row_num}({col['name']})"
                 value = row.get(key)
+                ref_when_hit = ref_when and str(row.get(to_camel(ref_when["column"]), "")).lower() == ref_when["value"].lower()
                 if value is None:
-                    if col.get("required"):
+                    if col.get("required") or ref_when_hit:
                         errors.append(f"{where}: 값이 필요합니다")
                     continue
                 items = value if isinstance(value, list) else [value]
@@ -210,6 +216,8 @@ def validate(tables: dict) -> list:
                         command_key = match.group(2).strip()
                         if command_key not in ref_keys:
                             errors.append(f"{where}: '{token.strip()}' 의 '{command_key}' 가 {ref} 에 없습니다")
+                if ref_when_hit and str(value) not in ref_when_values:
+                        errors.append(f"{where}: {value} 이 {ref_when['ref']} 에 없습니다 ({ref_when['column']} {ref_when['value']})")
                 if col.get("textKey"):
                     if not value.startswith("@"):
                         errors.append(f"{where}: '{value}' 는 Text 키('@키')여야 합니다. 문구는 Text_* 표에 넣으세요")

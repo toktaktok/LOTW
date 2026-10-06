@@ -77,13 +77,16 @@ class CommandRefTests(unittest.TestCase):
         schemas = {
             "Dialogue": {"columns": [
                 {"name": "DataId", "type": "int"},
-                {"name": "Actions", "type": "string", "commandRefs": {"giveItem": "Item.ItemId", "item": "Item.ItemId"}},
+                {"name": "Actions", "type": "string",
+                 "commandRefs": {"giveItem": "Item.ItemId", "item": "Item.ItemId", "startQuest": "Quest.DataId"}},
             ]},
             "Item": {"columns": [{"name": "ItemId", "type": "string"}]},
+            "Quest": {"columns": [{"name": "DataId", "type": "int"}]},
         }
         grids = {
             "Dialogue": [["DataId", "Actions"], ["int", "string"], [1, actions]],
             "Item": [["ItemId"], ["string"], ["rose"]],
+            "Quest": [["DataId"], ["int"], [101]],
         }
         tables, errors = {}, []
         for name, grid in grids.items():
@@ -101,6 +104,48 @@ class CommandRefTests(unittest.TestCase):
         errors = self.run_commands("setFlag:got;giveitem:tulip=1")
         self.assertEqual(len(errors), 1)
         self.assertIn("'tulip' 가 Item.ItemId 에 없습니다", errors[0])
+
+    def test_int_id_command(self):
+        self.assertEqual(self.run_commands("startQuest:101"), [])
+        errors = self.run_commands("startQuest:102")
+        self.assertEqual(len(errors), 1)
+        self.assertIn("'102' 가 Quest.DataId 에 없습니다", errors[0])
+
+
+class RefWhenTests(unittest.TestCase):
+    """Sequence Param 처럼 다른 컬럼 값에 따라 참조를 검사 (refWhen)."""
+
+    def run_steps(self, rows):
+        schemas = {
+            "Sequence": {"columns": [
+                {"name": "Type", "type": "string"},
+                {"name": "Param", "type": "string", "refWhen": {"column": "Type", "value": "dialogue", "ref": "Dialogue.DataId"}},
+            ]},
+            "Dialogue": {"columns": [{"name": "DataId", "type": "int"}]},
+        }
+        grids = {
+            "Sequence": [["Type", "Param"], ["string", "string"]] + rows,
+            "Dialogue": [["DataId"], ["int"], [9000]],
+        }
+        tables, errors = {}, []
+        for name, grid in grids.items():
+            table = Table(name, f"{name}.xlsx")
+            table.schema = schemas[name]
+            build_rows(table, grid, errors)
+            tables[name] = table
+        return errors + validate(tables)
+
+    def test_checks_only_matching_type(self):
+        self.assertEqual(self.run_steps([["Dialogue", "9000"], ["scene", "Plaza"]]), [])
+        errors = self.run_steps([["dialogue", "9001"]])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("9001 이 Dialogue.DataId 에 없습니다", errors[0])
+
+    def test_empty_param_on_matching_type(self):
+        self.assertEqual(self.run_steps([["scene", None]]), [])
+        errors = self.run_steps([["dialogue", None]])
+        self.assertEqual(len(errors), 1)
+        self.assertIn("값이 필요합니다", errors[0])
 
 
 class SplitTableTests(unittest.TestCase):
@@ -167,6 +212,28 @@ class RowClassTests(unittest.TestCase):
                 continue
             with open(os.path.join(convert_table.ROWDATA_DIR, f"{schema['rowClass']}.cs"), encoding="utf-8") as f:
                 self.assertEqual(f.read(), convert_table.row_class_source(name, schema), file)
+
+
+class RepoUpToDateTests(unittest.TestCase):
+    """Excel 을 고치고 ConvertTable.bat 을 안 돌리면 실패합니다 (커밋된 JSON, DataManager 목록 비교)."""
+
+    @classmethod
+    def setUpClass(cls):
+        cls.tables, cls.errors = convert_table.read_tables()
+
+    def test_excel_is_valid(self):
+        self.assertEqual(self.errors, [])
+
+    def test_json_matches_excel(self):
+        for table in self.tables.values():
+            expected = [row for _, row in table.rows]
+            for out_dir in convert_table.OUTPUT_DIRS:
+                with open(os.path.join(out_dir, f"{table.name}.json"), encoding="utf-8") as f:
+                    self.assertEqual(json.load(f), expected, f"{out_dir} {table.name}.json")
+
+    def test_registry_matches_tables(self):
+        with open(convert_table.REGISTRY_PATH, encoding="utf-8") as f:
+            self.assertEqual(f.read(), convert_table.registry_source(self.tables))
 
 
 class ConvertTests(unittest.TestCase):

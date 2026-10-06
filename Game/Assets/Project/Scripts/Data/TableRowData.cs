@@ -9,9 +9,8 @@ namespace Project.Scripts.Data
     ///
     /// 새 테이블을 추가할 때:
     ///   1. Table/Schema/ 에 스키마(rowClass, columns), Table/Excel/ 에 .xlsx 파일 추가 후 ConvertTable.bat 실행
-    ///      → 이 클래스를 상속받는 필드 클래스가 Data/Table/Generated/ 에 생성됨
-    ///   2. DataManager.LoadAllTables() 에 LoadTable 호출 등록
-    ///   3. 상수나 메서드가 필요하면 Data/Table/ 에 같은 이름의 partial 클래스 추가
+    ///      → 이 클래스를 상속받는 필드 클래스(Data/Table/Generated/)와 DataManager 로드 목록이 생성됨
+    ///   2. 상수나 메서드가 필요하면 Data/Table/ 에 같은 이름의 partial 클래스 추가
     /// </summary>
     [Serializable]
     public abstract class TableRowData
