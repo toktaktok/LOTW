@@ -33,8 +33,12 @@ namespace Project.Scripts.Content.Controller
 
         private void Update()
         {
+            // 막힌 동안은 안내를 숨김 (미니게임 창 아래에 "버튼 누르기" 같은 안내가 남지 않게). 풀리면 다시 찾음
             if(UIManager.Instance.HasBlockingPage || SequencePlayer.IsPlaying)
+            {
+                SetNearby(null);
                 return;
+            }
 
             // 페이드/로딩 중 상호작용하면 사라질 씬의 대상으로 UI가 열림
             if(SceneTransitionManager.HasInstance && SceneTransitionManager.Instance.IsTransitioning)
@@ -71,11 +75,16 @@ namespace Project.Scripts.Content.Controller
                 }
             }
 
-            if(closest != _currentNearby)
-            {
-                _currentNearby = closest;
-                UpdateHint();
-            }
+            SetNearby(closest);
+        }
+
+        private void SetNearby(IInteractable nearby)
+        {
+            if(nearby == _currentNearby)
+                return;
+
+            _currentNearby = nearby;
+            UpdateHint();
         }
 
         private void UpdateHint()

@@ -93,7 +93,7 @@ namespace Project.Scripts.Core.Managers
             }
 
             _input = new MinigameInput();
-            _session = new MinigameSession(definition, source, _input);
+            _session = new MinigameSession(definition, source, _input, GetStageResolution(definition, source));
             _context = new MinigameContext(_gameContext, _session.Vars);
             _onEnded = onEnded;
             MinigameRules.ApplyStart(definition, _context);
@@ -109,10 +109,10 @@ namespace Project.Scripts.Core.Managers
             return true;
         }
 
-        /// <summary>진행 중인 판을 보상 없이 중단합니다. 정의가 중단을 허용할 때만 동작합니다.</summary>
+        /// <summary>진행 중인 판을 보상 없이 중단합니다. 정의가 중단을 허용하고 메카닉이 막지 않을 때만 동작합니다.</summary>
         public void Abort()
         {
-            if(_isRunning && _session.Definition.AllowAbort)
+            if(_isRunning && _session.Definition.AllowAbort && _mechanic.CanAbort)
                 Finish(null);
         }
 
@@ -120,9 +120,18 @@ namespace Project.Scripts.Core.Managers
 
         #region Flow
 
+        // SourceBounds면 발생원이 화면에서 차지하는 영역 크기. 투영할 수 없으면 정의의 해상도.
+        private static Vector2Int GetStageResolution(MinigameDefinition definition, GameObject source)
+        {
+            if(definition.Layout.placement == MinigamePlacement.SourceBounds
+                && MinigameProjection.TryGetStageResolution(definition, source, out Vector2Int resolution))
+                return resolution;
+            return definition.StageResolution;
+        }
+
         private void CreateStage(MinigameDefinition definition, MinigameBase mechanicPrefab)
         {
-            Vector2Int resolution = definition.StageResolution;
+            Vector2Int resolution = _session.StageResolution;
             _stageTexture = new RenderTexture(resolution.x, resolution.y, MinigameDefines.StageDepthBits)
             {
                 filterMode = FilterMode.Point,

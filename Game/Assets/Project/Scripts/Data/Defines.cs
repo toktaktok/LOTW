@@ -76,8 +76,14 @@ namespace Project.Scripts.Data
         /// <summary>스테이지를 놓는 위치. 월드 카메라에 잡히지 않도록 멀리 둠.</summary>
         public static readonly Vector3 StageOrigin = new Vector3(0f, -1000f, 0f);
         public static readonly Vector2Int DefaultStageResolution = new Vector2Int(240, 150);
+        /// <summary>SourceBounds 배치에서 발생원 영역이 이보다 작으면 이 크기로 늘림 (정의가 더 크게 정할 수 있음).</summary>
+        public static readonly Vector2Int MinStageResolution = new Vector2Int(48, 48);
+        /// <summary>투영 크기를 정수로 올릴 때 무시하는 오차(RT 픽셀). 104.0002가 105가 되지 않게.</summary>
+        public const float ProjectionSizeTolerance = 0.01f;
         public const int DefaultDisplayScale = 4;
         public const int StageDepthBits = 16;
+        /// <summary>창 제목과 상태 글자 사이 최소 간격(캔버스 단위). 이보다 좁으면 제목을 숨김.</summary>
+        public const float HeaderGap = 8f;
 
         /// <summary>메카닉이 항상 읽을 수 있는 경과 시간 변수(초, 내림).</summary>
         public const string TimeVar = "time";
@@ -97,6 +103,40 @@ namespace Project.Scripts.Data
 
         public static readonly int IrisXId = Shader.PropertyToID("_IrisX");
         public static readonly int IrisYId = Shader.PropertyToID("_IrisY");
+    }
+
+    /// <summary>낙하 게이트 미니게임 판 배치 상수. 길이는 스테이지 픽셀.</summary>
+    public readonly struct GateDropDefines
+    {
+        public const int MinOutlets = 2;
+        public const int MaxOutlets = 8;
+        /// <summary>레인(출구 1칸) 폭. 짝수만 씀.</summary>
+        public const int MinLaneWidth = 10;
+        public const int MaxLaneWidth = 24;
+        public const int MinStageHeight = 96;
+        /// <summary>판 바깥 테두리 두께.</summary>
+        public const int Border = 2;
+        public const int ButtonAreaHeight = 12;
+        public const int ButtonHeight = 7;
+        /// <summary>출구 칸 안에서 캔 위아래 여백.</summary>
+        public const int OutletPadding = 2;
+        /// <summary>투입구 위 여백.</summary>
+        public const int InletPadding = 3;
+        /// <summary>투입구 캔과 첫 줄 핀 사이 여백.</summary>
+        public const int InletDropGap = 4;
+        /// <summary>핀 줄 간격 목표 = 레인 폭 x 이 값.</summary>
+        public const float RowStepPerLane = 0.72f;
+        /// <summary>핀 줄 간격 최소 = 레인 폭 x 이 값. 반 레인(옆으로 가는 거리)만큼은 내려가 45도보다 눕지 않게.</summary>
+        public const float MinRowStepPerLane = 0.5f;
+        public const int MinRows = 3;
+        public const int MaxRows = 31;
+        public const int MinCanDiameter = 7;
+        public const int MaxCanDiameter = 15;
+        /// <summary>핀 크기 (홀수).</summary>
+        public const int PegSize = 3;
+        public const int GateThickness = 2;
+        /// <summary>게이트 줄과 마지막 줄 사이 = 캔 지름 + 이 값. 마지막 줄 핀 위 캔이 문짝과 겹치지 않게.</summary>
+        public const int GateRowGap = 3;
     }
 
     /// <summary>플레이 모드 맵 에디터 상수.</summary>

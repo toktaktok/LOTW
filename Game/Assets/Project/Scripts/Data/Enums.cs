@@ -88,12 +88,16 @@ namespace Project.Scripts.Data
         Once
     }
 
-    /// <summary>미니게임 창 위치 기준.</summary>
+    /// <summary>
+    /// 미니게임 창 위치 기준.
+    /// SourceBounds: 발생원 오브젝트가 화면에서 차지하는 영역에 화면을 그대로 겹침. 스테이지 크기와 표시 배율도 그 영역이 정함.
+    /// </summary>
     public enum MinigamePlacement
     {
         Center,
         Anchor,
-        Source
+        Source,
+        SourceBounds
     }
 
     /// <summary>미니게임 창이 열리기 시작하는 지점.</summary>
@@ -101,5 +105,15 @@ namespace Project.Scripts.Data
     {
         WindowCenter,
         Source
+    }
+
+    /// <summary>낙하 게이트 한 판의 단계. Ready: 투입구에서 흔들림, Falling: 핀을 타고 내려감, Landing: 출구에서 튕기며 멈춤.</summary>
+    public enum GateDropPhase
+    {
+        Idle,
+        Ready,
+        Falling,
+        Landing,
+        Done
     }
 }

@@ -5,5 +5,47 @@
     "displayName": "@item.rose.name",
     "description": "@item.rose.desc",
     "maxStack": 99
+  },
+  {
+    "dataId": 2,
+    "itemId": "drink_soda",
+    "displayName": "@item.drink_soda.name",
+    "description": "@item.drink_soda.desc",
+    "maxStack": 99
+  },
+  {
+    "dataId": 3,
+    "itemId": "drink_milk",
+    "displayName": "@item.drink_milk.name",
+    "description": "@item.drink_milk.desc",
+    "maxStack": 99
+  },
+  {
+    "dataId": 4,
+    "itemId": "drink_coffee",
+    "displayName": "@item.drink_coffee.name",
+    "description": "@item.drink_coffee.desc",
+    "maxStack": 99
+  },
+  {
+    "dataId": 5,
+    "itemId": "drink_lemon",
+    "displayName": "@item.drink_lemon.name",
+    "description": "@item.drink_lemon.desc",
+    "maxStack": 99
+  },
+  {
+    "dataId": 6,
+    "itemId": "drink_greentea",
+    "displayName": "@item.drink_greentea.name",
+    "description": "@item.drink_greentea.desc",
+    "maxStack": 99
+  },
+  {
+    "dataId": 7,
+    "itemId": "drink_dud",
+    "displayName": "@item.drink_dud.name",
+    "description": "@item.drink_dud.desc",
+    "maxStack": 99
   }
 ]

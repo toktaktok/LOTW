@@ -10,5 +10,77 @@
     "key": "item.rose.desc",
     "ko": "오늘 들어온 붉은 장미.",
     "en": "A red rose that arrived today."
+  },
+  {
+    "dataId": 3,
+    "key": "item.drink_soda.name",
+    "ko": "탄산음료",
+    "en": "Soda"
+  },
+  {
+    "dataId": 4,
+    "key": "item.drink_soda.desc",
+    "ko": "자판기에서 나온 톡 쏘는 탄산음료.",
+    "en": "A fizzy soda from the vending machine."
+  },
+  {
+    "dataId": 5,
+    "key": "item.drink_milk.name",
+    "ko": "우유",
+    "en": "Milk"
+  },
+  {
+    "dataId": 6,
+    "key": "item.drink_milk.desc",
+    "ko": "자판기에서 나온 차가운 우유.",
+    "en": "Cold milk from the vending machine."
+  },
+  {
+    "dataId": 7,
+    "key": "item.drink_coffee.name",
+    "ko": "캔커피",
+    "en": "Canned Coffee"
+  },
+  {
+    "dataId": 8,
+    "key": "item.drink_coffee.desc",
+    "ko": "자판기에서 나온 달달한 캔커피.",
+    "en": "Sweet canned coffee from the vending machine."
+  },
+  {
+    "dataId": 9,
+    "key": "item.drink_lemon.name",
+    "ko": "레몬에이드",
+    "en": "Lemonade"
+  },
+  {
+    "dataId": 10,
+    "key": "item.drink_lemon.desc",
+    "ko": "자판기에서 나온 새콤한 레몬에이드.",
+    "en": "Sour lemonade from the vending machine."
+  },
+  {
+    "dataId": 11,
+    "key": "item.drink_greentea.name",
+    "ko": "녹차",
+    "en": "Green Tea"
+  },
+  {
+    "dataId": 12,
+    "key": "item.drink_greentea.desc",
+    "ko": "자판기에서 나온 씁쓸한 녹차.",
+    "en": "Bitter green tea from the vending machine."
+  },
+  {
+    "dataId": 13,
+    "key": "item.drink_dud.name",
+    "ko": "꽝 음료",
+    "en": "Dud Drink"
+  },
+  {
+    "dataId": 14,
+    "key": "item.drink_dud.desc",
+    "ko": "캔에 '꽝'이라고만 적혀 있다. 무슨 맛인지 알 수 없다.",
+    "en": "The can only says 'DUD'. Nobody knows the taste."
   }
 ]

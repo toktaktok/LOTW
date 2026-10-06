@@ -14,9 +14,20 @@ namespace Project.Scripts.System.Minigame
         [SerializeField] private Camera stageCamera;
 
         public Camera StageCamera => stageCamera;
+        /// <summary>false면 닫기(중단)를 무시합니다. 결과가 이미 정해져 연출 중일 때 보상을 잃지 않게 씁니다.</summary>
+        public virtual bool CanAbort => true;
         protected MinigameSession Session { get; private set; }
 
-        public void Bind(MinigameSession session) => Session = session;
+        public void Bind(MinigameSession session)
+        {
+            Session = session;
+            OnBind();
+        }
+
+        /// <summary>세션이 연결된 직후 (창이 열리기 전, 스테이지 카메라와 RT는 준비됨). Session.StageResolution에 맞춰 판을 만들 때 씁니다.</summary>
+        protected virtual void OnBind()
+        {
+        }
 
         /// <summary>창이 다 열리고 입력이 켜진 직후.</summary>
         public virtual void OnBegin()

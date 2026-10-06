@@ -10,5 +10,17 @@
     "key": "world.scene.character",
     "ko": "테스트",
     "en": "Test"
+  },
+  {
+    "dataId": 3,
+    "key": "world.vending_roulette.title",
+    "ko": "자판기",
+    "en": "Vending Machine"
+  },
+  {
+    "dataId": 4,
+    "key": "world.vending_roulette.prompt",
+    "ko": "버튼 누르기",
+    "en": "Press a button"
   }
 ]

@@ -55,6 +55,9 @@ namespace Project.Scripts.Data
         public bool AllowAbort => allowAbort;
         public string AbortActions => abortActions;
 
+        /// <summary>SourceBounds 배치에서 메카닉이 판을 만들 수 있는 최소 스테이지 크기. 메카닉 정의가 재정의합니다.</summary>
+        public virtual Vector2Int MinStageResolution => MinigameDefines.MinStageResolution;
+
         public string PlaysFlag => MinigameDefines.FlagPrefix + id + MinigameDefines.PlaysFlagSuffix;
         public string ClearedFlag => MinigameDefines.FlagPrefix + id + MinigameDefines.ClearedFlagSuffix;
         public string GetOutcomeFlag(string outcomeName) => MinigameDefines.FlagPrefix + id + "_" + outcomeName;
