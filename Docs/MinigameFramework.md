@@ -220,13 +220,21 @@ MinigameWindow (BaseUI, CanvasGroup)
 
 | 필드 | 설명 |
 |---|---|
-| `placement` | `Center` 화면 중앙 / `Anchor` 화면 비율 좌표 / `Source` 발생원 오브젝트의 화면 위치 기준 |
+| `placement` | `Center` 화면 중앙 / `Anchor` 화면 비율 좌표 / `Source` 발생원 오브젝트의 화면 위치 기준 / `SourceBounds` 발생원이 화면에서 차지하는 영역에 그대로 겹침 |
 | `anchor` | `Anchor`일 때 화면 비율 좌표 (0-1, 예: 0.7, 0.55) |
 | `offset` | 기준점에서의 픽셀 오프셋 (1080p 기준) |
 | `openFrom` | 열림 애니메이션 시작점: `WindowCenter` / `Source` (오브젝트에서 튀어나오듯 열림) |
 
 - 창 크기는 `stageResolution` x 정수 배율로 정해진다. 픽셀 격자를 지키려고 임의 크기는 두지 않는다
 - `Source` 배치는 연 순간의 위치로 고정한다 (카메라가 움직여도 창은 따라가지 않음). 화면 밖으로 나가면 안쪽으로 밀어 넣는다
+- `SourceBounds` 배치 (2026-10-06 추가, 12.1):
+  - 발생원(자식 포함) 렌더러들의 3D 경계 상자를 월드 저해상도 RT 픽셀로 투영한다. 그 사각형 크기가 스테이지 해상도가 된다. `stageResolution`, `anchor`, `offset`, `displayScale`은 쓰지 않는다
+  - 스테이지는 월드 RT와 같은 픽셀 격자, 같은 정수 배율로 그린다. 스테이지 1픽셀 = 월드 화면 1픽셀이다
+  - 화면 밖으로 밀어 넣지 않는다. 밀면 발생원과 어긋나기 때문이다
+  - 열려 있는 동안 월드 화면이 갱신될 때마다 발생원 위치를 다시 구해 따라간다. 갱신 시점은 `LowResPixelRenderer.OnViewUpdated`다 (카메라를 픽셀 격자에 맞춘 직후). 그래서 창이 월드보다 한 프레임 늦지 않다
+  - 스테이지 해상도는 연 순간의 값을 유지한다. 창 크기는 스테이지 해상도 x 월드 화면 배율이다. 화면 크기가 바뀌어 배율이 바뀌면 창 크기도 바뀐다
+  - 투영 크기를 정수 픽셀로 올릴 때 0.01픽셀 이하의 오차는 무시한다 (`MinigameDefines.ProjectionSizeTolerance`)
+  - 투영할 수 없으면(렌더러 없음, 월드 렌더러 준비 안 됨) 정의의 `stageResolution`과 일반 배치를 쓴다
 
 ### 6.2.2 열림/닫힘 애니메이션 (조리개)
 
@@ -250,6 +258,8 @@ MinigameWindow (BaseUI, CanvasGroup)
 아날로그 카메라 렌즈로 투사한 정도만 낸다. 기하 왜곡은 넣지 않는다.
 - 가장자리 비네팅 (모서리가 부드럽게 어두워짐)
 - 약한 필름 그레인, 아주 약한 밝기 깜빡임
+  - 그레인 해시는 `sin`을 쓰지 않는다 (Dave Hoskins hash12). `sin` 해시는 입력이 크면 GPU 정밀도 때문에 대각선 줄무늬가 생긴다 (2026-10-06 확인)
+  - 프레임 번호는 61로 나눈 나머지를 쓴다. 해시 입력이 커지지 않게 하기 위해서다
 - 선택: 가장자리 미세 색수차 (1px 이하)
 - 화면 좌표와 스테이지 좌표가 선형 관계라 포인터 변환이 단순하다
 
@@ -257,7 +267,7 @@ MinigameWindow (BaseUI, CanvasGroup)
 
 | 스타일 | 연출 |
 |---|---|
-| 눈사람 | 정적, 공작 종이 질감 창틀, 왜곡 거의 없음, 차분한 열림 |
+| 눈사람 | 정적, 크래프트 종이 질감 창틀, 왜곡 거의 없음, 차분한 열림 |
 | 지그 | 렌즈가 미세하게 흔들림, 왜곡/색수차 강하고 시간에 따라 일렁임, 열릴 때 글리치 |
 
 스타일은 셰이더 파라미터 묶음 + 창틀 스프라이트 + 열림/닫힘 애니메이션이다. 색은 보라 계열을 피한다.
@@ -352,7 +362,7 @@ Tests/EditMode/MinigameRulesTests.cs
 | 1 | 정의 데이터 위치 | ScriptableObject (테이블 아님) |
 | 2 | 결과 실패 시 보상 | 실패도 `outcomes`에 넣으면 보상 가능. 기본은 실패 보상 없음 |
 
-## 12. 구현 현황 (2026-10-05)
+## 12. 구현 현황 (2026-10-06)
 
 ### 12.1 구현된 것
 
@@ -364,10 +374,14 @@ Tests/EditMode/MinigameRulesTests.cs
 | 런타임 | `MinigameManager` (한 번에 한 판, 스테이지/RT 수명, 틱, 결과 적용, 중단, 정리), `MinigameSession`, `MinigameBase` / `MinigameBase<TDefinition>` |
 | 입력 | `Minigame` 액션 맵 (Navigate, Submit, Alt, Point, Click. Esc 없음), `MinigameInput` (포인터 -> 스테이지 월드 좌표) |
 | 창 | `MinigameWindow` + `PF_MinigameWindow` (A안 창틀), `MinigameLens.shader` + `MAT_MinigameLens`, DOTween 열림/닫힘 (창틀 확장 -> 사각 조리개) |
-| 배치 | `layout`: Center / Anchor / Source, offset, openFrom (WindowCenter / Source), displayScale. 화면 밖으로 나가면 안쪽으로 밀어 넣음 |
+| 배치 | `layout`: Center / Anchor / Source / SourceBounds, offset, openFrom (WindowCenter / Source), displayScale. 화면 밖으로 나가면 안쪽으로 밀어 넣음 (SourceBounds는 제외) |
+| 투사 배치 | `MinigameProjection` (발생원 경계 상자 -> 월드 RT 픽셀 사각형 -> 스테이지 해상도와 화면 사각형). `LowResPixelRenderer.Current`가 월드 RT 크기, 배율, 서브픽셀 위치를 알려 준다. 스테이지 해상도는 `Session.StageResolution`에 들어가고, 정의의 `MinStageResolution`(가상 속성) 이상, 월드 RT 크기 이하로 맞춘다 |
+| 메카닉 훅 | `MinigameBase.OnBind()`: 세션 연결 직후, 창이 열리기 전에 부른다. 스테이지 크기에 맞춰 판을 만들 때 쓴다. `MinigameBase.CanAbort` (기본 true): false인 동안 닫기 버튼(`MinigameManager.Abort`)을 무시한다. 결과가 정해져 연출 중일 때 보상을 잃지 않게 쓴다 (낙하 게이트의 착지) |
+| 창 머리글 | 제목(왼쪽)과 상태(오른쪽)가 겹치면 제목을 숨긴다 (`MinigameDefines.HeaderGap` 8). 픽셀 글꼴이 흐려지지 않게 글자 크기는 줄이지 않는다 |
 | 진입 | `MinigameTrigger` (월드 상호작용), 대화 액션 `minigame:id` (대화를 닫고 실행, 끝나면 `followDialogueId` 또는 원래 다음 행에서 재개. onFinished(카메라 복귀)는 대화가 실제로 끝날 때 호출) |
-| 상호작용 | `IInteractable.CanInteract` (기본 true). false면 `PlayerInteractor` 대상에서 빠짐 |
+| 상호작용 | `IInteractable.CanInteract` (기본 true). false면 `PlayerInteractor` 대상에서 빠짐. 막는 페이지(미니게임 창 등)나 시퀀스가 있는 동안 `PlayerInteractor`가 HUD 상호작용 안내를 숨기고, 풀리면 대상을 다시 찾는다 |
 | 샘플 | 줄넘기: `JumpRopeMinigame` + `JumpRopeDefinition`, `PF_Minigame_JumpRope`, `MinigameDefinition_JumpRope` (5번 넘으면 성공 + `giveItem:rose`, 3번 걸리면 실패), 플라자 (39, 0, 1.2)의 `PF_JumpRopeKid` |
+| 샘플 | 자판기 룰렛 (낙하 게이트 형식): `Scripts/Content/Minigame/GateDrop/`, `PF_Minigame_GateDrop`, `MinigameDefinition_VendingRoulette` (SourceBounds 배치, 음료 6종 + 꽝). 플라자 `DrinkMachine` (107.1, 0, 4.8), 레일 `RailNode_A8`에서 상호작용. 사용자가 프로토타입으로 승인했다 (2026-10-06). 기획: `Docs/Minigames/자판기_룰렛.md`, `Docs/Minigames/형식/낙하_게이트.md` |
 
 ### 12.2 새 미니게임 만드는 순서
 
@@ -388,6 +402,8 @@ Tests/EditMode/MinigameRulesTests.cs
 - 메카닉 프리팹 이름은 `PF_Minigame_{Name}`.
 - `minigame:id` 가 있는 행은 화면에 표시되지 않는다 (행의 다른 액션은 실행됨). 분기 행(router)의 actions에 쓴 `minigame:`은 지원하지 않는다.
 - 시작할 수 없는 상태(조건 불만족, 반복 정책)에서 대화가 `minigame:id` 행에 오면 미니게임 없이 그 행이 그대로 표시된다.
+- 배치에 `SourceBounds`를 추가했다 (6.2.1). 스테이지 해상도가 정의 값으로 고정되지 않고 판마다 다를 수 있다. 메카닉은 `OnBind`에서 `Session.StageResolution`을 읽어 판을 만든다.
+- 7장의 자판기 룰렛 사례(Roulette 메커닉, 동전 비용)는 쓰지 않았다. 낙하 게이트 형식(`GateDrop`)으로 만들었고 시작 조건이 없다. 이용 아이템은 이후 단계다 (`Docs/Minigames/자판기_룰렛.md` 8장).
 
 ### 12.4 아직 없는 것 (필요해질 때 추가)
 
@@ -396,10 +412,15 @@ Tests/EditMode/MinigameRulesTests.cs
 - `Minigame` 전용 레이어와 카메라 컬링 분리 (지금은 스테이지를 월드에서 멀리 (0, -1000, 0) 두는 것으로 분리)
 - 메카닉 -> 연출용 시그널, 결과 연출(성공/실패 표시)은 창 제목 줄의 상태 문구와 0.6초 정지뿐
 - 미니게임 진행 중 세이브/씬 전환 처리
+- 결과가 정해진 뒤 연출 중(`CanAbort`가 false)에 창이 밖에서 닫히면(`UIManager.ClearAllPages`) 중단으로 처리되어 보상이 없다. 지금은 미니게임 중에 `ClearAllPages`를 부르는 경로가 없다 (일시 정지는 미니게임 중에 열리지 않는다)
 - 셰이더 공용 HLSL include
 
 ### 12.5 검증
 
 - EditMode: `MinigameRulesTests` 26개 포함 전체 179개 통과.
+- EditMode (2026-10-06): `MinigameProjectionTests`, `GateDropBoardTests`, `GateDropLayoutTests`, `PixelCanvasTests` 추가 후 전체 271개 통과.
+- EditMode (2026-10-06, 리뷰 반영 후): 전체 276개 통과.
+- Play 모드 (2026-10-06, 리뷰 반영 후, 스크립트 조작): 착지 단계에서 `MinigameManager.Abort`를 불러도 창이 닫히지 않았고 레몬이 지급됐다. 착지 전 `Abort`는 보상 없이 창을 닫았다 (`plays`만 1 늘었다). 착지 프레임(눌림, 색 차오름, 반짝임)을 화면 캡처로 확인했다. 카메라가 움직일 때 창이 자판기를 따라가는지는 확인하지 않았다.
+- Play 모드 (2026-10-06, Plaza, 스크립트 조작): `RailNode_A8`에서 자판기 대상 탐지와 HUD 안내, 자판기 영역에 겹쳐 열리는 창, 버튼 -> 게이트 열림 -> 그 출구로 착지, 착지 연출, 음료 지급과 기록 플래그(레몬, 꽝), 중단 후 재시작, 창이 열린 동안 HUD 안내 숨김. 실제 키와 마우스 입력, 60fps에서의 손맛은 확인하지 않았다 (에디터가 뒤에서 약 9fps로 돌았다).
 - Play 모드 (Plaza, 에디터 자동 조작): 열림/닫힘과 창 크기, 실제 키 입력(Space)으로 5회 넘어 성공 -> `rose` 지급과 `mg_jumprope_cleared` 기록, 3회 걸려 실패, 닫기 버튼 중단(보상 없음), 종료 후 스테이지 정리와 입력 차단 해제, 대화 `minigame:` 행 -> 미니게임 -> 대화 재개, 플라자 트리거 탐지와 실행, 화면 좌표 -> 스테이지 좌표 변환.
 - 직접 해 보지 못한 것: 실제 마우스 포인터 입력(에디터가 주입한 마우스 이벤트를 받지 않아 좌표 변환 함수만 확인), 게임패드, 플레이어가 걸어가서 여는 전체 동선, Anchor/Source 배치와 `openFrom = Source` 의 화면상 모습.

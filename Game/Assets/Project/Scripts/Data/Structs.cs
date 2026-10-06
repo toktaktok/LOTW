@@ -79,6 +79,7 @@ namespace Project.Scripts.Data
 
     /// <summary>
     /// 미니게임 창 배치. 창 크기는 스테이지 해상도 x 정수 배율로 정해집니다.
+    /// placement가 SourceBounds이면 해상도와 배율 대신 발생원의 화면 영역을 씁니다 (anchor, offset, displayScale 무시).
     /// </summary>
     [Serializable]
     public struct MinigameWindowLayout
@@ -91,6 +92,22 @@ namespace Project.Scripts.Data
         public MinigameOpenFrom openFrom;
         [Tooltip("스테이지 픽셀 표시 배율. 0이면 기본값")]
         public int displayScale;
+    }
+
+    /// <summary>
+    /// 낙하 게이트 출구 1칸. 같은 줄의 버튼과 게이트가 이 색으로 짝지어집니다.
+    /// </summary>
+    [Serializable]
+    public struct GateDropOutlet
+    {
+        [Tooltip("캔이 이 출구에 들어가면 끝나는 결과 이름 (정의 outcomes의 name)")]
+        public string outcome;
+        [Tooltip("출구, 게이트, 버튼 색. 캔이 들어가면 이 색으로 차오름")]
+        public Color color;
+        [Tooltip("고른 버튼과 결과를 창 상태 줄에 보여 줄 이름. '@키'로 Text 테이블 참조 가능")]
+        public string label;
+        [Tooltip("꽝 출구. 착지할 때 축하 연출 대신 김빠진 연출")]
+        public bool dud;
     }
 
     /// <summary>

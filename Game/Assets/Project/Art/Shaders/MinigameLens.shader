@@ -88,9 +88,12 @@ Shader "LOTW/UI/MinigameLens"
             float _IrisY;
             float _IrisEdge;
 
+            // sin 없는 해시 (Dave Hoskins hash12). sin 해시는 입력이 크면 GPU 정밀도 때문에 줄무늬가 생김
             float Hash(float2 p)
             {
-                return frac(sin(dot(p, float2(12.9898, 78.233))) * 43758.5453);
+                float3 p3 = frac(p.xyx * 0.1031);
+                p3 += dot(p3, p3.yzx + 33.33);
+                return frac((p3.x + p3.y) * p3.z);
             }
 
             v2f vert(appdata v)
@@ -116,7 +119,8 @@ Shader "LOTW/UI/MinigameLens"
                 float vignette = smoothstep(_VignetteRadius, _VignetteRadius + _VignetteSoftness, length(centered));
                 col.rgb *= 1.0 - vignette * _VignetteStrength;
 
-                float frame = floor(_Time.y * _GrainFps);
+                // 프레임 번호를 작은 범위로 접어 해시 입력이 커지지 않게 함 (커지면 줄무늬가 생김)
+                float frame = fmod(floor(_Time.y * _GrainFps), 61.0);
                 col.rgb += (Hash(pixel + frame * 17.13) - 0.5) * _GrainStrength;
                 col.rgb *= 1.0 + (Hash(float2(frame, 3.7)) - 0.5) * _FlickerStrength;
 

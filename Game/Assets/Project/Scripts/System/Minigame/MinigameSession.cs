@@ -15,6 +15,8 @@ namespace Project.Scripts.System.Minigame
         public GameObject Source { get; }
         public MinigameVars Vars { get; } = new();
         public MinigameInput Input { get; }
+        /// <summary>이번 판의 스테이지 RT 해상도. SourceBounds 배치면 발생원 영역 크기, 아니면 정의의 값.</summary>
+        public Vector2Int StageResolution { get; }
         public float Elapsed { get; private set; }
         public string Status { get; private set; }
 
@@ -24,11 +26,12 @@ namespace Project.Scripts.System.Minigame
 
         public event Action<string> OnStatusChanged;
 
-        public MinigameSession(MinigameDefinition definition, GameObject source, MinigameInput input)
+        public MinigameSession(MinigameDefinition definition, GameObject source, MinigameInput input, Vector2Int stageResolution)
         {
             Definition = definition;
             Source = source;
             Input = input;
+            StageResolution = stageResolution;
         }
 
         /// <summary>정의의 outcomes 중 이름이 같은 결과로 끝냅니다 (when 조건 없이 확정).</summary>

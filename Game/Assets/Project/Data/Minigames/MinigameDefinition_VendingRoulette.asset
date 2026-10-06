@@ -1,0 +1,96 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 446bd121bfd249c59edce905c6917615, type: 3}
+  m_Name: MinigameDefinition_VendingRoulette
+  m_EditorClassIdentifier: Project.Scripts::Project.Scripts.Content.Minigame.GateDrop.GateDropDefinition
+  id: vending_roulette
+  title: '@world.vending_roulette.title'
+  mechanicPrefab: {fileID: 1386650097263254718, guid: 6587f52edc9d410eb3826dafcaac76b7, type: 3}
+  stageResolution: {x: 104, y: 176}
+  screenMaterial: {fileID: 0}
+  layout:
+    placement: 3
+    anchor: {x: 0, y: 0}
+    offset: {x: 0, y: 0}
+    openFrom: 1
+    displayScale: 0
+  startConditions: 
+  deniedDialogueId: -1
+  startActions: 
+  repeatPolicy: 0
+  outcomes:
+  - name: soda
+    kind: 0
+    when: 
+    actions: giveItem:drink_soda=1
+    followDialogueId: -1
+  - name: milk
+    kind: 0
+    when: 
+    actions: giveItem:drink_milk=1
+    followDialogueId: -1
+  - name: coffee
+    kind: 0
+    when: 
+    actions: giveItem:drink_coffee=1
+    followDialogueId: -1
+  - name: lemon
+    kind: 0
+    when: 
+    actions: giveItem:drink_lemon=1
+    followDialogueId: -1
+  - name: greentea
+    kind: 0
+    when: 
+    actions: giveItem:drink_greentea=1
+    followDialogueId: -1
+  - name: dud
+    kind: 0
+    when: 
+    actions: giveItem:drink_dud=1
+    followDialogueId: -1
+  allowAbort: 1
+  abortActions: 
+  outlets:
+  - outcome: soda
+    color: {r: 0.86, g: 0.2, b: 0.22, a: 1}
+    label: '@item.drink_soda.name'
+    dud: 0
+  - outcome: milk
+    color: {r: 0.78, g: 0.9, b: 1.0, a: 1}
+    label: '@item.drink_milk.name'
+    dud: 0
+  - outcome: coffee
+    color: {r: 0.58, g: 0.37, b: 0.2, a: 1}
+    label: '@item.drink_coffee.name'
+    dud: 0
+  - outcome: lemon
+    color: {r: 0.98, g: 0.84, b: 0.22, a: 1}
+    label: '@item.drink_lemon.name'
+    dud: 0
+  - outcome: greentea
+    color: {r: 0.36, g: 0.72, b: 0.32, a: 1}
+    label: '@item.drink_greentea.name'
+    dud: 0
+  - outcome: dud
+    color: {r: 0.5, g: 0.5, b: 0.52, a: 1}
+    label: '@item.drink_dud.name'
+    dud: 1
+  pegRightChance: 0.5
+  startDelay: 0.6
+  gateOpenTime: 0.45
+  firstHopDuration: 0.3
+  lastHopDuration: 0.15
+  hopHeight: 3.5
+  landDuration: 0.8
+  boardColor: {r: 0.12, g: 0.33, b: 0.17, a: 1}
+  canColor: {r: 0.78, g: 0.8, b: 0.83, a: 1}

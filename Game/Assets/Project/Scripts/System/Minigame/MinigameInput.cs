@@ -20,6 +20,8 @@ namespace Project.Scripts.System.Minigame
         public bool AltHeld => _controls.Minigame.Alt.IsPressed();
         public bool ClickPressed => _controls.Minigame.Click.WasPressedThisFrame();
         public bool ClickHeld => _controls.Minigame.Click.IsPressed();
+        /// <summary>포인터 화면 좌표 (픽셀).</summary>
+        public Vector2 PointerScreen => _controls.Minigame.Point.ReadValue<Vector2>();
 
         /// <summary>창의 화면 영역(RawImage)과 스테이지 카메라를 연결합니다.</summary>
         public void Bind(RectTransform screenRect, Camera stageCamera)
@@ -35,7 +37,7 @@ namespace Project.Scripts.System.Minigame
         /// <summary>포인터가 화면 영역 안에 있으면 스테이지 월드 좌표(카메라 평면 기준 x, y)를 돌려줍니다.</summary>
         public bool TryGetPointerWorld(out Vector3 world)
         {
-            return TryScreenToWorld(_controls.Minigame.Point.ReadValue<Vector2>(), out world);
+            return TryScreenToWorld(PointerScreen, out world);
         }
 
         /// <summary>화면 좌표(픽셀)를 스테이지 월드 좌표로 바꿉니다. 화면 영역 밖이면 false.</summary>

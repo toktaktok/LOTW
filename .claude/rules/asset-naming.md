@@ -23,6 +23,9 @@ Applies to `Game/Assets/Project/` only. Third-party folders (`VoxelImporter`, `T
 | Audio | `Audio/{BGM\|SFX}/` |
 | Generated 3D textures | `Art/Textures/Voxel/` |
 | Item icons (path-loaded) | `Resources/Items/` (file name = Item table `Icon`) |
+| Minigame sprites | `Art/Minigames/{Mechanic}/`; art used by one minigame only goes in `Art/Minigames/{Mechanic}/{Minigame}/` |
+| Minigame stage prefabs | `Prefabs/Minigames/` (`PF_Minigame_{Mechanic}`, one-minigame variant `PF_Minigame_{Minigame}`) |
+| Minigame definitions | `Data/Minigames/` (`MinigameDefinition_{Minigame}`) |
 
 Character IDs: `0xx` player characters, `1xx` town NPCs, `2xx` other NPCs.
 
@@ -34,6 +37,8 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 | Character texture | `TX_C_` | `TX_C_Snowman_Move_Front`, `TX_C_Mouse_Idle_2` |
 | Environment texture | `TX_E_` | `TX_E_Poster_Coffee_1`, `TX_E_Window_003` |
 | UI texture | `TX_UI_` | `TX_UI_Notebook` |
+| Minigame texture | `TX_MG_` | `TX_MG_GateDrop_Peg`, `TX_MG_VendingRoulette_Panel` |
+| Item icon | `TX_Item_` | `TX_Item_DrinkSoda` (Subject = `ItemId` in PascalCase) |
 | Animation clip | `ANIM_` | `ANIM_Snowman_Move_Intro` |
 | Animator controller | `AC_` | `AC_Snowman` |
 | Model (vox/fbx) | `M_E_` | `M_E_CommonBuilding_001`, `M_E_Bench_1` |
@@ -56,7 +61,8 @@ Pattern: `{PREFIX}_{Subject}[_{State}][_{Variant}]`. Segments are PascalCase, se
 ## Import settings
 - Character sprites: PPU 25, Point filter, no compression, no mipmaps (see pixel render style).
 - Voxel models: VoxelImporter `importScale` = integer px / 25 (1 voxel = px low-res RT pixels). Default 5 px (0.2, `CameraDefines.VoxelPixels`, used by `VoxelPrefabCreator`). Choose px per building so the door is about 1.6x the Snowman (192 px / door voxels); set it with `LOTW/Voxel/Set Voxel Pixels...` on the prefabs selected in the Project window (it moves direct decal children; it does not move sprites or particles that sit next to a nested voxel prefab instance, such as the water and spray in `PF_FountainSet`, so adjust those by hand). The voxel object, its prefab root, and scene instances and groups all keep scale 1. Change size by voxel count in MagicaVoxel, not by Transform scale. Check with `LOTW/Voxel/Validate Voxel Scale`. Building .vox fronts (door) face vox max-y so they face Unity -Z at yaw 0. Only models with a prefab are rotated so far; check and rotate a model before making its prefab (OldApartment_2/_3/_Laundry and MiddleHouse_2/_3/_4 still face vox min-y).
-- UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`).
+- UI sprites: Sprite (Single until a sheet is sliced for use), Point filter, no compression, no mipmaps. Sprite sheets keep one file per sheet (`TX_UI_Magnify`, `TX_UI_Book_Open`). Item icons use the same settings.
+- Minigame sprites: same as environment sprites (PPU 25, Point filter, no compression, no mipmaps). The stage is a low-res RT (default 240x150) seen by an orthographic camera of size 3, so 1 sprite pixel = 1 stage pixel. Draw at that size; do not scale sprite objects.
 - Environment sprites (Decors, Props, Tilesets): Point filter, no compression, no mipmaps. PPU 25, same as character sprites. Size the image (not the PPU) to fit its model; resample with nearest neighbor. Sprite objects keep Transform scale 1; change size by image pixels, not by scale. Exceptions: textures used only through materials keep their own PPU (`TX_E_Poster_Pizza_White` in `MAT_Pizza`, `TX_E_Wash` in `MAT_Wash`). `TX_E_Bicycle` and `TX_E_Sunrise` are unplaced and still at default PPU 100; size them when first placed.
 
 ## Texture size

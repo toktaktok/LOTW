@@ -14,3 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Project.Scripts::Project.Scripts.Data.MinigameLibrary
   definitions:
   - {fileID: 11400000, guid: b4bb2f973ad3ce340a9792fdffbf68d4, type: 2}
+  - {fileID: 11400000, guid: 32447711784744e59870ebfb033c40b5, type: 2}
