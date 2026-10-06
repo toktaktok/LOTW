@@ -40,7 +40,7 @@ namespace Project.Scripts.System.Minigame
         /// <summary>보상 없이 중단합니다 (정의의 abortActions 실행).</summary>
         public void Abort() => IsAbortRequested = true;
 
-        /// <summary>창 제목 줄 오른쪽에 표시할 진행 상황 문구.</summary>
+        /// <summary>진행 상황 문구. 지금은 창에 표시하지 않음 (제목 줄 제거, 표시 위치 미정).</summary>
         public void SetStatus(string status)
         {
             if(Status == status)

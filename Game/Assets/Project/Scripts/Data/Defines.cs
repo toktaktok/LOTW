@@ -85,8 +85,6 @@ namespace Project.Scripts.Data
         public const float ProjectionSizeTolerance = 0.01f;
         public const int DefaultDisplayScale = 4;
         public const int StageDepthBits = 16;
-        /// <summary>창 제목과 상태 글자 사이 최소 간격(캔버스 단위). 이보다 좁으면 제목을 숨김.</summary>
-        public const float HeaderGap = 8f;
 
         /// <summary>메카닉이 항상 읽을 수 있는 경과 시간 변수(초, 내림).</summary>
         public const string TimeVar = "time";

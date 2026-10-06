@@ -37,7 +37,7 @@ namespace Project.Scripts.Data
         [Header("End")]
         [Tooltip("위에서부터 검사해 처음 만족하는 결과로 끝남")]
         [SerializeField] private MinigameOutcome[] outcomes;
-        [Tooltip("닫기 버튼으로 중단할 수 있는지")]
+        [Tooltip("나가기 입력(Backspace / 패드 B)으로 중단할 수 있는지")]
         [SerializeField] private bool allowAbort = true;
         [SerializeField] private string abortActions;
 
