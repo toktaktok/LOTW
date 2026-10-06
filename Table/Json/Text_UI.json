@@ -84,12 +84,6 @@
     "en": "Nothing written yet."
   },
   {
-    "dataId": 15,
-    "key": "ui.notebook.close",
-    "ko": "닫기",
-    "en": "Close"
-  },
-  {
     "dataId": 16,
     "key": "ui.toast.note",
     "ko": "수첩에 기록됨",

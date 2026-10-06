@@ -20,3 +20,8 @@
 - 결과: Unity EditMode 테스트 276개가 모두 통과했다.
 - 확인 안 함: 게임 화면의 수첩과 의뢰 문구. Play 모드를 실행하지 않았다.
 - 다음: Play 모드에서 수첩과 HUD 의뢰 문구를 확인한다.
+
+## 2026-10-06 19:00 | main
+- 작업: `Text_UI.xlsx`에서 `ui.notebook.close` 행을 지웠다. 같은 문구 "닫기"는 `ui.close`가 가진다.
+- 결과: 코드, 프리팹, 씬에서 `ui.notebook.close` 참조가 0개였다. `table_edit.py` 검증과 변환이 통과했다.
+- 다음: Play 모드에서 수첩과 HUD 의뢰 문구를 확인한다.
