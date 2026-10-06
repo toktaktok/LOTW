@@ -58,7 +58,6 @@ MonoBehaviour:
     when: 
     actions: giveItem:drink_dud=1
     followDialogueId: -1
-  allowAbort: 1
   abortActions: 
   outlets:
   - outcome: soda

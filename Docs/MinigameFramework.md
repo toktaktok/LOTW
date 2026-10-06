@@ -12,7 +12,7 @@
 | 현실 오브젝트를 과장/변형한 다른 동작 | 미니게임은 월드와 분리된 "스테이지"에서 돌고, 발생원(source) 정보를 받아 연출에 씀 |
 | 미니게임별 보상 | 결과(outcome)마다 액션 문자열 실행 (기존 대화 DSL 재사용) |
 | 윈도우 팝업 + 현미경 투영, 반투명 프레임 | 렌즈 셰이더를 씌운 RawImage + 반투명 창틀 |
-| 미니게임이 입력을 가져가고, 닫기/별도 동작으로 끝내야 복귀 | 전용 `Minigame` 액션 맵. 세션 동안만 켜지고 플레이어 입력은 차단 |
+| 미니게임이 입력을 가져가고, 결과 조건으로 끝나야 복귀 | 전용 `Minigame` 액션 맵. 세션 동안만 켜지고 플레이어 입력은 차단 |
 | 미니게임마다 동작 조건, 완료 조건이 다름 | 시작 조건 + 결과 규칙을 데이터로 정의. 코드로 직접 종료도 가능 |
 | 편집 자유도 최대 | "형식(메커닉)"과 "인스턴스(정의)"를 분리 |
 | 기획 규칙: 한 번만 쓰는 형식 금지 | 같은 메커닉을 정의만 바꿔 여러 곳에 재사용하는 구조 자체가 이 규칙을 강제 |
@@ -44,7 +44,7 @@ DialogueAction minigame:id -+-> TryStartAsync(def, source)
                                  4. UIManager.PushPage<MinigameWindow>  --> 창 열림, 렌즈에 RT 표시
                                  5. Minigame 액션 맵 Enable              --> 플레이어는 HasBlockingPage로 이미 차단
                                  6. 매 프레임 Tick: 메커닉 갱신 -> 결과 규칙 평가
-                                 7. 결과 확정 (규칙 매칭 / 메커닉 End / 닫기=Abort)
+                                 7. 결과 확정 (규칙 매칭 / 메커닉 End / 메커닉 Abort)
                                  8. 결과 액션 실행 (보상, 플래그), 기록 플래그 갱신
                                  9. 액션 맵 Disable, PopPage, 스테이지 파기  --> 창 닫힘
                                 10. MinigameEndedSignal 발행, 호출자에게 MinigameResult 반환
@@ -69,8 +69,7 @@ DialogueAction minigame:id -+-> TryStartAsync(def, source)
 | `deniedDialogueId` | int | 조건 미달 시 띄울 대화 (-1이면 상호작용 힌트 자체를 숨김) |
 | `startActions` | string | 시작 시 실행 (`takeItem:coin`, `sfx:...`) |
 | `outcomes` | List<MinigameOutcome> | 결과 규칙. 위에서부터 평가, 처음 맞는 규칙으로 종료 |
-| `abortActions` | string | 닫기/취소 시 실행 (보통 비움, 코인 환불 등에 사용) |
-| `allowAbort` | bool | false면 나가기 입력(`Minigame/Cancel`)을 무시 (취조 같은 강제 미니게임) |
+| `abortActions` | string | 메카닉이 중단하거나 창이 밖에서 닫힐 때 실행 (보통 비움, 코인 환불 등에 사용) |
 | `repeatPolicy` | enum | `Unlimited`, `UntilSuccess`, `Once` |
 | `timeLimit` | float | 0이면 무제한. 규칙의 `time` 변수와 별개로 창 타이머 표시용 |
 
@@ -182,7 +181,7 @@ public abstract class MinigameBase<TDefinition> : MinigameBase
    - `PointerStage`: 화면 좌표 -> 렌즈 RawImage 로컬 -> UV -> 스테이지 카메라 월드 좌표. 렌즈 왜곡이 없으므로 역변환 불필요
    - 포인터가 렌즈 밖이면 `IsPointerInLens == false`
 3. 플레이어 쪽: MinigameWindow가 Popup 페이지이므로 `HasBlockingPage`로 자동 차단. 추가 작업 없음
-4. 종료 수단: 나가기 입력(`Minigame/Cancel`: Backspace, 패드 B. `allowAbort`이고 `CanAbort`일 때) 또는 메커닉의 `End`. Esc는 쓰지 않는다
+4. 종료 수단: 결과 조건(outcomes) 또는 메커닉의 `End`/`Abort`뿐이다. 플레이어가 직접 나가는 입력은 없다 (Esc, Backspace, 패드 B 모두 쓰지 않는다)
 5. 복귀: Pop 처리 중에도 `HasBlockingPage`가 true라서 닫는 프레임의 입력이 월드로 새지 않는다 (기존 보장 그대로)
 
 나중에 UI끼리 겹쳐야 하는 경우가 생기면(예: 대화 중 수첩을 열어 증거 제시) 개별 UI에 "내가 맨 위인지" 검사를 넣지 않는다. 대신 입력 컨텍스트 스택으로 바꾼다.
@@ -348,7 +347,7 @@ Tests/EditMode/MinigameRulesTests.cs
 확정 (2026-10-05):
 - 월드 시간은 멈추지 않는다. 플레이어만 차단한다
 - Esc는 미니게임을 닫는 데 쓰지 않는다
-- 창에는 제목 줄과 닫기 버튼이 없다. 나가기는 `Minigame/Cancel`(Backspace, 패드 B)이다 (2026-10-06)
+- 창에는 제목 줄과 닫기 버튼이 없다. 플레이어가 직접 나가는 입력도 없다. 미니게임은 결과 조건으로만 끝난다 (2026-10-06)
 - RT 스테이지가 기본이고, 퍼즐형은 UI 모드를 허용한다
 - 렌즈는 아날로그 카메라 투사 정도로만 연출하고, 왜곡은 넣지 않는다
 - 대화창과 미니게임 창은 공존하지 않는다
@@ -372,11 +371,11 @@ Tests/EditMode/MinigameRulesTests.cs
 | 규칙 | `MinigameRules` (시작 가능 여부, 결과 판정, 시작/종료 기록, 창 위치 보정), `MinigameVars`, `MinigameContext` (게임 상태 + 변수) |
 | 조건/액션 | 조건 `var:key` (미니게임 정의에서만), 액션 `minigame:id` (대화에서만). 경과 시간은 변수 `time` (초, 내림)으로 읽는다: `var:time>=30` |
 | 런타임 | `MinigameManager` (한 번에 한 판, 스테이지/RT 수명, 틱, 결과 적용, 중단, 정리), `MinigameSession`, `MinigameBase` / `MinigameBase<TDefinition>` |
-| 입력 | `Minigame` 액션 맵 (Navigate, Submit, Alt, Point, Click, Cancel. Cancel은 Backspace와 패드 B. Esc 없음), `MinigameInput` (포인터 -> 스테이지 월드 좌표) |
+| 입력 | `Minigame` 액션 맵 (Navigate, Submit, Alt, Point, Click. 나가기 입력 없음), `MinigameInput` (포인터 -> 스테이지 월드 좌표) |
 | 창 | `MinigameWindow` + `PF_MinigameWindow` (A안 창틀), `MinigameLens.shader` + `MAT_MinigameLens`, DOTween 열림/닫힘 (창틀 확장 -> 사각 조리개) |
 | 배치 | `layout`: Center / Anchor / Source / SourceBounds, offset, openFrom (WindowCenter / Source), displayScale. 화면 밖으로 나가면 안쪽으로 밀어 넣음 (SourceBounds는 제외) |
 | 투사 배치 | `MinigameProjection` (발생원 경계 상자 -> 월드 RT 픽셀 사각형 -> 스테이지 해상도와 화면 사각형). `LowResPixelRenderer.Current`가 월드 RT 크기, 배율, 서브픽셀 위치를 알려 준다. 스테이지 해상도는 `Session.StageResolution`에 들어가고, 정의의 `MinStageResolution`(가상 속성) 이상, 월드 RT 크기 이하로 맞춘다 |
-| 메카닉 훅 | `MinigameBase.OnBind()`: 세션 연결 직후, 창이 열리기 전에 부른다. 스테이지 크기에 맞춰 판을 만들 때 쓴다. `MinigameBase.CanAbort` (기본 true): false인 동안 나가기 입력(`MinigameManager.Abort`)을 무시한다. 결과가 정해져 연출 중일 때 보상을 잃지 않게 쓴다 (낙하 게이트의 착지) |
+| 메카닉 훅 | `MinigameBase.OnBind()`: 세션 연결 직후, 창이 열리기 전에 부른다. 스테이지 크기에 맞춰 판을 만들 때 쓴다. 메카닉은 `Session.Abort()`로 판을 보상 없이 끝낼 수 있다 (판을 만들지 못했을 때) |
 | 창틀 | 화면 둘레에 14px 여백이 네 변에 같다. 제목, 상태 문구, 닫기 버튼은 없다. `MinigameSession.Status`는 메카닉이 계속 쓰지만 지금은 표시할 곳이 없다 (12.4) |
 | 진입 | `MinigameTrigger` (월드 상호작용), 대화 액션 `minigame:id` (대화를 닫고 실행, 끝나면 `followDialogueId` 또는 원래 다음 행에서 재개. onFinished(카메라 복귀)는 대화가 실제로 끝날 때 호출) |
 | 상호작용 | `IInteractable.CanInteract` (기본 true). false면 `PlayerInteractor` 대상에서 빠짐. 막는 페이지(미니게임 창 등)나 시퀀스가 있는 동안 `PlayerInteractor`가 HUD 상호작용 안내를 숨기고, 풀리면 대상을 다시 찾는다 |
@@ -411,9 +410,9 @@ Tests/EditMode/MinigameRulesTests.cs
 - `MinigameFrameStyle` (지그 스타일 창틀 등 창틀 프리셋)
 - `Minigame` 전용 레이어와 카메라 컬링 분리 (지금은 스테이지를 월드에서 멀리 (0, -1000, 0) 두는 것으로 분리)
 - 상태 문구(`MinigameSession.Status`) 표시 위치. 제목 줄을 없앤 뒤 줄넘기 횟수와 자판기 출구 이름이 화면에 나오지 않는다
-- 메카닉 -> 연출용 시그널, 결과 연출(성공/실패 표시)은 0.6초 정지뿐. 나가기 키 안내도 화면에 없다
+- 메카닉 -> 연출용 시그널, 결과 연출(성공/실패 표시)은 0.6초 정지뿐
 - 미니게임 진행 중 세이브/씬 전환 처리
-- 결과가 정해진 뒤 연출 중(`CanAbort`가 false)에 창이 밖에서 닫히면(`UIManager.ClearAllPages`) 중단으로 처리되어 보상이 없다. 지금은 미니게임 중에 `ClearAllPages`를 부르는 경로가 없다 (일시 정지는 미니게임 중에 열리지 않는다)
+- 결과가 정해지기 전에 창이 밖에서 닫히면(`UIManager.ClearAllPages`) 중단으로 처리되어 보상이 없다. 지금은 미니게임 중에 `ClearAllPages`를 부르는 경로가 없다 (일시 정지는 미니게임 중에 열리지 않는다)
 - 셰이더 공용 HLSL include
 
 ### 12.5 검증

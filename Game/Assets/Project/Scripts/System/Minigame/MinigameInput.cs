@@ -20,8 +20,6 @@ namespace Project.Scripts.System.Minigame
         public bool AltHeld => _controls.Minigame.Alt.IsPressed();
         public bool ClickPressed => _controls.Minigame.Click.WasPressedThisFrame();
         public bool ClickHeld => _controls.Minigame.Click.IsPressed();
-        /// <summary>나가기 (Backspace / 패드 B). Esc는 메타 연출 전용이라 쓰지 않음.</summary>
-        public bool CancelPressed => _controls.Minigame.Cancel.WasPressedThisFrame();
         /// <summary>포인터 화면 좌표 (픽셀).</summary>
         public Vector2 PointerScreen => _controls.Minigame.Point.ReadValue<Vector2>();
 

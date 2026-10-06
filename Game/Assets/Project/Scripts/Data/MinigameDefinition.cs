@@ -37,8 +37,7 @@ namespace Project.Scripts.Data
         [Header("End")]
         [Tooltip("위에서부터 검사해 처음 만족하는 결과로 끝남")]
         [SerializeField] private MinigameOutcome[] outcomes;
-        [Tooltip("나가기 입력(Backspace / 패드 B)으로 중단할 수 있는지")]
-        [SerializeField] private bool allowAbort = true;
+        [Tooltip("메카닉이 중단하거나 창이 밖에서 닫힐 때 실행")]
         [SerializeField] private string abortActions;
 
         public string Id => id;
@@ -52,7 +51,6 @@ namespace Project.Scripts.Data
         public string StartActions => startActions;
         public MinigameRepeatPolicy RepeatPolicy => repeatPolicy;
         public MinigameOutcome[] Outcomes => outcomes;
-        public bool AllowAbort => allowAbort;
         public string AbortActions => abortActions;
 
         /// <summary>SourceBounds 배치에서 메카닉이 판을 만들 수 있는 최소 스테이지 크기. 메카닉 정의가 재정의합니다.</summary>

@@ -41,13 +41,6 @@ namespace Project.Scripts.Core.Managers
             if(!_isRunning)
                 return;
 
-            if(_input.CancelPressed)
-            {
-                Abort();
-                if(!_isRunning)
-                    return;
-            }
-
             _session.Tick(Time.deltaTime);
             _mechanic.OnTick(Time.deltaTime);
 
@@ -116,13 +109,6 @@ namespace Project.Scripts.Core.Managers
                 window.Setup(_session, _stageTexture, OnWindowOpened, OnWindowClosed);
             });
             return true;
-        }
-
-        /// <summary>진행 중인 판을 보상 없이 중단합니다 (나가기 입력). 정의가 중단을 허용하고 메카닉이 막지 않을 때만 동작합니다.</summary>
-        public void Abort()
-        {
-            if(_isRunning && _session.Definition.AllowAbort && _mechanic.CanAbort)
-                Finish(null);
         }
 
         #endregion

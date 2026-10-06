@@ -38,7 +38,6 @@ MonoBehaviour:
     when: var:miss>=3
     actions: 
     followDialogueId: -1
-  allowAbort: 1
   abortActions: 
   startPeriod: 1.4
   periodStep: 0.06
