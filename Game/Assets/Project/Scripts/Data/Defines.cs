@@ -10,6 +10,10 @@ namespace Project.Scripts.Data
         public const int HudQuestLines = 3;
         /// <summary>"수첩에 기록됨" 알림 표시 시간(초, unscaled).</summary>
         public const float ToastDuration = 2.5f;
+        /// <summary>알림이 나타나고 사라지는 시간(초, unscaled).</summary>
+        public const float ToastFadeDuration = 0.2f;
+        /// <summary>알림이 나타날 때 위에서 내려오는 거리(px).</summary>
+        public const float ToastSlideDistance = 16f;
         /// <summary>HUD 키 표시에 쓰는 입력 컨트롤 스킴 (InputSystem_Actions).</summary>
         public const string KeyboardControlScheme = "Keyboard&Mouse";
         /// <summary>수첩 표지에 붙이는 포스트잇 최대 수.</summary>

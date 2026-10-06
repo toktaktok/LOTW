@@ -34,7 +34,7 @@ namespace Project.Scripts.Editor.UI
         private static readonly Vector2 CloseButtonSize = new Vector2(52f, 52f);
         private const float PageTitleHeight = 56f;
         private const float EntryHeight = 40f;
-        private static readonly Vector2 StickyCell = new Vector2(200f, 200f);
+        private static readonly Vector2 StickyCell = new Vector2(216f, 240f);
         private const int StickyPadding = 28;
 
         private const float TitleFontSize = 30f;
@@ -42,7 +42,7 @@ namespace Project.Scripts.Editor.UI
 
         // HUD 배치 (1920x1080 기준)
         private const float HudMargin = 32f;
-        private static readonly Vector2 NotebookButtonSize = new Vector2(128f, 128f);
+        private static readonly Vector2 NotebookButtonSize = new Vector2(184f, 104f);
         private static readonly Vector2 BadgeSize = new Vector2(36f, 36f);
         private static readonly Vector2 KeyHintSize = new Vector2(36f, 36f);
         private static readonly Vector2 QuestPanelSize = new Vector2(440f, 0f);
@@ -337,6 +337,7 @@ namespace Project.Scripts.Editor.UI
             Anchor(toast, new Vector2(0.5f, 1f));
             toast.anchoredPosition = new Vector2(0f, -HudMargin);
             toast.sizeDelta = ToastSize;
+            toast.gameObject.AddComponent<CanvasGroup>().blocksRaycasts = false;
             Image bg = toast.gameObject.AddComponent<Image>();
             bg.color = KraftPanelColor;
             bg.raycastTarget = false;

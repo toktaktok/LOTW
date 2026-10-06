@@ -18,7 +18,12 @@ namespace Project.Scripts.Framework.UI
         private bool hideOnAwake = true;
         [SerializeField]
         private float fadeDuration = 0.3f;
-        
+        [Tooltip("Fade 중 크기도 popScale -> 1 로 키울 대상 (패널). 비우면 투명도만 바뀝니다.")]
+        [SerializeField]
+        private RectTransform popTarget;
+        [SerializeField]
+        private float popScale = 0.94f;
+
         [Header("Animation")]
         [SerializeField]
         protected Animator uiAnimator;
@@ -102,10 +107,18 @@ namespace Project.Scripts.Framework.UI
                 timer += Time.unscaledDeltaTime;
                 float t = Mathf.SmoothStep(0f, 1f, timer / fadeDuration);
                 canvasGroup.alpha = Mathf.Lerp(start, end, t);
-            
+                SetPop(canvasGroup.alpha);
+
                 await Awaitable.NextFrameAsync();
             }
             canvasGroup.alpha = end;
+            SetPop(1f);
+        }
+
+        private void SetPop(float alpha)
+        {
+            if(popTarget != null)
+                popTarget.localScale = Vector3.one * Mathf.LerpUnclamped(popScale, 1f, alpha);
         }
         protected async Awaitable PlayAnimationAndWait(int triggerID)
         {

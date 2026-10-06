@@ -44,6 +44,8 @@ namespace Project.Scripts.Content.UI
 
         private readonly Queue<string> _toasts = new Queue<string>();
         private Coroutine _toastRoutine;
+        private CanvasGroup _toastGroup;
+        private float _toastRestY;
         private bool _hintVisible;
         private bool _dirty;
 
@@ -52,6 +54,11 @@ namespace Project.Scripts.Content.UI
             base.Awake();
             if(notebookButton != null)
                 notebookButton.onClick.AddListener(OnNotebook);
+            if(toastRoot != null)
+            {
+                _toastGroup = toastRoot.GetComponent<CanvasGroup>();
+                _toastRestY = ((RectTransform)toastRoot.transform).anchoredPosition.y;
+            }
         }
 
         private void OnEnable()
@@ -192,10 +199,32 @@ namespace Project.Scripts.Content.UI
             {
                 toastText.text = _toasts.Dequeue();
                 toastRoot.SetActive(true);
+                yield return ToastFadeRoutine(0f, 1f);
                 yield return new WaitForSecondsRealtime(UIDefines.ToastDuration);
+                yield return ToastFadeRoutine(1f, 0f);
                 toastRoot.SetActive(false);
             }
             _toastRoutine = null;
+        }
+
+        // 위에서 살짝 내려오며 나타나고, 올라가며 사라짐. 프리팹 Toast 에 CanvasGroup 이 없으면 바로 켜고 끔
+        private IEnumerator ToastFadeRoutine(float from, float to)
+        {
+            if(_toastGroup == null)
+                yield break;
+
+            var rect = (RectTransform)toastRoot.transform;
+            float timer = 0f;
+            while(true)
+            {
+                float t = Mathf.SmoothStep(from, to, Mathf.Clamp01(timer / UIDefines.ToastFadeDuration));
+                _toastGroup.alpha = t;
+                rect.anchoredPosition = new Vector2(rect.anchoredPosition.x, _toastRestY + (1f - t) * UIDefines.ToastSlideDistance);
+                if(timer >= UIDefines.ToastFadeDuration)
+                    break;
+                timer += Time.unscaledDeltaTime;
+                yield return null;
+            }
         }
 
         private void OnNotebook()
