@@ -6,6 +6,7 @@ using UnityEngine.TestTools;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using Project.Scripts.System.Dialogue;
+using Project.Scripts.Framework;
 
 namespace Tests.EditMode
 {
@@ -303,7 +304,7 @@ namespace Tests.EditMode
         public void ParseFormat_RoundTripsAllTableRows()
         {
             var asset = Resources.Load<TextAsset>("Table/Dialogue");
-            foreach(DialogueData line in Project.Scripts.Core.JsonArrayHelper.FromJson<DialogueData>(asset.text))
+            foreach(DialogueData line in Project.Scripts.Framework.JsonArrayHelper.FromJson<DialogueData>(asset.text))
             {
                 foreach(string text in new[] { line.conditions, line.actions })
                 {

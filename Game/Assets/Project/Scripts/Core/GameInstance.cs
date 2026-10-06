@@ -1,6 +1,6 @@
 using System;
 using UnityEngine;
-using Project.Scripts.Core.Managers;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Core
 {
@@ -24,6 +24,12 @@ namespace Project.Scripts.Core
         #region Events
 
         public static event Action OnSettingsChanged;
+
+        event Action IVolumeProvider.OnVolumeChanged
+        {
+            add => OnSettingsChanged += value;
+            remove => OnSettingsChanged -= value;
+        }
 
         #endregion
 

@@ -1,7 +1,6 @@
 using UnityEngine;
-using Project.Scripts.Data;
 
-namespace Project.Scripts.System.UI
+namespace Project.Scripts.Framework.UI
 {
     [RequireComponent(typeof(CanvasGroup))]
     public abstract class BaseUI : MonoBehaviour
@@ -28,6 +27,9 @@ namespace Project.Scripts.System.UI
         public bool IsVisible => currentUIState == UIState.Opening || currentUIState == UIState.Open;
         
         protected CanvasGroup canvasGroup;
+
+        private static readonly int ShowHash = Animator.StringToHash("Show");
+        private static readonly int HideHash = Animator.StringToHash("Hide");
         
         #endregion
 
@@ -61,7 +63,7 @@ namespace Project.Scripts.System.UI
                     await FadeRoutine(0f, 1f);
                     break;
                 case UITransitionMode.Animation:
-                    await PlayAnimationAndWait(AnimDefines.ShowID);
+                    await PlayAnimationAndWait(ShowHash);
                     break;
             }
             SetVisibility(true);
@@ -83,7 +85,7 @@ namespace Project.Scripts.System.UI
                     await FadeRoutine(1f, 0f);
                     break;
                 case UITransitionMode.Animation:
-                    await PlayAnimationAndWait(AnimDefines.HideID);
+                    await PlayAnimationAndWait(HideHash);
                     break;
             }
             SetVisibility(false);

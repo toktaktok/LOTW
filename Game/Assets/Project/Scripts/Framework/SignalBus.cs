@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Project.Scripts.Core
+namespace Project.Scripts.Framework
 {
     /// <summary>
     /// 타입별 신호(이벤트)를 게시/구독하는 순수 C# 메시지 버스입니다.

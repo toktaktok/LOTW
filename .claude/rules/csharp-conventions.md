@@ -30,8 +30,8 @@ Applies to this repo only. Skip generated files (`InputSystem_Actions.cs`).
 - Verbs: `Get`/`TryGet` (return null if missing), `Has`/`Is` for checks, `Set` for mutation, `Init()` for WorldObject setup, `Setup...()` for UI.
 
 ## Structure
-- Namespace mirrors folder: `Project.Scripts.{Core|System|Content|Data|Editor}...`.
-- Layers: `Core` framework/managers, `System` reusable world/UI bases, `Content` game-specific, `Data` plain data.
+- Namespace mirrors folder: `Project.Scripts.{Framework|Core|System|Content|Data|Editor}...`.
+- Layers: `Framework` game-agnostic (own asmdef, must not reference other layers), `Core` LOTW managers and boot wiring, `System` reusable world/UI bases, `Content` game-specific, `Data` plain data.
 - One class per file. Small data types live in `Data/Structs.cs`, `Data/Enums.cs`, `Data/Defines.cs`.
 - Member order: serialized settings, runtime state, properties, Unity lifecycle, public API, private helpers, editor gizmos.
 - `#region` and `/// <summary>` are optional; keep them where they already exist.

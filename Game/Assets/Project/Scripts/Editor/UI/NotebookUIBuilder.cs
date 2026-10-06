@@ -7,6 +7,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Project.Scripts.Framework.Managers;
 using static Project.Scripts.Editor.UI.UIBuildUtil;
 
 namespace Project.Scripts.Editor.UI

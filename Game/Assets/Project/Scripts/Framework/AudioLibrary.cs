@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Project.Scripts.Data
+namespace Project.Scripts.Framework
 {
     /// <summary>
     /// 키(클립 파일 이름, 예: BGM_Village, SFX_Door)로 오디오 클립을 찾는 목록.

@@ -1,7 +1,7 @@
 using UnityEngine;
 using Project.Scripts.Content.Story;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.World
 {

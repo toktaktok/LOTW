@@ -5,6 +5,7 @@ using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using UnityEngine;
 using UnityEngine.TestTools;
+using Project.Scripts.Framework.Managers;
 
 namespace Tests.EditMode
 {

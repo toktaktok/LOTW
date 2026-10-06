@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
-using Project.Scripts.Core.Managers;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.Minigame.GateDrop
 {

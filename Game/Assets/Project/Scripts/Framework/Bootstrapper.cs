@@ -1,7 +1,7 @@
 using UnityEngine;
-using Project.Scripts.Core.Managers;
+using Project.Scripts.Framework.Managers;
 
-namespace Project.Scripts.Core
+namespace Project.Scripts.Framework
 {
     /// <summary>
     /// 씬 로드 전에 매니저 프리팹을 자동 인스턴스화합니다.

@@ -3,10 +3,10 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using UnityEngine;
+using Project.Scripts.Framework;
 
 namespace Tests.EditMode
 {

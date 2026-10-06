@@ -5,6 +5,8 @@ using Project.Scripts.Content.UI;
 using Project.Scripts.Data;
 using Project.Scripts.System.Dialogue;
 using Project.Scripts.System.Minigame;
+using Project.Scripts.Framework;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Core.Managers
 {

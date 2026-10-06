@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Project.Scripts.Data;
+using Project.Scripts.Framework;
 using DialogueData = Project.Scripts.Data.Table.DialogueData;
 using MapData = Project.Scripts.Data.Table.MapData;
 using ItemTableData = Project.Scripts.Data.Table.ItemTableData;

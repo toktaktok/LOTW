@@ -2,10 +2,8 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using Project.Scripts.System.World;
-using Project.Scripts.Content.Controller;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 씬 전환 시 호출되는 콜백.
@@ -16,42 +14,6 @@ namespace Project.Scripts.Core.Managers
         void OnBeforeTransition();
         void OnSceneLoaded(string sceneName, string entranceId);
         void OnAfterTransition();
-    }
-
-    /// <summary>
-    /// 기본 핸들러: PlayerController를 SceneEntrance 위치에 배치하고 카메라 입력을 제어합니다.
-    /// </summary>
-    public class DefaultSceneTransitionHandler : ISceneTransitionHandler
-    {
-        public void OnBeforeTransition()
-        {
-            CameraManager.Instance.SetInput(false);
-            // UI는 DontDestroyOnLoad라 이전 씬 대상을 붙든 페이지가 남음. HUD는 새 씬 PlayerController가 다시 연다.
-            UIManager.Instance.ClearAllPages();
-        }
-
-        public void OnSceneLoaded(string sceneName, string entranceId)
-        {
-            if(string.IsNullOrEmpty(entranceId))
-                return;
-
-            SceneEntrance[] entrances = UnityEngine.Object.FindObjectsByType<SceneEntrance>(FindObjectsSortMode.None);
-            foreach(SceneEntrance entrance in entrances)
-            {
-                if(entrance.EntranceId != entranceId)
-                    continue;
-
-                PlayerController player = UnityEngine.Object.FindFirstObjectByType<PlayerController>();
-                if(player != null)
-                    player.WarpToEntrance(entrance.SpawnPosition, entrance.StartNode);
-                break;
-            }
-        }
-
-        public void OnAfterTransition()
-        {
-            CameraManager.Instance.SetInput(true);
-        }
     }
 
     /// <summary>
@@ -90,7 +52,6 @@ namespace Project.Scripts.Core.Managers
         {
             base.Awake();
             CreateFadeCanvas();
-            _handler = new DefaultSceneTransitionHandler();
         }
 
         #endregion
@@ -98,7 +59,7 @@ namespace Project.Scripts.Core.Managers
         #region Handler
 
         /// <summary>
-        /// 씬 전환 핸들러를 교체합니다. 기본값은 DefaultSceneTransitionHandler입니다.
+        /// 씬 전환 핸들러를 주입합니다. 없으면 페이드와 씬 로드만 합니다.
         /// </summary>
         public void SetHandler(ISceneTransitionHandler handler)
         {

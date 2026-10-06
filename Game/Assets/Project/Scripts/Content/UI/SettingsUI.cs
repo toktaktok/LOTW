@@ -4,9 +4,10 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using Project.Scripts.Core;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using Project.Scripts.System.UI;
+using Project.Scripts.Framework.Managers;
+using Project.Scripts.Framework.UI;
 
 namespace Project.Scripts.Content.UI
 {

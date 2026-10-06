@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 전역 신호 버스를 노출하는 매니저. 순수 로직은 SignalBus에 위임합니다.

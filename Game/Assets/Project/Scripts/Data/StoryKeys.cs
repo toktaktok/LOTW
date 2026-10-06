@@ -1,3 +1,5 @@
+using Project.Scripts.Framework.Managers;
+
 namespace Project.Scripts.Data
 {
     /// <summary>

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using Project.Scripts.Data.Table;
+using Project.Scripts.Framework;
 
 namespace Project.Scripts.Core
 {

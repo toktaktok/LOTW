@@ -2,6 +2,7 @@
     "name": "EditModeTests",
     "rootNamespace": "Tests.EditMode",
     "references": [
+        "Project.Scripts.Framework",
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "Project.Scripts",

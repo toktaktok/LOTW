@@ -5,6 +5,7 @@ using UnityEngine;
 using Project.Scripts.Core;
 using Project.Scripts.Data.Table;
 using Project.Scripts.Editor.Data;
+using Project.Scripts.Framework;
 
 namespace Project.Scripts.Editor.Dialogue
 {

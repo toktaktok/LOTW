@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 게임 진행 플래그(스토리/퀘스트/월드 상태)를 보관하는 순수 C# 저장소입니다.

@@ -3,10 +3,9 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using Project.Scripts.System.UI;
-using Project.Scripts.Data;
+using Project.Scripts.Framework.UI;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     public class UIPage
     {

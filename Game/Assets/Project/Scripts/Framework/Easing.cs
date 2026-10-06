@@ -1,6 +1,6 @@
 using System;
 
-namespace Project.Scripts.Core
+namespace Project.Scripts.Framework
 {
     /// <summary>
     /// 트윈/페이드 보간에 사용하는 이징 곡선 모음입니다.

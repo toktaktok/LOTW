@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using UnityEngine;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 임의의 직렬화 가능 데이터를 JSON 파일로 저장/로드하는 범용 유틸리티.

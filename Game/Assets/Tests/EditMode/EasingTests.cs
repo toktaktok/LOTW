@@ -1,5 +1,5 @@
 using NUnit.Framework;
-using Project.Scripts.Core;
+using Project.Scripts.Framework;
 
 namespace Tests.EditMode
 {

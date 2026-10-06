@@ -2,6 +2,7 @@
     "name": "Project.Scripts",
     "rootNamespace": "Project.Scripts",
     "references": [
+        "Project.Scripts.Framework",
         "Unity.InputSystem",
         "Unity.Cinemachine",
         "Unity.TextMeshPro",

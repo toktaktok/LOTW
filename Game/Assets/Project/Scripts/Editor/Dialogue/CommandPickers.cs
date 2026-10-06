@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
-using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using Project.Scripts.Editor.Data;
 using Project.Scripts.System.Dialogue;
+using Project.Scripts.Framework;
 using Object = UnityEngine.Object;
 
 namespace Project.Scripts.Editor.Dialogue

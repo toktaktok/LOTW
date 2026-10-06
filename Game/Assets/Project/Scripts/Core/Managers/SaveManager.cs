@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Project.Scripts.Data;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Core.Managers
 {

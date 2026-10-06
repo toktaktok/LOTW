@@ -1,7 +1,7 @@
 using UnityEngine;
 using Project.Scripts.Content.Dialogue;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.System.Dialogue;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.World
 {

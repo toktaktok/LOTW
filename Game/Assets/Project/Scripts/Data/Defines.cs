@@ -1,4 +1,5 @@
 using UnityEngine;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Data
 {
@@ -27,8 +28,6 @@ namespace Project.Scripts.Data
     }
     public readonly struct AnimDefines
     {
-        public static readonly int ShowID = Animator.StringToHash("Show");
-        public static readonly int HideID = Animator.StringToHash("Hide");
         public static readonly int SelectID = Animator.StringToHash("Select");
         public static readonly int IdleID = Animator.StringToHash("Idle");
         public static readonly int MoveID = Animator.StringToHash("Move");

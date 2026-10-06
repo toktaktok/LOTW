@@ -7,8 +7,10 @@ using UnityEngine.UI;
 using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.Minigame;
-using Project.Scripts.System.UI;
 using Project.Scripts.System.World;
+using Project.Scripts.Framework;
+using Project.Scripts.Framework.Managers;
+using Project.Scripts.Framework.UI;
 
 namespace Project.Scripts.Content.UI
 {

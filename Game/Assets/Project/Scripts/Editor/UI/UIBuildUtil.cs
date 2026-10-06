@@ -1,11 +1,12 @@
 // UI 프리팹 빌더 공용 함수 (에디터 전용). NotebookUIBuilder, MenuUIBuilder 가 `using static` 으로 씁니다.
 using System;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.System.UI;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using Project.Scripts.Framework.Managers;
+using Project.Scripts.Framework.UI;
 
 namespace Project.Scripts.Editor.UI
 {

@@ -2,11 +2,12 @@ using Unity.Cinemachine;
 using UnityEngine;
 using Project.Scripts.Content.Dialogue;
 using Project.Scripts.Content.UI;
-using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using Project.Scripts.Data.Table;
 using Project.Scripts.System.Dialogue;
+using Project.Scripts.Framework;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.Story
 {

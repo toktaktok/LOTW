@@ -1,29 +1,5 @@
 namespace Project.Scripts.Data
 {
-    public enum UIState
-    {
-        None,
-        Opening,
-        Open,
-        Closing,
-        Closed
-    }
-
-    public enum UITransitionMode
-    {
-        None,
-        Fade,
-        Animation
-    }
-    
-    public enum UILayer
-    {
-        HUD,
-        Popup,
-        System,
-        Loading
-    }
-
     /// <summary>의뢰 상태. 플래그 quest.{id} 의 값과 같습니다.</summary>
     public enum QuestState
     {

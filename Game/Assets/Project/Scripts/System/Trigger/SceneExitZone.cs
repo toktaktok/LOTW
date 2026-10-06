@@ -1,7 +1,7 @@
 using UnityEngine;
-using Project.Scripts.Core.Managers;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
+using Project.Scripts.Framework.Managers;
 
 #if UNITY_EDITOR
 using UnityEditor;

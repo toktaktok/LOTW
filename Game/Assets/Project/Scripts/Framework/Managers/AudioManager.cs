@@ -1,19 +1,20 @@
+using System;
 using System.Collections;
 using UnityEngine;
-using Project.Scripts.Data;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 볼륨 정보를 제공하는 인터페이스.
     /// AudioManager가 이 인터페이스를 통해 볼륨을 읽으므로,
-    /// GameInstance 외 다른 시스템으로도 교체 가능합니다.
+    /// 볼륨이 바뀌면 OnVolumeChanged 를 발생시킵니다.
     /// </summary>
     public interface IVolumeProvider
     {
         float MasterVolume { get; }
         float BgmVolume { get; }
         float SfxVolume { get; }
+        event Action OnVolumeChanged;
     }
 
     /// <summary>
@@ -61,17 +62,10 @@ namespace Project.Scripts.Core.Managers
             }
         }
 
-        private void Start()
-        {
-            if(_volumeProvider == null)
-                SetVolumeProvider(GameInstance.Instance);
-
-            ApplyVolume();
-        }
-
         protected override void OnDestroy()
         {
-            GameInstance.OnSettingsChanged -= ApplyVolume;
+            if(_volumeProvider != null)
+                _volumeProvider.OnVolumeChanged -= ApplyVolume;
             base.OnDestroy();
         }
 
@@ -80,18 +74,17 @@ namespace Project.Scripts.Core.Managers
         #region Volume Provider
 
         /// <summary>
-        /// 볼륨 제공자를 주입합니다. 기본값은 GameInstance입니다.
+        /// 볼륨 제공자를 주입합니다. 없으면 볼륨 1로 재생합니다.
         /// </summary>
         public void SetVolumeProvider(IVolumeProvider provider)
         {
-            // 기존 이벤트 해제
-            GameInstance.OnSettingsChanged -= ApplyVolume;
+            if(_volumeProvider != null)
+                _volumeProvider.OnVolumeChanged -= ApplyVolume;
 
             _volumeProvider = provider;
 
-            // GameInstance인 경우 자동으로 이벤트 구독
-            if(provider is GameInstance)
-                GameInstance.OnSettingsChanged += ApplyVolume;
+            if(_volumeProvider != null)
+                _volumeProvider.OnVolumeChanged += ApplyVolume;
 
             ApplyVolume();
         }

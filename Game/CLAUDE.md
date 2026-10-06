@@ -12,11 +12,11 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 ## Architecture
 
-**Assemblies:** `Project.Scripts` (runtime, `Assets/Project/Scripts/Project.Scripts.asmdef`), `Project.Scripts.Editor` (editor-only), `EditModeTests` (tests, refs `Project.Scripts`).
+**Assemblies:** `Project.Scripts.Framework` (`Assets/Project/Scripts/Framework/`, game-agnostic: Singleton, StateMachine, SignalBus, Easing, SaveSystem, FlagStore, UI/Audio/Flag/Signal/Core/SceneTransition managers, BaseUI, AudioLibrary, UI enums; references only Unity packages, never `Project.Scripts`), `Project.Scripts` (runtime, `Assets/Project/Scripts/Project.Scripts.asmdef`, refs Framework), `Project.Scripts.Editor` (editor-only), `EditModeTests` (tests, refs all three). Keep Framework free of LOTW types so it can be moved to a package later; game-specific wiring goes in `Core/GameBootstrap` (`AfterSceneLoad`: sets `AudioManager` volume provider = `GameInstance`, `SceneTransitionManager` handler = `Content/World/GameSceneTransitionHandler`).
 
 **Boot:** `Bootstrapper.Execute()` via `[RuntimeInitializeOnLoadMethod(BeforeSceneLoad)]` instantiates `Resources/SubSystemCollection.prefab` as DontDestroyOnLoad if no `SystemRoot`. Prefab holds all managers: Camera, UI, World, Core, Audio, Save, Inventory, Data, Minigame.
 
-**Singleton:** `Singleton<T>` (Core/Singleton.cs) -- auto-creates, DontDestroyOnLoad, self-destructs duplicates. All managers extend this.
+**Singleton:** `Singleton<T>` (Framework/Singleton.cs) -- auto-creates, DontDestroyOnLoad, self-destructs duplicates. All managers extend this.
 
 **Rail Movement:** Player moves on `RailNode` graph (max 2 neighbors, linear). `PlayerController` has delegate `StateMachine` with Idle/Move states. `MoveOnPath()` projects camera-relative input onto rail segment. `RailConnector : IInteractable` connects rail sections via warp/walk to `destinationNode`, optional camera switch.
 
@@ -46,6 +46,6 @@ No build CLI. All build/test via Unity Editor. Tests: Window > General > Test Ru
 
 **Defines:** Magic numbers in `Data/Defines.cs` as `readonly struct`: WorldDefines, CameraDefines, AnimDefines, UIDefines, SceneDefines, MinigameDefines. Editor gizmos in `Editor/Data/Defines.cs` (ToolDefines).
 
-**Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/CharacterProfile.cs`, `Data/AudioLibrary.cs` -- ScriptableObjects (`LOTW/Character Profile`, `LOTW/Audio Library`), assets in `Assets/Project/Data/`. `Data/Table/` -- table row classes (`TableRowData` subclasses: Dialogue, Map, ItemTable, Text, Quest, QuestObjective, Notebook).
+**Data:** `Data/Structs.cs` -- ItemData, ItemSlot, SaveData. `Data/CharacterProfile.cs`, `Framework/AudioLibrary.cs` -- ScriptableObjects (`LOTW/Character Profile`, `LOTW/Audio Library`), assets in `Assets/Project/Data/`. `Data/Table/` -- table row classes (`TableRowData` subclasses: Dialogue, Map, ItemTable, Text, Quest, QuestObjective, Notebook).
 
-**Namespaces:** Mirror folder paths -- `Project.Scripts.Core(.Managers)`, `Project.Scripts.System.World/.UI`, `Project.Scripts.Content.Controller/.World/.UI`, `Project.Scripts.Data`, `Project.Scripts.Editor`.
+**Namespaces:** Mirror folder paths -- `Project.Scripts.Framework(.Managers/.UI)`, `Project.Scripts.Core(.Managers)`, `Project.Scripts.System.World/.UI`, `Project.Scripts.Content.Controller/.World/.UI`, `Project.Scripts.Data`, `Project.Scripts.Editor`.

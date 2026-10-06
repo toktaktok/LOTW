@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Project.Scripts.Core
+namespace Project.Scripts.Framework
 {
     /// <summary>
     /// Unity JsonUtility 는 최상위 JSON 배열을 직접 파싱할 수 없어서

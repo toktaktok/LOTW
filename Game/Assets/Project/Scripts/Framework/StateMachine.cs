@@ -1,7 +1,7 @@
 using UnityEngine;
 using System;
 
-namespace Project.Scripts.Core
+namespace Project.Scripts.Framework
 {
     public class StateMachine<T> where T : class
     {

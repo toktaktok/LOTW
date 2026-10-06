@@ -1,6 +1,6 @@
 using System;
 
-namespace Project.Scripts.Core.Managers
+namespace Project.Scripts.Framework.Managers
 {
     /// <summary>
     /// 게임 진행 플래그를 보관하는 매니저. 순수 로직은 FlagStore에 위임합니다.

@@ -2,6 +2,7 @@ using Project.Scripts.Content.Story;
 using Project.Scripts.Core;
 using Project.Scripts.Core.Managers;
 using Project.Scripts.System.Dialogue;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.Dialogue
 {

@@ -2,8 +2,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using NUnit.Framework;
-using Project.Scripts.Core;
 using UnityEngine;
+using Project.Scripts.Framework;
 using DialogueRow = Project.Scripts.Data.Table.DialogueData;
 
 namespace Tests.EditMode

@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Unity.Cinemachine;
 
-using Project.Scripts.Core;
 using Project.Scripts.Data;
 using Project.Scripts.System.World;
 using Project.Scripts.Content.World;
 using Project.Scripts.Content.Story;
 using Project.Scripts.Content.UI;
 using Project.Scripts.Core.Managers;
+using Project.Scripts.Framework;
+using Project.Scripts.Framework.Managers;
 
 namespace Project.Scripts.Content.Controller
 {
